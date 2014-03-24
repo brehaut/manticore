@@ -210,7 +210,7 @@
              (l/conso [name level size type _] monsters-tail monsters)
              (price-monsterso party-level monsters-tail tail)
 
-             #_(monster-scalero size type scale)
+             (monster-scalero size type scale)
 
              (l/conda
               [(monster-costo party-level level scale cost)
