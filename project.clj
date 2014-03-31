@@ -3,10 +3,11 @@
   :url "http://github.com/brehaut/manticore"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [#_[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/core.logic "0.8.7"]
                  [org.clojure/clojurescript "0.0-2156"
-                  :exclusions [org.apache.ant/ant]]]
+                  :exclusions [org.apache.ant/ant
+                               org.clojure/clojure]]]
 
   :source-paths ["src/clj" 
                  "src/cljs"]
