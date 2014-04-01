@@ -179,7 +179,6 @@
 
 (defn monster-scale
   [{:keys [size type]}]
-  (println type size (= type :13thage/mook))
   (if (= type :13thage/mook) 
     :13thage/mook
     size))
