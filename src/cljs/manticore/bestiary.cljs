@@ -1,4 +1,5 @@
-(ns manticore.bestiary)
+(ns manticore.bestiary
+  (:require [clojure.browser.repl]))
 
  ;; The following relations encodes the Monster Equivalents 
  ;; table from 13th Age as a set of relations
@@ -179,6 +180,7 @@
 
 (defn monster-scale
   [{:keys [size type]}]
+  (println type size (= type :13thage/mook))
   (if (= type :13thage/mook) 
     :13thage/mook
     size))
@@ -206,6 +208,8 @@
   (map (fn [n] [(repeat n monster) (- points (* n price))])
        (range 0 (inc (quot points price)))))
 
+
+;; and the hard part in the absence of core.logic
 
 (defn allocate-monsters*
   [points [m & monsters]]

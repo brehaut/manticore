@@ -4,22 +4,33 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/core.logic "0.8.7"]
-                 [org.clojure/clojurescript "0.0-2156"
-                  :exclusions [org.apache.ant/ant]]]
+                 [ring "1.2.1"]
+                 [compojure "1.1.6"]
+                 [enlive "1.1.5"]
+
+                 [org.clojure/clojurescript "0.0-2197"
+                  :exclusions [org.apache.ant/ant]]
+                 [om "0.5.3"]]
 
   :source-paths ["src/clj" 
                  "src/cljs"]
 
-  :cljsbuild {
-    :builds [{
-        :source-paths ["src/cljs"]
-        :compiler {
-          :output-to "target/main.js" 
-          :optimizations :whitespace
-          :pretty-print true}}]}
-
-  :profiles {:dev {:repl-options {:init-ns manticore.bestiary}
-                   :plugins [[lein-cljsbuild "1.0.2"]
-                             [com.cemerick/austin "0.1.4"]]}})
+  :profiles {:dev 
+             {:repl-options {:init-ns manticore.dev}
+              :plugins [[lein-cljsbuild "1.0.3"]
+                        [com.cemerick/austin "0.1.4"]]
+              :cljsbuild {:builds [{:id "dev"
+                                    :source-paths ["src/cljs"]
+                                    :compiler {:output-to "target/classes/public/app.js"
+                                               :optimizations :simple
+                                               :pretty-print true
+                                               :source-map true}}
+                                   
+                                   {:id "release"
+                                    :source-paths ["src/cljs"]
+                                    :compiler {:output-to "target/classes/public/app.js"
+                                               :optimizations :advanced
+                                               :pretty-print false
+                                               :preamble ["react/react.min.js"]
+                                               :externs ["react/externs/react.js"]}}]}}})
 
