@@ -1,9 +1,6 @@
 # Manticore
 
-An experimental program to generate encounters for [*13th Age*](http://13thage.com/). 
-
-The core of this program uses [core.logic](http://github.com/clojure/core.logic/) – a [miniKanren](http://minikanren.org) implementation – for most of 
-the main logic of this game. 
+An experimental clojurescript program to generate encounters for [*13th Age*](http://13thage.com/). 
 
 ## Usage
 
@@ -12,9 +9,7 @@ This project is currently a WIP. Two major problems:
  * Currently the encounter generation is exhaustive. A single level 1 character generates approximately 350
 	“fair” encounters. Exponential explosion occurs rapidly. Not all of these encounters are useful; filtering
 	and additional querying is needed for prepping the domain of the search.
- * There is exactly zero UI. Compounding this some values in the system (costs per monster in particular) while to
-   scale with the rules of 13th age use different values due to nuances of the finite domain operations provided by
-  `core.logic`.
+ * There is exactly zero UI. 
 	
 ## Thanks
 

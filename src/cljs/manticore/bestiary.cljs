@@ -285,7 +285,7 @@
     (for [[ms remaining] (repeat-monster points m)
           [allocation allocated-remaining] (or (allocate-monsters* remaining monsters) 
                                                [[[] remaining]])
-          :when (<= allocated-remaining 4)]
+          :when (zero? allocated-remaining)]
       [(into ms allocation) allocated-remaining])))
 
 (defn allocate-monsters 
