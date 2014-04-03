@@ -1,5 +1,6 @@
 (ns manticore.bestiary
-  (:require [clojure.browser.repl]))
+  (:require [clojure.browser.repl]
+            [clojure.set :as set]))
 
  ;; The following relations encodes the Monster Equivalents 
  ;; table from 13th Age as a set of relations
@@ -155,15 +156,93 @@
    ])
 
 
-(defn vec->monster
+(defn vec->monster*
   "The monster table (above) uses vectors for simplicity, but
-   the actual search system uses monster maps to name everything."  
+   the actual search system uses monster maps to name everything."
   [[name level size type attrs]]
   {:name name 
    :level level 
    :size size 
    :type type 
    :attrs attrs})
+
+
+(defn assoc-scale
+  "determine the monster scale from size and type."
+  [{:keys [size type] :as m}]
+  (assoc m :scale (if (= type :13thage/mook) 
+                    :13thage/mook
+                    size)))
+
+
+(defn vec->monster
+  "This function does all the preparation for a monster"
+  [vec]
+  (-> vec 
+      vec->monster*
+      assoc-scale))
+
+;; pre allocation filtering predicate functions
+;;
+;; these functions are to minimize the search space for 
+;; allocating monsters from. 
+
+(defn- intrinsic-matches?
+  "A predicate that tests an intrinsic property (rather than attribute)
+   of a monster against a valid set. E.g. test size or type.
+
+   this function is intended to be partially applied (see below)"
+  [key match-set monster]
+  (if-let [prop (monster key)]
+    (contains? match-set prop)
+    false))
+
+(def match-name? (partial intrinsic-matches? :name))
+(def match-level? (partial intrinsic-matches? :level))
+(def match-size? (partial intrinsic-matches? :size))
+(def match-type? (partial intrinsic-matches? :type))
+(def match-scale? (partial intrinsic-matches? :scale))
+
+(defn attribute-matches?
+  "Attributes are like tags; they dont have a particular name. Either
+   they are present in the attribute set or they are not."
+  [attribute monster]
+  (contains? (:attrs monster) attribute))
+
+(defn attributes-match?
+  "Like attribute-matches? but requires that a set of attributes all
+   match."
+  [attributes-set monster]
+  (set/subset? attributes-set (:attrs monster)))
+
+
+;; post allocation sorting
+;;
+;; these functions are used to determine how close to a given 
+;; breakdown of an encounter an allocation is.
+(defn normalized-frequencies
+  "Like frequencies but the values are all normalized to total 1.0"
+  [xs]
+   (let [freqs (frequencies xs)
+         total (apply + (vals freqs))]
+    (into {} (map (fn [[k v]] [k (/ v total)]) freqs))))
+
+
+(defn intrinsic-ratio-distance
+  "Calculates the distance between an ideal proportion of keys
+   and the proportion present in allocation. 
+
+   proportion-map values do not need to sum to 1, but should not 
+   exceed it.
+
+   A distance of 0 means the proportion matches"
+  [key proportion-map allocation]
+  (let [freqs (normalized-frequencies (map key allocation))]
+    (reduce (fn [distance [k prop]] 
+              (+ distance (Math/abs (- prop (freqs k 0)))))
+            0
+            proportion-map)))
+
 
 ;; the follow functions define the rules that link the various maps above.
 
@@ -178,29 +257,20 @@
     (- monster-adjusted party)))
 
 
-(defn monster-scale
-  [{:keys [size type]}]
-  (println type size (= type :13thage/mook))
-  (if (= type :13thage/mook) 
-    :13thage/mook
-    size))
-
-
 (defn price-monster
   "Calculates the scale and cost of this monster for the current
    party level and associates them with the monster map.
 
    monsters that are not valid are replaced with nils"
-  [party-level {:keys [level] :as m}]
+  [party-level {:keys [level scale] :as m}]
   (let [cost (relative-cost (relative-level party-level level))
-        scale (monster-scale m)
         mul (size-factor scale)]
     (if cost
-      (assoc m 
-        :scale scale
-        :price (* mul cost))
+      (assoc m :price (* mul cost))
       nil)))
 
+
+;; allocation algorithm
 
 (defn repeat-monster
   "Repeats a monster as many times as the available points will allow."
@@ -208,8 +278,6 @@
   (map (fn [n] [(repeat n monster) (- points (* n price))])
        (range 0 (inc (quot points price)))))
 
-
-;; and the hard part in the absence of core.logic
 
 (defn allocate-monsters*
   [points [m & monsters]]
@@ -224,3 +292,20 @@
   [points monsters]
   (map first (allocate-monsters* points monsters)))
 
+;; party utilities
+
+(defn price-party
+  "Determine how many points this party is worth for
+   the purposes of allocation."
+  [characters]
+  (* characters 
+     (size-factor :13thage/normal)
+     (relative-cost 0)))
+
+
+;; primary interface
+
+(defn allocations-for-party
+  [characters party-level monsters]
+  (allocate-monsters (price-party characters)
+                     (keep #(price-monster party-level %) monsters)))

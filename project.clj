@@ -22,9 +22,7 @@
               :cljsbuild {:builds [{:id "dev"
                                     :source-paths ["src/cljs"]
                                     :compiler {:output-to "target/classes/public/app.js"
-                                               :optimizations :simple
-                                               :pretty-print true
-                                               :source-map true}}
+                                               :optimizations :simple}}
                                    
                                    {:id "release"
                                     :source-paths ["src/cljs"]
