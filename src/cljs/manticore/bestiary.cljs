@@ -1,6 +1,5 @@
 (ns manticore.bestiary
-  (:require [clojure.browser.repl]
-            [clojure.set :as set]))
+  (:require [clojure.set :as set]))
 
  ;; The following relations encodes the Monster Equivalents 
  ;; table from 13th Age as a set of relations

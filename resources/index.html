@@ -1,9 +1,39 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="/app.js" type="text/javascript"></script>
+        <link href="/static/normalize.css" type="text/css" rel="stylesheet" />
+        <link href="/static/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
-      <h1>Hello, world!</h1>
+      <header>
+        <h1>13th Age Encounters</h1>
+        <p>
+          Generate <em>‘fair’</em>
+          encounters for <em>13th Age</em> based on criteria
+        </p>
+      </header>
+      
+      <section>
+        <header>
+          <h1>Party</h1>
+          <p>
+            Monster value is relative to the level of the player
+            characters. The number of monsters is compared to the
+            number of player characters.
+          </p>
+        </header>
+        <div id="party">
+        </div>
+      </section>
+
+      <section id="filters"></section>
+      <section id="proportions"></section>
+      <section id="encounters"></section>      
+
+      <footer>
+        <a href="http://github.com/brehaut/manticore">Source code.</a>
+      </footer>        
+
+      <script src="/app.js" type="text/javascript"></script>
     </body>
 </html>

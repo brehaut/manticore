@@ -22,7 +22,9 @@
               :cljsbuild {:builds [{:id "dev"
                                     :source-paths ["src/cljs"]
                                     :compiler {:output-to "target/classes/public/app.js"
-                                               :optimizations :simple}}
+                                               :optimizations :simple
+                                               :preamble ["react/react.min.js"]
+                                               :externs ["react/externs/react.js"]}}
                                    
                                    {:id "release"
                                     :source-paths ["src/cljs"]
