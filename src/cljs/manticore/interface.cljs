@@ -30,8 +30,14 @@
     (render [_]
       (let [v (om/value (edit-key data))]
         (dom/input #js {:value v
-                        :onKeyDown #(when-not (<= 48 (.-keyCode %) 57)
-                                      (.preventDefault %))
+                        :onKeyDown #(let [key (.-keyCode %)] 
+                                      (when-not (or (<= 48 key 57) ;; numeric ey
+                                                    (<= 37 key 40) ;; arrow
+                                                    (#{8 46} key)  ;; del, backspace
+                                                    (.-altKey %) 
+                                                    (.-metaKey %) 
+                                                    (.-ctrlKey %))
+                                        (.preventDefault %)))
                         :onChange #(handle-numeric-change % data edit-key v)})))))
 
 
@@ -50,3 +56,4 @@
 
 (om/root party-view app-state
   {:target (. js/document (getElementById "party"))})
+
