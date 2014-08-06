@@ -8,9 +8,9 @@
                  [compojure "1.1.6"]
                  [enlive "1.1.5"]
 
-                 [org.clojure/clojurescript "0.0-2197"
+                 [org.clojure/clojurescript "0.0-2280"
                   :exclusions [org.apache.ant/ant]]
-                 [om "0.5.3"]]
+                 [om "0.7.1"]]
 
   :source-paths ["src/clj" 
                  "src/cljs"]
