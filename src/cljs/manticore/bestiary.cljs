@@ -58,7 +58,7 @@
 ;;
 ;; These are all processed with vec->monster (below) for actual use.
 
-(def monsters
+(def monsters*
   "Monsters from 13th Age core book as a small database to
    search for matching encounters"
   [["Giant ant" 0 :13thage/normal :13thage/troop #{:13thage/animal}]
@@ -86,7 +86,7 @@
    ["Hunting spider" 2 :13thage/normal :13thage/wrecker #{:13thage/animal}]
    ["Kobold hero" 2 :13thage/normal :13thage/leader #{:13thage/kobold}]
    ["Lizardman savage" 2 :13thage/normal :13thage/wrecker #{:13thage/lizardman}]
-   ["Medium white dragon" 2 :13thage/normal :13thage/troop #{:13thage/dragon :13thage/white-dragon}]
+   ["Medium white dragon" 2 :13thage/normal :13thage/troop #{:13thage/dragon :13thage/white}]
    ["Newly-risen ghoul" 2 :13thage/normal :13thage/mook #{:13thage/undead :13thage/ghoul}]
    ["Orc berserker" 2 :13thage/normal :13thage/troop #{:13thage/orc}]
    ["Orc shaman" 2 :13thage/normal :13thage/leader #{:13thage/orc}]
@@ -337,6 +337,14 @@
 
 
 ;; primary interface
+
+(def monsters (map vec->monster monsters*))
+
+(def all-sizes (keys size-factor))
+
+(def all-types (distinct (map :type monsters)))
+
+(def all-attributes (distinct (mapcat :attrs monsters)))
 
 (defn allocations-for-party
   [characters party-level monsters]

@@ -1,7 +1,9 @@
 (ns manticore.interface
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+
+            [manticore.bestiary :as bestiary]))
 
 (enable-console-print!)
 
@@ -9,7 +11,9 @@
   (atom {:party {:level 1
                  :characters 1}
          
-         :filters {}
+         :filters {:size #{}
+                   :type #{}
+                   :attributes #{}}
 
          :sort {}
          }))
@@ -54,6 +58,46 @@
                                     (app :party)
                                     {:opts {:edit-key :level}})))))
 
+
+;; filters section
+(defn selection-view
+  [data owner {:keys [title key choices]}]
+  (reify om/IRender
+    (render [_]
+      (dom/div #js {:class (str "filter-group " 
+                            (.toLowerCase title))
+
+                    :onClick #(prn (.targetNode %))
+                    }
+               title
+               (apply dom/ul nil
+                (map (fn [k]
+                       (dom/li nil (name k))) 
+                     choices))))))
+
+
+(defn filtering-view
+  [app owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/div nil 
+               (dom/h2 nil "Filters")
+               ;; copy and waste follow
+               (om/build selection-view (get-in app [:filters :type])
+                         {:opts {:title "Type"
+                                 :choices (sort bestiary/all-types)}})
+               (om/build selection-view (get-in app [:filters :size])
+                         {:opts {:title "Size"
+                                 :choices bestiary/all-sizes}})
+               (om/build selection-view (get-in app [:filters :attributes])
+                         {:opts {:title "Classifications"
+                                 :choices (sort bestiary/all-attributes)}})))))
+
+
 (om/root party-view app-state
-  {:target (. js/document (getElementById "party"))})
+         {:target (. js/document (getElementById "party"))})
+
+(om/root filtering-view app-state
+         {:target (. js/document (getElementById "filters"))})
 
