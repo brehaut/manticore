@@ -313,17 +313,22 @@
 
 
 (defn allocate-monsters*
+  "calculates all allocations, regardless of how many points left unspent"
   [points [m & monsters]]
-  (when m
+  (if m
     (for [[ms remaining] (repeat-monster points m)
           [allocation allocated-remaining] (or (allocate-monsters* remaining monsters) 
-                                               [[[] remaining]])
-          :when (zero? allocated-remaining)]
-      [(into ms allocation) allocated-remaining])))
+                                               [[[] remaining]])] 
+      [(into ms allocation) allocated-remaining])
+    nil))
 
 (defn allocate-monsters 
+
+  "calculate all allocations that left no reasonable amount unspent"
   [points monsters]
-  (map first (allocate-monsters* points monsters)))
+  (let [allocs (allocate-monsters* points monsters)
+        allowed-unspent (apply min (map :price monsters))]
+    (keep (fn [[al rem]] (if (< rem allowed-unspent) al nil)) allocs)))
 
 ;; party utilities
 
@@ -338,6 +343,11 @@
 
 ;; primary interface
 
+(defn maximum-one-dragon
+  [allocations]
+  (remove (fn [alloc] (< 1 (count (filter #(attribute-matches :13thage/dragon %) alloc)))) 
+          allocations))
+
 (def monsters (map vec->monster monsters*))
 
 (def all-sizes (keys size-factor))
@@ -350,3 +360,4 @@
   [characters party-level monsters]
   (allocate-monsters (price-party characters)
                      (keep #(price-monster party-level %) monsters)))
+
