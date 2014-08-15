@@ -320,6 +320,11 @@ module Manticore.Bestiary {
                           monstersIdx:number, 
                           acc:Array<MonsterAllocation>) {
 
+            // cap results at a maximum. 
+            if (allAllocations.length >= 5000) throw { message: "Results truncated" };
+
+            // if we are out of monsters, or have run out 
+            // of points to spend, then stop recursing.
             if (monstersIdx >= monsters.length) return;
             if (remainingPoints < allowedUnspent) {
                 allAllocations[allAllocations.length] = acc;
@@ -332,6 +337,7 @@ module Manticore.Bestiary {
             // skip this monster
             allocate(remainingPoints, monstersIdx + 1, cur);
 
+            // produce allocations for all the available numbers of this monster
             for (var i = 0, j = repeats.length; i < j; i++) {
                 cur = acc.slice(); // copy array
                 var alloc:MonsterAllocation = repeats[i];
@@ -342,7 +348,12 @@ module Manticore.Bestiary {
             }
         }
 
-        allocate(points, 0, []);
+        try {
+            allocate(points, 0, []);
+        }
+        catch (ex) { // produced more than the maximum number of results.
+            // pass;  
+        }
 
         return allAllocations;
     }
