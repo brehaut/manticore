@@ -335,7 +335,7 @@ module Manticore.Bestiary {
             var cur = acc;
 
             // skip this monster
-            allocate(remainingPoints, monstersIdx + 1, cur);
+            allocate(remainingPoints, monstersIdx + 1, cur); 
 
             // produce allocations for all the available numbers of this monster
             for (var i = 0, j = repeats.length; i < j; i++) {

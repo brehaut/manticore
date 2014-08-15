@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="/static/normalize.css" type="text/css" rel="stylesheet" />
-        <link href="/static/style.css" type="text/css" rel="stylesheet" />
+      <meta charset="utf-8">
+      <link href="static/css/normalize.css" type="text/css" rel="stylesheet" />
+      <link href="static/css/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
       <header>
@@ -22,11 +23,27 @@
             number of player characters.
           </p>
         </header>
-        <div id="party">
-        </div>
+        <label for="party-size">Number of Characters</label>
+        <input name="party-size" value="4">
+
+        <label for="party-level">Party level</label>
+        <input class="party-level" value="2">
       </section>
 
       <section id="filters">
+        <header>
+          <h1>Filters</h1>
+        </header>
+
+        <section class="filter">
+          <header>
+            <h1>Size</h1>
+          </header>
+          
+          <ul>
+            <li>Normal</li>
+          </ul>
+        </section>
       </section>
       <section id="proportions"></section>
       <section id="encounters"></section>      
@@ -35,6 +52,6 @@
         <a href="http://github.com/brehaut/manticore">Source code.</a>
       </footer>        
 
-      <script src="/app.js" type="text/javascript"></script>
+      <script src="static/js/main.js" type="text/javascript"></script>
     </body>
 </html>
