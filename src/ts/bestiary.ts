@@ -126,11 +126,19 @@ module Manticore.Bestiary {
                    ["Balor",13,"large","wrecker",["demon"]]
                   ];
 
+    // Monster records
+    //
+    // These two types simply represent records for monsters.
+    // the PricedMonster has the additional information for
+    // a monster priced relative to a party. 
+    // 
+    // a bit hideous to have a subclass, but the overall
+    // nasty contained.
 
 
-    class Monster {
+    export class Monster {
         public scale:string;
-
+ 
         constructor(public name:string, 
                     public level:number, 
                     public size:string,
@@ -152,14 +160,29 @@ module Manticore.Bestiary {
 
 
     class PricedMonster extends Monster {
-        constructor(public name:string,  
-                    public level:number, 
-                    public size:string,
-                    public kind:string,
-                    public attributes: Array<string>,
-                    public price:number) { }
+        constructor(name:string,  
+                    level:number, 
+                    size:string,
+                    kind:string,
+                    attributes: Array<string>,
+                    public price:number) { 
+            super(name, level, size, kind, attributes);
+        }
     }
 
+
+    class MonsterAllocation {
+        public cost: number;
+
+        constructor (public monster:PricedMonster, public num:number) { 
+            this.cost = this.monster.price * num;
+        }
+
+        public toString() {
+            return this.monster.toString() + " x" + this.num;  
+        }
+    }
+    
 
     function sizeFactor(size) {
         return ({
@@ -212,7 +235,7 @@ module Manticore.Bestiary {
 
 
     function adjustment(level:number):number {
-        return tierAdjustment(adjustment(level));
+        return tierAdjustment(levelToTier(level));
     }
     
 
@@ -236,6 +259,7 @@ module Manticore.Bestiary {
         var multiplier = sizeFactor(m.scale);
 
         if (cost === null) return null;
+
         return new PricedMonster(m.name,
                                  m.level,
                                  m.size,
@@ -248,4 +272,95 @@ module Manticore.Bestiary {
         return characters * sizeFactor("normal") * relativeCost(0);
     }
     
+
+    // allocateMonster sis the core algorithm of this application.
+    // 
+    // It is an unrolled recursive exhaustive search.
+    // in cljs:
+
+// (defn repeat-monster
+//   "Repeats a monster as many times as the available points will allow."
+//   [points {:keys [price] :as monster}]  
+//   (map (fn [n] [(repeat n monster) (- points (* n price))])
+//        (range 0 (inc (quot points price)))))
+
+
+// (defn allocate-monsters*
+//   "calculates all allocations, regardless of how many points left unspent"
+//   [points [m & monsters]]
+//   (if m
+//     (for [[ms remaining] (repeat-monster points m)
+//           [allocation allocated-remaining] (or (allocate-monsters* remaining monsters) 
+//                                                [[[] remaining]])] 
+//       [(into ms allocation) allocated-remaining])
+//     nil))
+
+// (defn allocate-monsters 
+
+//   "calculate all allocations that left no reasonable amount unspent"
+//   [points monsters]
+//   (let [allocs (allocate-monsters* points monsters)
+//         allowed-unspent (apply min (map :price monsters))]
+//     (keep (fn [[al rem]] (if (< rem allowed-unspent) al nil)) allocs)))    
+
+    function repeatMonster(points, monster):Array<MonsterAllocation> {
+        var repeats = [];
+        for (var i = 1, j = Math.floor(points / monster.price); i <= j; i++) {
+            repeats[repeats.length] = new MonsterAllocation(monster, i);
+        }
+        return repeats;
+    }
+
+
+    function allocateMonsters(points:number, monsters:Array<PricedMonster>) {
+        var allAllocations = [];     
+        var allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
+
+        function allocate(remainingPoints:number, 
+                          monstersIdx:number, 
+                          acc:Array<MonsterAllocation>) {
+
+            if (monstersIdx >= monsters.length) return;
+            if (remainingPoints < allowedUnspent) {
+                allAllocations[allAllocations.length] = acc;
+                return;
+            }
+
+            var repeats = repeatMonster(remainingPoints, monsters[monstersIdx]);
+            var cur = acc;
+
+            // skip this monster
+            allocate(remainingPoints, monstersIdx + 1, cur);
+
+            for (var i = 0, j = repeats.length; i < j; i++) {
+                cur = acc.slice(); // copy array
+                var alloc:MonsterAllocation = repeats[i];
+
+                cur[cur.length] = alloc;
+
+                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur);
+            }
+        }
+
+        allocate(points, 0, []);
+
+        return allAllocations;
+    }
+
+
+    // public API:
+    export var monsters:Array<Monster> = rawdata.map(monsterFromRecord);
+
+    export function allocationsForParty(characters:number, 
+                                 partyLevel:number, 
+                                 selectedMonsters:Array<Monster>) {
+
+        return allocateMonsters(priceParty(characters),
+                                selectedMonsters
+                                .map((m) => priceMonster(partyLevel, m))
+                                .filter((m) => m !== null)
+                               );
+    }
+
 }
+
