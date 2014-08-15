@@ -1,6 +1,6 @@
 # Manticore
 
-An experimental clojurescript program to generate encounters for [*13th Age*](http://13thage.com/). 
+An experimental typescript program to generate encounters for [*13th Age*](http://13thage.com/). 
 
 ## Usage
 
@@ -11,6 +11,13 @@ This project is currently a WIP. Two major problems:
 	and additional querying is needed for prepping the domain of the search.
  * There is exactly zero UI. 
 	
+You will need typescript and make installed to build this project:
+
+    $ make
+
+will compile the typescript source and move it and other resources into the `target` directory
+ready for deployment. 
+
 ## Thanks
 
 William Byrd provided feedback and revision to a very early draft of this program. While none of that code has survived into the current version, the changes made were enlightening and pushed forward my understanding of logic programming greatly.
@@ -21,4 +28,4 @@ This program uses trademarks and/or copyrights owned by Fire Opal Media, which a
 
 Source code copyright © 2014 Andrew Brehaut
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the Eclipse Public License
