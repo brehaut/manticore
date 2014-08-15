@@ -1,3 +1,4 @@
+/// <reference path="data.ts" />
 module Manticore.Bestiary {
     var rawdata = [["Giant ant",0,"normal","troop",["animal"]],
                    
@@ -135,31 +136,7 @@ module Manticore.Bestiary {
     // a bit hideous to have a subclass, but the overall
     // nasty contained.
 
-
-    export class Monster {
-        public scale:string;
- 
-        constructor(public name:string, 
-                    public level:number, 
-                    public size:string,
-                    public kind:string,
-                    public attributes: Array<string>) { 
-            if (kind === "mook") {
-                this.scale = "mook";
-            }
-            else {
-                this.scale = size;
-            }                
-        }
-
-        public toString() {
-            return this.name + "(level " + this.level + " " + this.kind + ")";
-        }
-    }
-
-
-
-    class PricedMonster extends Monster {
+    class PricedMonster extends Data.Monster {
         constructor(name:string,  
                     level:number, 
                     size:string,
@@ -171,11 +148,13 @@ module Manticore.Bestiary {
     }
 
 
-    class MonsterAllocation {
+    class MonsterAllocation implements Data.Allocation {
         public cost: number;
+        public monster: Data.Monster;
 
-        constructor (public monster:PricedMonster, public num:number) { 
-            this.cost = this.monster.price * num;
+        constructor (monster:PricedMonster, public num:number) { 
+            this.cost = monster.price * num;
+            this.monster = monster;
         }
 
         public toString() {
@@ -246,15 +225,15 @@ module Manticore.Bestiary {
 
 
     function monsterFromRecord(record) {
-        return new Monster(record[0], 
-                           record[1],
-                           record[2],
-                           record[3],
-                           record[4]);
+        return new Data.Monster(record[0], 
+                                record[1],
+                                record[2],
+                                record[3],
+                                record[4]);
     }
 
 
-    function priceMonster(partyLevel:number, m:Monster) {
+    function priceMonster(partyLevel:number, m:Data.Monster) {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
         var multiplier = sizeFactor(m.scale);
 
@@ -360,11 +339,11 @@ module Manticore.Bestiary {
 
 
     // public API:
-    export var monsters:Array<Monster> = rawdata.map(monsterFromRecord);
+    export var monsters:Array<Data.Monster> = rawdata.map(monsterFromRecord);
 
     export function allocationsForParty(characters:number, 
-                                 partyLevel:number, 
-                                 selectedMonsters:Array<Monster>) {
+                                        partyLevel:number, 
+                                        selectedMonsters:Array<Data.Monster>) {
 
         return allocateMonsters(priceParty(characters),
                                 selectedMonsters
