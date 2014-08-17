@@ -163,13 +163,37 @@ module Manticore.Bestiary {
     }
     
 
-    function sizeFactor(size) {
-        return ({
-            mook: 1,
-            normal: 5,
-            large: 10,
-            huge: 15
-        })[size];
+    // sizeFactor is the multiplier for relative cost by monster scale.
+    // mooks are equal to 1/5 of an ordinary monster from level 3 up,
+    // at level 1 they are equal to 1/3, and level 2 they are 1/4
+    //
+    // the size values for the non-mook sizes are calculated to result in
+    // an even number for a mook at each size.
+    function scaleFactor(scale: string, partyLevel: number) {
+        var base = (3 * 4 * 5);
+
+        if (scale === "mook") {
+            if (partyLevel === 1) {
+                return base / 3;
+            }
+            else if (partyLevel === 2) {
+                return base / 4;
+            }
+            else {
+                return base / 5;
+            }
+        }
+        else if (scale === "normal") {
+            return base;
+        }
+        else if (scale === "large") {
+            return base * 2;
+        }
+        else if (scale === "huge") {
+            return base * 3;
+        }
+
+        throw new Error("invalid scale '" + scale + "'");
     }
 
 
@@ -235,7 +259,7 @@ module Manticore.Bestiary {
 
     function priceMonster(partyLevel:number, m:Data.Monster) {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
-        var multiplier = sizeFactor(m.scale);
+        var multiplier = scaleFactor(m.scale, partyLevel);
 
         if (cost === null) return null;
 
@@ -248,40 +272,11 @@ module Manticore.Bestiary {
     }
 
     function priceParty(characters:number) {
-        return characters * sizeFactor("normal") * relativeCost(0);
+        return characters * scaleFactor("normal", 1) * relativeCost(0);
     }
     
 
-    // allocateMonster sis the core algorithm of this application.
-    // 
-    // It is an unrolled recursive exhaustive search.
-    // in cljs:
-
-// (defn repeat-monster
-//   "Repeats a monster as many times as the available points will allow."
-//   [points {:keys [price] :as monster}]  
-//   (map (fn [n] [(repeat n monster) (- points (* n price))])
-//        (range 0 (inc (quot points price)))))
-
-
-// (defn allocate-monsters*
-//   "calculates all allocations, regardless of how many points left unspent"
-//   [points [m & monsters]]
-//   (if m
-//     (for [[ms remaining] (repeat-monster points m)
-//           [allocation allocated-remaining] (or (allocate-monsters* remaining monsters) 
-//                                                [[[] remaining]])] 
-//       [(into ms allocation) allocated-remaining])
-//     nil))
-
-// (defn allocate-monsters 
-
-//   "calculate all allocations that left no reasonable amount unspent"
-//   [points monsters]
-//   (let [allocs (allocate-monsters* points monsters)
-//         allowed-unspent (apply min (map :price monsters))]
-//     (keep (fn [[al rem]] (if (< rem allowed-unspent) al nil)) allocs)))    
-
+    // allocateMonster is the core algorithm of this application.
     function repeatMonster(points, monster):Array<MonsterAllocation> {
         var repeats = [];
         for (var i = 1, j = Math.floor(points / monster.price); i <= j; i++) {
@@ -304,11 +299,16 @@ module Manticore.Bestiary {
 
             // if we are out of monsters, or have run out 
             // of points to spend, then stop recursing.
-            if (monstersIdx >= monsters.length) return;
+            // we check points first, so that we can add the allocation to 
+            // the list even if we have run out of monsters
             if (remainingPoints < allowedUnspent) {
                 allAllocations[allAllocations.length] = acc;
                 return;
             }
+
+            if (monstersIdx >= monsters.length) return;
+
+            // recursive behaviour follows
 
             var repeats = repeatMonster(remainingPoints, monsters[monstersIdx]);
             var cur = acc;
@@ -331,6 +331,7 @@ module Manticore.Bestiary {
             allocate(points, 0, []);
         }
         catch (ex) { // produced more than the maximum number of results.
+            console.log(ex);
             // pass;  
         }
 
