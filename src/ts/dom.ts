@@ -7,7 +7,8 @@ module manticore {
      "section", "article", 
      "header", "hgroup", "h1", "h2",
      "footer",
-     "form", "button", "input"].forEach((elName:string) => {
+     "form", "button", "input", "label"]
+        .forEach((elName:string) => {
          DOM[elName] = (attributes, ...children) => {
              var el = document.createElement(elName);
              attributes = attributes || {};

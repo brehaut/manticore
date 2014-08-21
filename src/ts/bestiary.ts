@@ -162,13 +162,15 @@ module manticore.bestiary {
     function allocateMonsters(points:number, monsters:Array<PricedMonster>) {
         var allAllocations = [];     
         var allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
+        
+        var startT = +new Date();
 
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
                           acc:Array<MonsterAllocation>) {
 
-            // cap results at a maximum. 
-            if (allAllocations.length >= 5000) throw { message: "Results truncated" };
+            // cap runtime to 2 seconds
+            if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
 
             // if we are out of monsters, or have run out 
             // of points to spend, then stop recursing.
