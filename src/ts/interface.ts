@@ -1,12 +1,23 @@
 /// <reference path="data.ts" />
+/// <reference path="dom.ts" />
 
-module Manticore.Interface {
+module manticore.interface {
     class UI {
-        catalog: Array<Data.Monster>;
+        catalog: Array<data.Monster>;
     }
 
+    function loadingUI(root, promise) {
+        var loading = DOM.div(null, DOM.text("Loading..."))
+        root.appendChild(loading);
 
-    export function initialize(catalog, allocator) {
-        console.log("Go");
+        promise.then((_) => {
+            loading.remove();
+        });
+    }
+
+    export function initialize(root, 
+                               bestiary:Promise<bestiary.Bestiary>,
+                               allocator) {
+        loadingUI(root, bestiary);
     }
 }

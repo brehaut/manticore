@@ -1,4 +1,4 @@
-module Manticore.Data {
+module manticore.data {
     export class Monster {
         public scale:string;
  
