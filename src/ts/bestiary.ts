@@ -227,10 +227,40 @@ module manticore.bestiary {
 
 
     export class Bestiary {
-        constructor(public monsters:Array<data.Monster>) {
+        constructor(public monsters:data.Monster[]) {
 
         }
         
+        public allSizes() {
+            return this.distinctValues((m) => m.size);
+        }
+
+        public allKinds() {
+            return this.distinctValues((m) => m.kind);
+        }
+
+        public allAttributes() {
+            var attributes = [];
+            
+            this.monsters.forEach((m:data.Monster) => {
+                m.attributes.forEach((a:string) => {
+                    if (attributes.indexOf(a) === -1) attributes.push(a);
+                });
+            });
+
+            return attributes;
+        }
+
+        private distinctValues<T>(accessor:(m:data.Monster)=>T):T[] {
+            var vals:T[] = [];
+
+            this.monsters.forEach((m:data.Monster) => {
+                var v = accessor(m);
+                if (vals.indexOf(v) === -1) vals.push(v);
+            });
+
+            return vals;
+        }
     }
 
     export function createBestiary(dataset) {

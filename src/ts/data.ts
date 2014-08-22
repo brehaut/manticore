@@ -21,11 +21,29 @@ module manticore.data {
     }
 
 
+    export function sizePredicate(size:string) {
+        return (m:Monster) => m.size === size;
+    }
+
+    export function kindPredicate(kind:string) {
+        return (m:Monster) => m.kind === kind;
+    }
+
+    export function hasOneAttributePredicate(attributes:string[]) {
+        return (m:Monster) => {
+            var mattrs = m.attributes;
+            for (var i = 0, j = attributes.length; i < j; i++) {
+                if (mattrs.indexOf(attributes[i]) >= 0) return true;
+            }
+            return false;
+        }
+    }
+
+
     export interface Allocation {
         monster:Monster;
         num:number;
     }
-
 
 
     export interface Allocator {

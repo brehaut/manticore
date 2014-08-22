@@ -1,23 +1,22 @@
 /// <reference path="data.ts" />
+/// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
 
 module manticore.interface {
+    var _ = strings._;
 
-    class PartyView {
-        private el:Element;
+    
+    interface IView {
+        appendTo(parent: Element):void;
+    }
 
-        constructor () {
-            this.createElements();
-        }
 
-        public appendTo(element:Element) {
-            element.appendChild(this.el);
-        }
+    class NumericField implements IView {
+        private el: Element;
 
-        private labelNumericField(label:string, className:string, val:number, max?:number) {
-            var input = DOM.input({
+        constructor (val:number, max?:number) {
+            this.el = DOM.input({
                 value: val,
-                "class": className,
                 onkeydown: (e) => {
                     if ([48,49,50,51,52,53,54,55,56,57, // numbers
                          37,38,39,40,                   // arrows
@@ -35,29 +34,83 @@ module manticore.interface {
                 }
                 
             });
+        }
 
-            return DOM.div(
-                null, 
-                DOM.label(null, DOM.text(label)),
-                input
+        appendTo(el) {
+            el.appendChild(this.el);
+        }
+    }
+
+ 
+    class PartyView implements IView {
+        private el:Element;
+
+        constructor () {
+            this.createElements();
+        }
+
+        public appendTo(element:Element) {
+            element.appendChild(this.el);
+        }
+
+        private labeledNumericField(label:string, className:string, val:number, max?:number) {
+            var input = new NumericField(val, max); 
+
+            var div = DOM.div(
+                {"class": "field " + className},
+                DOM.label(null, DOM.text(label))
             );
+
+            input.appendTo(div); 
+
+            return div;
         }
 
         private createElements() {
-            var size = this.labelNumericField("Party size", "size", 4, 10);
-            var level = this.labelNumericField("Party level", "level", 2, 10);
+            var size = this.labeledNumericField(_("Party size"), "size", 4, 10);
+            var level = this.labeledNumericField(_("Party level"), "level", 2, 10);
 
             this.el = DOM.section(
                 {
-                    className: "party"
+                    "class": "clearfix party"
                 }, 
                 DOM.header(
                     null, 
-                    DOM.h1(null, DOM.text("Party")),
-                    DOM.p(null, DOM.text("Set the size and level of the party. This is used to determine the cost of individual monsters, and set the size of the encounter."))
+                    DOM.h1(null, DOM.text(_("Party"))),
+                    DOM.p(null, DOM.text(_("[party summary]")))
                 ),
                 size,
                 level
+            );
+        }
+    }
+
+
+    class FiltersView {
+        private el:Element;
+
+        constructor(bestiary:bestiary.Bestiary) {
+            console.log(bestiary.allSizes());
+            console.log(bestiary.allKinds());
+            console.log(bestiary.allAttributes());
+
+            this.createElements();
+        }
+
+        public appendTo(element:Element) {
+            element.appendChild(this.el);
+        }
+
+        private createElements() {
+            this.el = DOM.section(
+                {
+                    "class": "filters"
+                }, 
+                DOM.header( 
+                    null, 
+                    DOM.h1(null, DOM.text(_("Filter bestiary"))),
+                    DOM.p(null, DOM.text(_("[filter summary]")))
+                )
             );
         }
     }
@@ -68,14 +121,17 @@ module manticore.interface {
     class UI {
         private viewContainer: Element;
         private partyView: PartyView;
+        private filtersView: FiltersView;
 
         constructor(public catalog: bestiary.Bestiary) {            
             this.viewContainer = DOM.div(null);
             this.partyView = new PartyView();
+            this.filtersView = new FiltersView(catalog);
         }
         
         public appendTo(element:Element) {
             this.partyView.appendTo(this.viewContainer);
+            this.filtersView.appendTo(this.viewContainer);
 
             element.appendChild(this.viewContainer);
         }
@@ -104,10 +160,6 @@ module manticore.interface {
     export function initialize(root, 
                                bestiary:Promise<bestiary.Bestiary>,
                                allocator) {
-
-        // artificial loading delay
-        bestiary = bestiary.then((_) => awaitDelay(2000));
-
         bestiary
             .map<void>((bestiary) => {
                 new UI(bestiary).appendTo(root);
