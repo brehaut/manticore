@@ -4,12 +4,7 @@ An experimental typescript program to generate encounters for [*13th Age*](http:
 
 ## Usage
 
-This project is currently a WIP. Two major problems:
-
- * Currently the encounter generation is exhaustive. A single level 1 character generates approximately 350
-	“fair” encounters. Exponential explosion occurs rapidly. Not all of these encounters are useful; filtering
-	and additional querying is needed for prepping the domain of the search.
- * There is exactly zero UI. 
+This project is currently a WIP.
 	
 You will need typescript and make installed to build this project:
 
@@ -17,6 +12,16 @@ You will need typescript and make installed to build this project:
 
 will compile the typescript source and move it and other resources into the `target` directory
 ready for deployment. 
+
+The application is a simple client side web app, so you just need to place the `target` directory into your webserver and point your browser there. If you have python installed running `make server` will launch a simple http server on port 8080 for testing.
+
+##  Known issues:
+
+ * It will never work in Internet Explorer 8 or lower.
+ * The UI is a bit wacky on a small (phone) screen. This will come later.
+ * Only the core book is currently included. I plan to support multiple books in the future, and include that as a  filtering option.  
+ * There is no way to select specific monsters.
+ * There is no information about the number of monsters that are selected by a filter rule.
 
 ## Thanks
 
