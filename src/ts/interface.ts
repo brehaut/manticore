@@ -159,6 +159,8 @@ module manticore.interface {
         private createElements() {
             var ul = DOM.ul(
                 {
+                    "class": "clearfix",
+
                     onclick: (e) => {
                         if (e.target.nodeName.toLowerCase() !== "li") return;
                         this.toggleState(e.target.getAttribute("data-name"));
@@ -171,10 +173,12 @@ module manticore.interface {
             );
             
             var header = DOM.header(null, [
-                DOM.h1(null, [DOM.text(_(this.name))])
+                DOM.h2(null, [DOM.text(_(this.name))])
             ]);
 
-            this.el = DOM.div(null, [header, ul]);
+            this.el = DOM.div({
+                "class": "C attribute-filter -" + this.name.toLowerCase()
+            }, [header, ul]);
         }
     }
 
@@ -189,7 +193,7 @@ module manticore.interface {
         constructor(bestiary:bestiary.Bestiary) {
             this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
             this.kindView = new PropertyFilterView("Role", bestiary.allKinds());
-            this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes());
+            this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes().sort());
 
             this.createElements();
         }
@@ -209,7 +213,7 @@ module manticore.interface {
         private createElements() {
             this.el = DOM.section(
                 {
-                    "class": "filters"
+                    "class": "filters clearfix"
                 }, 
                 [
                     DOM.header( 
@@ -233,9 +237,13 @@ module manticore.interface {
     class ResultsView implements IView {
         private el: HTMLElement;
         private resultsEl: HTMLElement;
+        private moreButton: HTMLElement;
 
         public onRequestGenerate: Event<void>;
-        
+
+        private currentIndex: number;
+        private pendingAllocations
+
         constructor () {
             this.onRequestGenerate = new Event<void>();
             
@@ -248,21 +256,68 @@ module manticore.interface {
 
         public displayResults(allocs: data.Allocation[][]) {
             DOM.empty(this.resultsEl);
+            
+            this.currentIndex = 0;
+            this.pendingAllocations = allocs;
+
+            this.show100();
+        }
+
+        private allocationMarkup(alloc: data.Allocation) {
+            return DOM.div(
+                {"class": "allocation"},
+                [
+                    DOM.div({"class":"kind"},[
+                        DOM.text(_(alloc.monster.kind)),
+                        DOM.span({"class":"level"}, 
+                                 [DOM.text(alloc.monster.level.toString())])
+                    ]),
+                    DOM.em({"class": "name"}, [
+                        DOM.text(_(alloc.monster.name))
+                    ]),
+                    DOM.span({"class": "number"}, [
+                        DOM.text(" ×" + alloc.num.toString())
+                    ])
+                ]
+            );                           
+        }
+
+        private show100() {
+            var window = 100;
+
+            var allocs = this.pendingAllocations.slice(this.currentIndex, this.currentIndex + window);
 
             allocs.forEach(alloc => {
-                this.resultsEl.appendChild(DOM.li(null, [
-                    DOM.text(alloc.toString())
-                ]));
+                this.resultsEl.appendChild(DOM.li(
+                    {"class": "clearfix"}, 
+                    alloc.map(al => this.allocationMarkup(al))
+                ));
             });
+
+            this.currentIndex += window;
+
+            if (this.currentIndex > this.pendingAllocations.length) {
+                this.moreButton.style.display = "none";
+            }
+            else {
+                this.moreButton.style.display = "inline-block";
+            }
         }
 
         private createElements() {
-            this.el = DOM.div({ 
+            this.el = DOM.section({ 
                 "class": "results"
             }, [
+                DOM.header(
+                    null,
+                    [
+                        DOM.h1(null, [DOM.text(_("Encounters"))]),
+                        DOM.p(null, [DOM.text(_("[results summary]"))])
+                    ]
+                ),              
                 DOM.div(
                     {
-                        "class": "button",
+                        "class": "button generate",
                         
                         onclick: (e) => {
                             this.onRequestGenerate.trigger(null);
@@ -273,9 +328,19 @@ module manticore.interface {
                     ])
             ]);
 
-            this.resultsEl = DOM.ul({}, []);
+            this.resultsEl = DOM.ul({"class": "encounters"}, []);
+            this.moreButton = DOM.div(
+                {
+                    "class":"button",
+
+                    onclick: (e) => this.show100()
+                }, 
+                [DOM.text(_("more"))]
+            );
+            this.moreButton.style.display = "none";
 
             this.el.appendChild(this.resultsEl);
+            this.el.appendChild(this.moreButton);
         }
     }
 
@@ -290,7 +355,6 @@ module manticore.interface {
         private filtersView: FiltersView;
         private resultsView: ResultsView;
         
-
         constructor(private allocator: data.Allocator, 
                     private catalog: bestiary.Bestiary, 
                     root:HTMLElement) {
@@ -302,8 +366,8 @@ module manticore.interface {
             this.resultsView.onRequestGenerate.register(_ => {
                 var pred = data.predicateForFilters(this.filtersView.getFilters());
                 var selection = catalog.filteredBestiary(pred);
-                var alloc = allocator(this.partyView.getPartyLevel(),
-                                      this.partyView.getPartySize(),
+                var alloc = allocator(this.partyView.getPartySize(),               
+                                      this.partyView.getPartyLevel(),
                                       selection);
 
                 this.resultsView.displayResults(alloc);

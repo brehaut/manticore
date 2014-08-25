@@ -214,7 +214,7 @@ module manticore.bestiary {
 
 
     // public API:
-    export function allocationsForParty(characters:number, 
+    export function allocationsForParty(characters:number,
                                         partyLevel:number, 
                                         selectedMonsters:Array<data.Monster>) {
 
