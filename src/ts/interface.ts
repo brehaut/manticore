@@ -265,7 +265,7 @@ module manticore.interface {
 
         private allocationMarkup(alloc: data.Allocation) {
             return DOM.div(
-                {"class": "allocation"},
+                {"class": "allocation " + alloc.monster.size},
                 [
                     DOM.div({"class":"kind"},[
                         DOM.text(_(alloc.monster.kind)),
