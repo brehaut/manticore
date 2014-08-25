@@ -1,4 +1,4 @@
-build: clean, bundle_contrib_js
+build: clean bundle_contrib_js
 	mkdir -p target/static/{css,js,data}
 	cp static/data/* target/static/data/
 	cp static/css/* target/static/css/
