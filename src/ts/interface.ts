@@ -42,6 +42,9 @@ module manticore.interface {
             this.onChange = new Event<number>();
 
             this.el = <HTMLInputElement> DOM.input({
+                type: "number",
+                min: 0,
+                max: max,
                 value: val,
                 onkeydown: (e) => {
                     if ([48,49,50,51,52,53,54,55,56,57, // numbers
