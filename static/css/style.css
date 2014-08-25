@@ -84,6 +84,17 @@ section.party > .field > input
     width: 33%;
 }
 
+/* filters */
+
+section.filters li {
+    color: #aaa;
+    cursor: pointer;
+}
+
+section.filters li.selected {
+    color: black;
+}
+
 
 @media screen and (min-width:320px) {
     body > header,

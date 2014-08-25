@@ -30,7 +30,7 @@ module manticore.bestiary {
         }
 
         public toString() {
-            return this.monster.toString() + " x" + this.num + " (" + this.cost + ")";  
+            return this.monster.toString() + " x" + this.num;
         }
     }
     
@@ -251,6 +251,10 @@ module manticore.bestiary {
             return attributes;
         }
 
+        public filteredBestiary(filter: data.IPredicate<data.Monster>) {
+            return this.monsters.filter(filter);
+        }
+
         private distinctValues<T>(accessor:(m:data.Monster)=>T):T[] {
             var vals:T[] = [];
 
@@ -262,6 +266,7 @@ module manticore.bestiary {
             return vals;
         }
     }
+
 
     export function createBestiary(dataset) {
         return new Bestiary(dataset.map(monsterFromRecord));

@@ -6,7 +6,7 @@ module manticore.interface {
     var _ = strings._;
 
     function arrayFrom<T>(arrayLike):T[] {
-        return Array.prototype.slice(arrayLike);
+        return Array.prototype.slice.apply(arrayLike);
     }
 
     
@@ -15,11 +15,33 @@ module manticore.interface {
     }
 
 
+    class Event<T> {
+        private handlers: Array<(v:T) => void>;
+        constructor () {
+            this.handlers = [];
+        }
+
+        public trigger(v:T) {
+            for (var i = 0, j = this.handlers.length; i < j; i++) {
+                this.handlers[i](v);
+            }
+        }
+
+        public register(handler:(v:T) => void) {
+            this.handlers.push(handler);
+        }
+    }
+
+
     class NumericField implements IView {
-        private el: HTMLElement;
+        private el: HTMLInputElement;
+
+        public onChange: Event<number>;
 
         constructor (val:number, max?:number) {
-            this.el = DOM.input({
+            this.onChange = new Event<number>();
+
+            this.el = <HTMLInputElement> DOM.input({
                 value: val,
                 onkeydown: (e) => {
                     if ([48,49,50,51,52,53,54,55,56,57, // numbers
@@ -35,6 +57,8 @@ module manticore.interface {
                 onchange: (e) => {
                     var v = Math.max(0, Math.min(+e.target.value, max || Infinity));
                     e.target.value = v;
+
+                    this.onChange.trigger(v);
                 }
                 
             });
@@ -53,11 +77,22 @@ module manticore.interface {
             this.createElements();
         }
 
+        public getPartyLevel () {
+            return +(<HTMLInputElement> this.el.querySelector("div.level input")).value;
+        }
+
+        public getPartySize () {
+            return +(<HTMLInputElement> this.el.querySelector("div.size input")).value;
+        }
+
         public _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
-        private labeledNumericField(label:string, className:string, val:number, max?:number) {
+        private labeledNumericField(label:string, 
+                                    className:string, 
+                                    val:number, 
+                                    max?:number) {
             var input = new NumericField(val, max); 
 
             var div = DOM.div(
@@ -128,10 +163,18 @@ module manticore.interface {
                         if (e.target.nodeName.toLowerCase() !== "li") return;
                         this.toggleState(e.target.getAttribute("data-name"));
                     }
-                }   
+                },
+                this.attributes.map(key => {
+                    var k = key.toString();
+                    return DOM.li({"data-name": k}, [DOM.text(_(k))]);
+                })
             );
             
-            this.el = DOM.div(null, [ul]);
+            var header = DOM.header(null, [
+                DOM.h1(null, [DOM.text(_(this.name))])
+            ]);
+
+            this.el = DOM.div(null, [header, ul]);
         }
     }
 
@@ -139,8 +182,24 @@ module manticore.interface {
     class FiltersView implements IView {
         private el:HTMLElement;
 
+        private sizeView: PropertyFilterView;
+        private kindView: PropertyFilterView;
+        private attributesView: PropertyFilterView;
+
         constructor(bestiary:bestiary.Bestiary) {
+            this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
+            this.kindView = new PropertyFilterView("Role", bestiary.allKinds());
+            this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes());
+
             this.createElements();
+        }
+
+        public getFilters():{[index: string]: string[]} {
+            return {
+                size: this.sizeView.getSelectedAttributes(),
+                kind: this.kindView.getSelectedAttributes(),
+                attributes: this.attributesView.getSelectedAttributes(),
+            }
         }
 
         public _appendTo(element:HTMLElement) {
@@ -152,36 +211,114 @@ module manticore.interface {
                 {
                     "class": "filters"
                 }, 
-                [DOM.header( 
-                    null, 
-                    [
-                        DOM.h1(null, [DOM.text(_("Filter bestiary"))]),
-                        DOM.p(null, [DOM.text(_("[filter summary]"))])
-                    ]
-                )]
+                [
+                    DOM.header( 
+                        null, 
+                        [
+                            DOM.h1(null, [DOM.text(_("Filter bestiary"))]),
+                            DOM.p(null, [DOM.text(_("[filter summary]"))])
+                        ]
+                    )
+                ]
             );
+
+            [this.sizeView, this.kindView, this.attributesView]
+                .forEach(v => v._appendTo(this.el))
+            ;
         }
     }
+
+
+
+    class ResultsView implements IView {
+        private el: HTMLElement;
+        private resultsEl: HTMLElement;
+
+        public onRequestGenerate: Event<void>;
+        
+        constructor () {
+            this.onRequestGenerate = new Event<void>();
+            
+            this.createElements();
+        }
+
+        public _appendTo(el:HTMLElement) {
+            el.appendChild(this.el);
+        }
+
+        public displayResults(allocs: data.Allocation[][]) {
+            DOM.empty(this.resultsEl);
+
+            allocs.forEach(alloc => {
+                this.resultsEl.appendChild(DOM.li(null, [
+                    DOM.text(alloc.toString())
+                ]));
+            });
+        }
+
+        private createElements() {
+            this.el = DOM.div({ 
+                "class": "results"
+            }, [
+                DOM.div(
+                    {
+                        "class": "button",
+                        
+                        onclick: (e) => {
+                            this.onRequestGenerate.trigger(null);
+                        }
+                    },
+                    [
+                        DOM.text(_("generate encounters"))
+                    ])
+            ]);
+
+            this.resultsEl = DOM.ul({}, []);
+
+            this.el.appendChild(this.resultsEl);
+        }
+    }
+
 
 
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
     class UI implements IView {
         private viewContainer: HTMLElement;
+
         private partyView: PartyView;
         private filtersView: FiltersView;
+        private resultsView: ResultsView;
+        
 
-        constructor(public catalog: bestiary.Bestiary, root:HTMLElement) {            
+        constructor(private allocator: data.Allocator, 
+                    private catalog: bestiary.Bestiary, 
+                    root:HTMLElement) {
             this.viewContainer = DOM.div(null);
             this.partyView = new PartyView();
             this.filtersView = new FiltersView(catalog);
+            this.resultsView = new ResultsView();
+
+            this.resultsView.onRequestGenerate.register(_ => {
+                var pred = data.predicateForFilters(this.filtersView.getFilters());
+                var selection = catalog.filteredBestiary(pred);
+                var alloc = allocator(this.partyView.getPartyLevel(),
+                                      this.partyView.getPartySize(),
+                                      selection);
+
+                this.resultsView.displayResults(alloc);
+            });
 
             this._appendTo(root);
+
+            (<any>window).ui = this;
+            (<any>window).bs = catalog;
         }
         
         public _appendTo(element:HTMLElement) {
             this.partyView._appendTo(this.viewContainer);
             this.filtersView._appendTo(this.viewContainer);
+            this.resultsView._appendTo(this.viewContainer);
 
             element.appendChild(this.viewContainer);
         }
@@ -212,7 +349,7 @@ module manticore.interface {
                                allocator) {
         bestiary
             .map<void>((bestiary) => {
-                new UI(bestiary, root);
+                new UI(allocator, bestiary, root);
             })
             .catch((e) => {
                 console.log(e);

@@ -15,7 +15,6 @@ module manticore {
             }
             
             for (var i = 0, j = children.length; i < j; i++) {
-                console.log(el, i, children[i]);
                 el.appendChild(children[i]);
             }
             
@@ -26,6 +25,10 @@ module manticore {
     export var DOM = {
         remove: (n:Node) => {
             if (n.parentNode) n.parentNode.removeChild(n);
+        },
+
+        empty: (el:HTMLElement) => {
+            while (el.children.length) el.removeChild(el.children[0]);
         },
 
         text: (s:string) => document.createTextNode(s),

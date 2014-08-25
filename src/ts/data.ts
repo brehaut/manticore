@@ -20,7 +20,30 @@ module manticore.data {
         }
     }
 
+    // general purpose predicates
+    export interface IPredicate<T> {
+        (v:T): boolean;
+    }
 
+    export function anyPredicate<T>(preds:Array<(v:T)=>boolean>) {
+        return (v:T) => {
+            for (var i = 0, j = preds.length; i < j; i++) {
+                if (preds[i](v)) return true;
+            }
+            return false;
+        };
+    }
+
+    export function allPredicate<T>(preds:Array<(v:T)=>boolean>) {
+        return (v:T) => {
+            for (var i = 0, j = preds.length; i < j; i++) {
+                if (!preds[i](v)) return false;
+            }
+            return true;
+        };
+    }
+    
+    // monster specific predicate functions
     export function sizePredicate(size:string) {
         return (m:Monster) => m.size === size;
     }
@@ -37,6 +60,35 @@ module manticore.data {
             }
             return false;
         }
+    }
+
+
+    export function predicateForFilters(filters:{[index: string]:string[]}) {
+        var predicates:Array<(m:data.Monster) => boolean> = [];
+
+        for (var key in filters) if (filters.hasOwnProperty(key)) {
+            var attributes = filters[key];
+            if (attributes === null || attributes.length == 0) continue;
+
+            if (key === "size") {
+                predicates.push(data.anyPredicate<data.Monster>(
+                    attributes.map(data.sizePredicate)
+                ));
+            } 
+            else if (key === "kind") {
+                predicates.push(data.anyPredicate<data.Monster>(
+                    attributes.map(data.kindPredicate)
+                ));
+            }
+            else if (key === "attributes") {
+                predicates.push(data.hasOneAttributePredicate(attributes));
+            }
+            else {
+                throw new Error("unknown filter type: " + key);
+            }            
+        }
+
+        return allPredicate(predicates);
     }
 
 
