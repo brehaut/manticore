@@ -132,8 +132,12 @@ module manticore.interface {
     class PropertyFilterView implements IView {
         private el:HTMLElement;
 
+        public onChanged: Event<void>;
+
         constructor (private name: string, 
                      private attributes:{toString:()=>string}[]) {
+            this.onChanged = new Event<void>();
+
             this.createElements();
         } 
 
@@ -154,6 +158,8 @@ module manticore.interface {
         private toggleState(attribute:string) {
             var li = <HTMLElement> this.el.querySelector("li[data-name=" + attribute + "]");
             li.classList.toggle("selected");
+
+            this.onChanged.trigger(null);
         }
 
         private createElements() {
@@ -185,15 +191,24 @@ module manticore.interface {
 
     class FiltersView implements IView {
         private el:HTMLElement;
+        private selectionCountEl:HTMLElement;
+
+        public onFilterChanged: Event<string>;
 
         private sizeView: PropertyFilterView;
         private kindView: PropertyFilterView;
         private attributesView: PropertyFilterView;
 
         constructor(bestiary:bestiary.Bestiary) {
+            this.onFilterChanged = new Event<string>();
+
             this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
             this.kindView = new PropertyFilterView("Role", bestiary.allKinds());
             this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes().sort());
+
+            this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
+            this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
+            this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
 
             this.createElements();
         }
@@ -204,6 +219,10 @@ module manticore.interface {
                 kind: this.kindView.getSelectedAttributes(),
                 attributes: this.attributesView.getSelectedAttributes(),
             }
+        }
+
+        public updateSelectedCount(count: number) {
+            this.selectionCountEl.innerText = _("Number of monsters selected: ") + count;
         }
 
         public _appendTo(element:HTMLElement) {
@@ -229,6 +248,10 @@ module manticore.interface {
             [this.sizeView, this.kindView, this.attributesView]
                 .forEach(v => v._appendTo(this.el))
             ;
+
+            this.selectionCountEl = DOM.div({"class": "selection-count"});
+
+            this.el.appendChild(this.selectionCountEl)
         }
     }
 
@@ -362,21 +385,31 @@ module manticore.interface {
             this.partyView = new PartyView();
             this.filtersView = new FiltersView(catalog);
             this.resultsView = new ResultsView();
+            
+            this.bindEvents();
+
+            this._appendTo(root);
+        }
+
+        private getSelection() {
+            var pred = data.predicateForFilters(this.filtersView.getFilters());
+            return this.catalog.filteredBestiary(pred);
+        }
+
+        private bindEvents() {
+            this.filtersView.onFilterChanged.register(_ => {
+                this.filtersView.updateSelectedCount(this.getSelection().length);
+            });
 
             this.resultsView.onRequestGenerate.register(_ => {
-                var pred = data.predicateForFilters(this.filtersView.getFilters());
-                var selection = catalog.filteredBestiary(pred);
-                var alloc = allocator(this.partyView.getPartySize(),               
-                                      this.partyView.getPartyLevel(),
-                                      selection);
+                var selection = this.getSelection();
+
+                var alloc = this.allocator(this.partyView.getPartySize(),               
+                                           this.partyView.getPartyLevel(),
+                                           selection);
 
                 this.resultsView.displayResults(alloc);
             });
-
-            this._appendTo(root);
-
-            (<any>window).ui = this;
-            (<any>window).bs = catalog;
         }
         
         public _appendTo(element:HTMLElement) {

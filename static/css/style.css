@@ -68,7 +68,7 @@ section > header > h1 {
 
 section.party > .field {
     float: left;
-    width: 25%;
+    width: 50%;
 }
 
 section.party > .field > label
@@ -94,6 +94,16 @@ section.filters li {
 
 section.filters li.selected {
     color: black;
+}
+
+section.filters .selection-count {
+    clear: both;
+    width: 50%;
+    margin-top: 3em;
+    padding-top: 1em;
+    border-top: 1px solid #ccc;
+    font-size: 0.9em;
+    color: #666;
 }
 
 .C.attribute-filter {
@@ -221,6 +231,7 @@ section.results .encounters li .allocation .kind .level:before {
         margin-left: auto;
         margin-right: auto;
     }
+
 }
 
 @media screen and (min-width:960px) {
@@ -231,5 +242,10 @@ section.results .encounters li .allocation .kind .level:before {
         max-width: 960px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    section.party > .field {
+        float: left;
+        width: 25%;
     }
 }
