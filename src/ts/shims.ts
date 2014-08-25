@@ -54,6 +54,8 @@ if (typeof Promise.prototype.map == "undefined") {
 }
 
 
+// array polyfils taken from developer.mozilla.org
+
 
 // Production steps of ECMA-262, Edition 5, 15.4.4.19
 // Reference: http://es5.github.com/#x15.4.4.19
@@ -226,3 +228,4 @@ if (!Array.prototype.forEach) {
     // 8. return undefined
   };
 }
+

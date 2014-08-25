@@ -9,7 +9,7 @@ interface PromiseExecutor<T> {
 interface Promise<T> {
     then<NextT>(fulfilled?:(v:T)=>Promise<NextT>, rejected?:(err:any)=>Promise<NextT>):Promise<NextT>;
     // variants of then that support functor map are not provided, instead map here is
-    // and is monkeypatched in in shims.ts
+    // and is monkeypatched in in shims.ts\
     map<NextT>(fn:(v:T) => NextT):Promise<NextT>;
     'catch'(handle:(err:any) => any): any;
 }

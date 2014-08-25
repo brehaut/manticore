@@ -5,14 +5,18 @@
 module manticore.interface {
     var _ = strings._;
 
+    function arrayFrom<T>(arrayLike):T[] {
+        return Array.prototype.slice(arrayLike);
+    }
+
     
     interface IView {
-        appendTo(parent: Element):void;
+        _appendTo(parent: HTMLElement):void;
     }
 
 
     class NumericField implements IView {
-        private el: Element;
+        private el: HTMLElement;
 
         constructor (val:number, max?:number) {
             this.el = DOM.input({
@@ -36,20 +40,20 @@ module manticore.interface {
             });
         }
 
-        appendTo(el) {
+        _appendTo(el) {
             el.appendChild(this.el);
         }
     }
 
  
     class PartyView implements IView {
-        private el:Element;
+        private el:HTMLElement;
 
         constructor () {
             this.createElements();
         }
 
-        public appendTo(element:Element) {
+        public _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
@@ -58,10 +62,10 @@ module manticore.interface {
 
             var div = DOM.div(
                 {"class": "field " + className},
-                DOM.label(null, DOM.text(label))
+                [DOM.label(null, [DOM.text(label)])]
             );
 
-            input.appendTo(div); 
+            input._appendTo(div); 
 
             return div;
         }
@@ -74,30 +78,72 @@ module manticore.interface {
                 {
                     "class": "clearfix party"
                 }, 
-                DOM.header(
-                    null, 
-                    DOM.h1(null, DOM.text(_("Party"))),
-                    DOM.p(null, DOM.text(_("[party summary]")))
-                ),
-                size,
-                level
+                [
+                    DOM.header(
+                        null, 
+                        [
+                            DOM.h1(null, [DOM.text(_("Party"))]),
+                            DOM.p(null, [DOM.text(_("[party summary]"))])
+                        ]
+                    ),
+                    size,
+                    level
+                ]
             );
         }
     }
 
 
-    class FiltersView {
-        private el:Element;
+    class PropertyFilterView implements IView {
+        private el:HTMLElement;
+
+        constructor (private name: string, 
+                     private attributes:{toString:()=>string}[]) {
+            this.createElements();
+        } 
+
+        public _appendTo(parent:HTMLElement) {
+            parent.appendChild(this.el);
+        }
+
+        public getSelectedAttributes() {            
+            var selected = arrayFrom<HTMLElement>(this.el.querySelectorAll("li"))
+                .map<string>((el:HTMLElement) =>
+                    el.classList.contains("selected") ? el.getAttribute("data-name") : null)
+               .filter((attr) => !!attr)
+           ;
+
+           return selected;
+        }
+
+        private toggleState(attribute:string) {
+            var li = <HTMLElement> this.el.querySelector("li[data-name=" + attribute + "]");
+            li.classList.toggle("selected");
+        }
+
+        private createElements() {
+            var ul = DOM.ul(
+                {
+                    onclick: (e) => {
+                        if (e.target.nodeName.toLowerCase() !== "li") return;
+                        this.toggleState(e.target.getAttribute("data-name"));
+                    }
+                }   
+            );
+            
+            this.el = DOM.div(null, [ul]);
+        }
+    }
+
+
+    class FiltersView implements IView {
+        private el:HTMLElement;
 
         constructor(bestiary:bestiary.Bestiary) {
-            console.log(bestiary.allSizes());
-            console.log(bestiary.allKinds());
-            console.log(bestiary.allAttributes());
-
             this.createElements();
         }
 
-        public appendTo(element:Element) {
+        public _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
@@ -106,11 +152,13 @@ module manticore.interface {
                 {
                     "class": "filters"
                 }, 
-                DOM.header( 
+                [DOM.header( 
                     null, 
-                    DOM.h1(null, DOM.text(_("Filter bestiary"))),
-                    DOM.p(null, DOM.text(_("[filter summary]")))
-                )
+                    [
+                        DOM.h1(null, [DOM.text(_("Filter bestiary"))]),
+                        DOM.p(null, [DOM.text(_("[filter summary]"))])
+                    ]
+                )]
             );
         }
     }
@@ -118,20 +166,22 @@ module manticore.interface {
 
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
-    class UI {
-        private viewContainer: Element;
+    class UI implements IView {
+        private viewContainer: HTMLElement;
         private partyView: PartyView;
         private filtersView: FiltersView;
 
-        constructor(public catalog: bestiary.Bestiary) {            
+        constructor(public catalog: bestiary.Bestiary, root:HTMLElement) {            
             this.viewContainer = DOM.div(null);
             this.partyView = new PartyView();
             this.filtersView = new FiltersView(catalog);
+
+            this._appendTo(root);
         }
         
-        public appendTo(element:Element) {
-            this.partyView.appendTo(this.viewContainer);
-            this.filtersView.appendTo(this.viewContainer);
+        public _appendTo(element:HTMLElement) {
+            this.partyView._appendTo(this.viewContainer);
+            this.filtersView._appendTo(this.viewContainer);
 
             element.appendChild(this.viewContainer);
         }
@@ -146,11 +196,11 @@ module manticore.interface {
 
     // show a loading bezel while the json data is loading.
     function loadingUI(root, promise) {
-        var loading = DOM.div(null, DOM.text("Loading..."))
+        var loading = DOM.div(null, [DOM.text("Loading...")])
         root.appendChild(loading);
 
         promise.then((_) => {
-            loading.remove();
+            DOM.remove(loading);
         });
     }
 
@@ -162,7 +212,7 @@ module manticore.interface {
                                allocator) {
         bestiary
             .map<void>((bestiary) => {
-                new UI(bestiary).appendTo(root);
+                new UI(bestiary, root);
             })
             .catch((e) => {
                 console.log(e);
