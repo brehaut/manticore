@@ -55,7 +55,7 @@ body > section {
 }
 
 body > footer {
-    background: rgba(70, 27, 14, 1);
+    background: rgba(40, 15, 7, 1);;
     color: #F2F2EB;
     font-size: 0.9em;
 }
@@ -109,8 +109,11 @@ section > header > p {
 /* party */
 
 section.party > .field {
-    float: left;
     width: 50%;
+}
+
+section.party > .field + .field {
+    margin-top: 1em;
 }
 
 section.party > .field > label
@@ -133,11 +136,27 @@ section.party > .field > input
 /* filters */
 
 section.filters li {
+    position: relative;
     color: rgba(70, 27, 14, 0.4);
     cursor: pointer;
     padding: 0.25em;
+    padding-left: 1.75em;
     margin: 0 -0.25em;
     text-transform: capitalize;
+}
+
+section.filters li:before {
+    position: absolute;
+    display: inline-block;
+    line-height: 0.95em;
+    content: ' ';
+    width: 1em;
+    height: 1em;
+    top: 0.3em;
+    left: 0.25em;
+    background: white;
+    border: 1px solid rgba(70, 27, 14, 0.3);
+    border-radius: 2px;
 }
 
 section.filters li:hover {
@@ -147,6 +166,11 @@ section.filters li:hover {
 
 section.filters li.selected {
     color: rgba(70, 27, 14, 1);
+}
+
+section.filters li.selected:before {
+    content: '■';
+    text-align: center;
 }
 
 section.filters .selection-count {
@@ -334,7 +358,6 @@ section.results .encounters li .allocation .kind .level:before {
     }
 
     section.party > .field {
-        float: left;
         width: 25%;
     }
 }
