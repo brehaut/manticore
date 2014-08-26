@@ -141,6 +141,7 @@ section.filters li {
     cursor: pointer;
     padding: 0.25em;
     padding-left: 1.75em;
+    padding-right: 0.25em;
     margin: 0 -0.25em;
     text-transform: capitalize;
 }
@@ -176,7 +177,7 @@ section.filters li.selected:before {
 section.filters .selection-count {
     clear: both;
     width: 50%;
-    margin-top: 30em;
+    margin-top: 1em;
     padding-top: 1em;
     border-top: 1px solid rgba(70, 27, 14, 0.1);
     font-size: 0.9em;
@@ -326,6 +327,7 @@ section.results .encounters li .allocation .kind .level:before {
         width: 66%;
     }
 
+
     section.results .encounters li .allocation {
         display: inline-block;
         float: left;
@@ -360,4 +362,20 @@ section.results .encounters li .allocation .kind .level:before {
     section.party > .field {
         width: 25%;
     }
+
+
+    .C.attribute-filter {
+        width: 16.6666%;
+    }
+    
+    .C.attribute-filter.-tags {
+        width: 66.666%;
+    }
+
+    .C.attribute-filter.-tags li {
+        float: left;
+        width: 25%;
+        margin: 0;
+    }
+
 }
