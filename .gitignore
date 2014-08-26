@@ -13,3 +13,4 @@ pom.xml
 /.nrepl-port
 out/*
 /static/js/main.js
+/static/js/main.js.map

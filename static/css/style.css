@@ -7,11 +7,12 @@ img {
 }
 
 body {
-    background: #fefefe;
-    color: #222;
+    background: #F2F2EB;
+    color: #461B0E;
     font-family: Helvetica;
-    font-size: 12pt;
+    font-size: 10pt;
     line-height: 1.2;
+    border-top: 10px solid #097E6C;
 }
 
 h1 {
@@ -31,37 +32,79 @@ a {
 /* specifc styling */
 
 body >  header {
-   border-bottom: 8px solid #222;
    margin-top: 3em;
-   margin-bottem: 3em;
 }
 
 body > header h1 {
+    font-size: 1.55em;
+    line-height: 1;
+    margin: 0;
+}
+
+body > header h2 {
     font-size: 1.5em;
+    line-height: 1em;
+    margin: 0;
+    font-weight: normal;
 }
 
 body > section {
-    
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 2em;
 }
 
 body > footer {
+    background: rgba(70, 27, 14, 1);
+    color: #F2F2EB;
     font-size: 0.8;
+}
+
+body > footer > div {
     margin-top: 2em;
-    margin-bottom: 2em;
+    margin-bottom: 0;
+    padding: 3em 0px;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+body > footer p {
+
+}
+
+body > footer a {
+    color: #6DD6C6;
+    border-bottom-color: rgba(255,255,255,0.25);
+}
+
+body > footer a:hover {
+    color: white;
+    border-bottom-color: rgba(255,255,255,0.5);
 }
 
 section + section {
-    border-top: 6px solid #222;
     margin-top: 5em;
 }
 
 section > header {
-    border-bottom: 4px solid #222;
-    margin: 1em 0;
+    border-top: 2px solid #097E6C; /*#461B0E;*/
+    border-bottom: 1px solid rgba(70, 27, 14, 0.1);
+    margin: 1em -10px;
+    padding: 1em 10px 0 10px;
 }
 
 section > header > h1 {
     font-size: 1.25em;
+}
+
+section > header > p {
+    font-size: 0.9em;
+    margin-top: 0.25em;
+    margin-bottom: 1.5em;
+}
+
+#application {
+    padding-top: 1.5em;
 }
 
 /* party */
@@ -83,25 +126,36 @@ section.party > .field > input
  {
     display: inline-block;
     width: 33%;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-radius: 3px;
+    border: 1px solid rgba(70, 27, 14, 0.4);
 }
 
 /* filters */
 
 section.filters li {
-    color: #aaa;
+    color: rgba(70, 27, 14, 0.4);
     cursor: pointer;
+    padding: 0.25em;
+    margin: 0 -0.25em;
+    text-transform: capitalize;
+}
+
+section.filters li:hover {
+    background: rgba(9, 126, 108, 0.11);
+    color: rgba(70, 27, 14, 0.8);
 }
 
 section.filters li.selected {
-    color: black;
+    color: rgba(70, 27, 14, 1);
 }
 
 section.filters .selection-count {
     clear: both;
     width: 50%;
-    margin-top: 3em;
+    margin-top: 30em;
     padding-top: 1em;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid rgba(70, 27, 14, 0.1);
     font-size: 0.9em;
     color: #666;
 }
@@ -113,6 +167,7 @@ section.filters .selection-count {
 
 .C.attribute-filter h2 {
     font-size: 1.1em;
+    font-weight: normal;
 }
 
 .C.attribute-filter ul {
@@ -132,17 +187,19 @@ section.filters .selection-count {
 
 /* results */
 
-section.results .button {
-    border: 1px solid #ddd;
-    background: #eee;
+section.results .button,
+section.results .button:active {
+    border: 1px solid rgba(70, 27, 14, 0.2);
+    background: rgba(70, 27, 14, 0.05);
     border-radius: 3px;
     cursor: pointer;
     display: inline-block;
     padding: 1em;
+    margin-bottom: 2em;
 }
 
 section.results .button:hover {
-    background: #767676;
+    background: #097E6C;
     color: white;
 }
 
@@ -162,7 +219,7 @@ section.results .encounters li + li {
 section.results .encounters li .allocation {
     display: block;
     background: #fafafa;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(70, 27, 14, 0.2);
     height: 3em;
     position: relative;
     margin-top: -1px;
@@ -224,7 +281,7 @@ section.results .encounters li .allocation .kind .level:before {
 @media screen and (min-width:320px) {
     body > header,
     body > section,
-    body > footer,
+    body > footer > div,
     body > #application {
         width: 96.88%;
         margin-left: auto;
@@ -233,6 +290,19 @@ section.results .encounters li .allocation .kind .level:before {
 }
 
 @media screen and (min-width:640px) {
+    body {
+        font-size: 12pt;
+    }
+
+    section > header > p {
+        opacity: 0.8;
+        width: 50%;
+    }
+
+    body > footer p {
+        width: 50%;
+    }
+
     section.results .encounters li .allocation {
         display: inline-block;
         float: left;
@@ -257,9 +327,9 @@ section.results .encounters li .allocation .kind .level:before {
 @media screen and (min-width:960px) {
     body > header,
     body > section,
-    body > footer,
+    body > footer > div,
     body > #application {
-        max-width: 960px;
+        max-width: 950px;
         margin-left: auto;
         margin-right: auto;
     }
