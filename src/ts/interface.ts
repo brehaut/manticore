@@ -389,6 +389,8 @@ module manticore.interface {
             this.filtersView = new FiltersView(catalog);
             this.resultsView = new ResultsView();
             
+            this.filtersView.updateSelectedCount(catalog.monsters.length);
+
             this.bindEvents();
 
             this._appendTo(root);

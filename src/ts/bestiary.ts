@@ -120,12 +120,13 @@ module manticore.bestiary {
     }
 
 
-    function monsterFromRecord(record) {
-        return new data.Monster(record[0], 
-                                record[1],
-                                record[2],
-                                record[3],
-                                record[4]);
+    function monsterFromRecord(book) {
+        return (record:any[]) => new data.Monster(record[0], 
+                                                  record[1],
+                                                  record[2],
+                                                  record[3],
+                                                  record[4],
+                                                  book);
     }
 
 
@@ -269,7 +270,12 @@ module manticore.bestiary {
 
 
     export function createBestiary(dataset) {
-        return new Bestiary(dataset.map(monsterFromRecord));
+        var catalog = [];
+        for (var key in dataset) if (dataset.hasOwnProperty(key)) {
+            catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
+        }
+
+        return new Bestiary(catalog);
     }
 
 }
