@@ -13,6 +13,10 @@ module manticore.interface {
         return text.replace(/[^-a-zA-Z0-9]+/g, "-");
     }
 
+    function template(text:string, fill:{[index:string]:any}) { 
+        return text.replace(/\{([a-zA-Z0-9]+?)\}/g, (_, key:string) => fill[key]);
+    }
+
     
     interface IView {
         _appendTo(parent: HTMLElement):void;
@@ -292,8 +296,25 @@ module manticore.interface {
             el.appendChild(this.el);
         }
 
-        public displayResults(allocs: data.Allocation[][]) {
+        public markResultsAsOutOfDate() {
+            this.resultsEl.classList.add("outofdate");
+        }
+
+        public displayResults(party: data.IParty, allocs: data.Allocation[][]) {
             DOM.empty(this.resultsEl);
+            
+            this.resultsEl.appendChild(
+                DOM.header(
+                    {"class": "results-summary"},
+                    [
+                        DOM.h1(null, [DOM.text(_("Possible encounters"))]),
+                        DOM.p(null, [DOM.text(template(_("{count} encounters for {num} level {level} characters."),
+                                                       {count: allocs.length,
+                                                        num: party.size,
+                                                        level: party.level}))])
+                    ])
+            );
+            this.resultsEl.classList.remove("outofdate");
             
             this.currentIndex = 0;
             this.pendingAllocations = allocs;
@@ -308,7 +329,9 @@ module manticore.interface {
                     DOM.div({"class":"kind"},[
                         DOM.text(_(alloc.monster.kind)),
                         DOM.span({"class":"level"}, 
-                                 [DOM.text(alloc.monster.level.toString())])
+                                 [DOM.text(alloc.monster.level.toString())]),
+                        DOM.span({"class":"book"}, 
+                                 [DOM.text(alloc.monster.book)])
                     ]),
                     DOM.em({"class": "name"}, [
                         DOM.text(_(alloc.monster.name))
@@ -318,7 +341,7 @@ module manticore.interface {
                     ])
                 ]
             );                           
-        }
+        }       
 
         private show100() {
             var window = 100;
@@ -412,6 +435,7 @@ module manticore.interface {
 
         private updateSelectionInfo() {
             this.filtersView.updateSelectedCount(this.getSelection().length);
+            this.resultsView.markResultsAsOutOfDate();
         }
         
         private getSelection() {
@@ -429,7 +453,7 @@ module manticore.interface {
                 var alloc = this.allocator(this.partyView.getPartyInfo(),
                                            selection);
 
-                this.resultsView.displayResults(alloc);
+                this.resultsView.displayResults(this.partyView.getPartyInfo(), alloc);
             });
         }
         

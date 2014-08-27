@@ -14,8 +14,9 @@ module manticore.bestiary {
                     size:string,
                     kind:string,
                     attributes: Array<string>,
+                    book: string,
                     public price:number) { 
-            super(name, level, size, kind, attributes);
+            super(name, level, size, kind, attributes, book);
         }
     }
 
@@ -145,6 +146,7 @@ module manticore.bestiary {
                                  m.size,
                                  m.kind,
                                  m.attributes,
+                                 m.book,
                                  cost * multiplier);
     }
 

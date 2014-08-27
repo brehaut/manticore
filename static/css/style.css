@@ -48,6 +48,7 @@ body > header h2 {
     font-weight: normal;
 }
 
+
 body > section {
     padding-left: 10px;
     padding-right: 10px;
@@ -58,6 +59,7 @@ body > footer {
     background: rgba(40, 15, 7, 1);;
     color: #F2F2EB;
     font-size: 0.9em;
+    margin-top: 3em;
 }
 
 body > footer > div {
@@ -103,7 +105,7 @@ section > header > p {
 }
 
 #application {
-    padding-top: 0.05em;
+    padding-top: 0.1em;
 }
 
 /* party */
@@ -119,15 +121,15 @@ section.party > .field + .field {
 section.party > .field > label
  {
     display: inline-block;
-    width: 66%;
+    width: 70%;
     text-align: right;
-    padding-right: 1em;
+    padding-right: 8.3%;
 }
 
 section.party > .field > input
  {
     display: inline-block;
-    width: 33%;
+    width: 30%;
     padding: 0.5em 0.5em 0.5em 1em;
     border-radius: 3px;
     border: 1px solid rgba(70, 27, 14, 0.4);
@@ -244,6 +246,25 @@ section.results .encounters {
     padding-left: 0;
 }
 
+section.results .encounters.outofdate {
+    opacity: 0.5;
+}
+
+section.results .encounters .results-summary {
+    margin-bottom: 2em;
+    padding-left: 10px;
+}
+
+section.results .encounters .results-summary h1 {
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+section.results .encounters .results-summary p {
+    font-size: 1em;
+    margin: 0;
+}
+
 section.results .encounters li + li {
     margin-top: 2em;
 }
@@ -261,13 +282,11 @@ section.results .encounters li .allocation {
 section.results .encounters li .allocation.large {
     height: 4em;
     padding: 0.75em 0.5em;
-    margin-top: -0.5em;
 }
 
 section.results .encounters li .allocation.huge {
     height: 5em;
     padding: 1em 0.5em;
-    margin-top: -1em;
 }
 
 
@@ -292,6 +311,8 @@ section.results .encounters li .allocation .number {
     float: right;
     font-weight: bold;
     margin-left: 1em;
+    font-size: 1.2em;
+    margin-top:-0.15em;
 }
 
 section.results .encounters li .allocation .kind {
@@ -303,7 +324,15 @@ section.results .encounters li .allocation .kind {
 }
 
 section.results .encounters li .allocation .kind .level {
+    opacity: 0.9;
+    padding-left: 0.5em;
+}
+
+section.results .encounters li .allocation .kind .book {
     float: right;
+    margin-left: 2em;
+    font-style: normal;
+    opacity: 0.5;
 }
 
 section.results .encounters li .allocation .kind .level:before {
@@ -331,10 +360,6 @@ section.results .encounters li .allocation .kind .level:before {
         width: 50%;
     }
 
-    body > footer p {
-        width: 66%;
-    }
-
 
     section.results .encounters li .allocation {
         display: inline-block;
@@ -343,6 +368,13 @@ section.results .encounters li .allocation .kind .level:before {
         margin-right: -1px;
     }
 
+    section.results .encounters li .allocation.large {
+        margin-top: -0.5em;
+    }
+
+    section.results .encounters li .allocation.huge {
+        margin-top: -1em;
+    }
 
     section.results .encounters li .allocation:first-child {
         border-radius: 5px 0 0 5px;
@@ -355,6 +387,14 @@ section.results .encounters li .allocation .kind .level:before {
     section.results .encounters li .allocation:first-child:last-child {
         border-radius: 5px;
     }
+}
+
+@media screen and (min-width:740px) {
+    body > header > p,
+    body > footer p {
+        width: 66.666%;
+    }
+
 }
 
 @media screen and (min-width:960px) {
