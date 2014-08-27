@@ -130,6 +130,10 @@ module manticore.bestiary {
     }
 
 
+    function isViable(partyLevel:number, monster:data.Monster): boolean {
+        return !!relativeCost(relativeLevel(partyLevel, monster.level));
+    }
+
     function priceMonster(partyLevel:number, m:data.Monster) {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
         var multiplier = scaleFactor(m.scale, partyLevel);
@@ -215,13 +219,12 @@ module manticore.bestiary {
 
 
     // public API:
-    export function allocationsForParty(characters:number,
-                                        partyLevel:number, 
+    export function allocationsForParty(party:data.IParty, 
                                         selectedMonsters:Array<data.Monster>) {
 
-        return allocateMonsters(priceParty(characters),
+        return allocateMonsters(priceParty(party.size),
                                 selectedMonsters
-                                .map((m) => priceMonster(partyLevel, m))
+                                .map((m) => priceMonster(party.level, m))
                                 .filter((m) => m !== null)
                                );
     }
@@ -256,8 +259,12 @@ module manticore.bestiary {
             return attributes;
         }
 
-        public filteredBestiary(filter: data.IPredicate<data.Monster>) {
-            return this.monsters.filter(filter);
+        public filteredBestiary(party: data.IParty,
+                                filter: data.IPredicate<data.Monster>) {
+            return this.monsters
+                .filter(m => isViable(party.level, m))
+                .filter(filter)
+            ;
         }
 
         private distinctValues<T>(accessor:(m:data.Monster)=>T):T[] {

@@ -17,7 +17,8 @@ module manticore.interface.strings {
         "[results summary]": "Encounters that fit these criteria",
 
         "generate encounters": "Generate encounters",
-        "more": "More…"
+        "more": "More…",
+        "Number selected ": "Number of viable monsters selected: "
     }
     
 

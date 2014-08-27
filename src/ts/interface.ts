@@ -40,14 +40,14 @@ module manticore.interface {
     class NumericField implements IView {
         private el: HTMLInputElement;
 
-        public onChange: Event<number>;
+        public onChanged: Event<number>;
 
         constructor (val:number, max?:number) {
-            this.onChange = new Event<number>();
+            this.onChanged = new Event<number>();
 
             this.el = <HTMLInputElement> DOM.input({
                 type: "number",
-                min: 0,
+                min: 1,
                 max: max,
                 value: val,
                 onkeydown: (e) => {
@@ -65,7 +65,7 @@ module manticore.interface {
                     var v = Math.max(0, Math.min(+e.target.value, max || Infinity));
                     e.target.value = v;
 
-                    this.onChange.trigger(v);
+                    this.onChanged.trigger(v);
                 }
                 
             });
@@ -80,16 +80,18 @@ module manticore.interface {
     class PartyView implements IView {
         private el:HTMLElement;
 
+        public onChanged: Event<data.IParty>;
+
         constructor () {
+            this.onChanged = new Event<data.IParty>();
             this.createElements();
         }
 
-        public getPartyLevel () {
-            return +(<HTMLInputElement> this.el.querySelector("div.level input")).value;
-        }
-
-        public getPartySize () {
-            return +(<HTMLInputElement> this.el.querySelector("div.size input")).value;
+        public getPartyInfo():data.IParty {
+            return {
+                level: +(<HTMLInputElement> this.el.querySelector("div.level input")).value,
+                size: +(<HTMLInputElement> this.el.querySelector("div.size input")).value
+            };
         }
 
         public _appendTo(element:HTMLElement) {
@@ -101,6 +103,7 @@ module manticore.interface {
                                     val:number, 
                                     max?:number) {
             var input = new NumericField(val, max); 
+            input.onChanged.register(_ => this.onChanged.trigger(this.getPartyInfo()));
 
             var div = DOM.div(
                 {"class": "field " + className},
@@ -234,7 +237,7 @@ module manticore.interface {
         }
 
         public updateSelectedCount(count: number) {
-            this.selectionCountEl.innerText = _("Number of monsters selected: ") + count;
+            this.selectionCountEl.innerText = _("Number selected ") + count;
         }
 
         public _appendTo(element:HTMLElement) {
@@ -403,23 +406,27 @@ module manticore.interface {
             this.bindEvents();
 
             this._appendTo(root);
+
+            this.updateSelectionInfo();
         }
 
+        private updateSelectionInfo() {
+            this.filtersView.updateSelectedCount(this.getSelection().length);
+        }
+        
         private getSelection() {
             var pred = data.predicateForFilters(this.filtersView.getFilters());
-            return this.catalog.filteredBestiary(pred);
+            return this.catalog.filteredBestiary(this.partyView.getPartyInfo(), pred);
         }
 
         private bindEvents() {
-            this.filtersView.onFilterChanged.register(_ => {
-                this.filtersView.updateSelectedCount(this.getSelection().length);
-            });
+            this.filtersView.onFilterChanged.register(_ => this.updateSelectionInfo());
+            this.partyView.onChanged.register(_ => this.updateSelectionInfo());
 
             this.resultsView.onRequestGenerate.register(_ => {
                 var selection = this.getSelection();
 
-                var alloc = this.allocator(this.partyView.getPartySize(),               
-                                           this.partyView.getPartyLevel(),
+                var alloc = this.allocator(this.partyView.getPartyInfo(),
                                            selection);
 
                 this.resultsView.displayResults(alloc);
@@ -430,7 +437,7 @@ module manticore.interface {
             this.partyView._appendTo(this.viewContainer);
             this.filtersView._appendTo(this.viewContainer);
             this.resultsView._appendTo(this.viewContainer);
-
+            
             element.appendChild(this.viewContainer);
         }
     }

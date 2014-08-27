@@ -35,7 +35,7 @@ module manticore.data {
 
 
     export interface Allocator {
-        (partySize: number, partyLevel: number, monsters: Array<Monster>): Array<Array<Allocation>>;
+        (party: IParty, monsters: Array<Monster>): Array<Array<Allocation>>;
     }
 
 
