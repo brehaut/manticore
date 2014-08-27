@@ -141,8 +141,6 @@ section.filters li {
     cursor: pointer;
     padding: 0.25em;
     padding-left: 1.75em;
-    padding-right: 0.25em;
-    margin: 0 -0.25em;
     text-transform: capitalize;
 }
 
@@ -197,6 +195,16 @@ section.filters .selection-count {
 .C.attribute-filter ul {
     list-style: none;
     padding-left: 0;
+}
+
+.C.attribute-filter.-sources {
+    width: 100%;
+}
+
+.C.attribute-filter.-sources li {
+    float: left;
+    width: 25%;
+    margin: 0;
 }
 
 .C.attribute-filter.-tags {
@@ -368,6 +376,11 @@ section.results .encounters li .allocation .kind .level:before {
         width: 16.6666%;
     }
     
+
+    .C.attribute-filter.-sources li {
+        width: 16.6666%;
+    }
+
     .C.attribute-filter.-tags {
         width: 66.666%;
     }

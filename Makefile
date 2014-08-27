@@ -1,3 +1,6 @@
+build_stock: build
+	rm target/static/data/custom.json
+
 build: clean bundle_contrib_js
 	mkdir -p target/static/{css,js,data}
 	cp static/data/* target/static/data/

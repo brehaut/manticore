@@ -232,6 +232,10 @@ module manticore.bestiary {
 
         }
         
+        public allSources() {
+            return this.distinctValues((m) => m.book);
+        }
+
         public allSizes() {
             return this.distinctValues((m) => m.size);
         }

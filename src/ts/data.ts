@@ -21,6 +21,24 @@ module manticore.data {
         }
     }
 
+
+    export interface IParty {
+        size: number;
+        level: number;
+    }
+
+
+    export interface Allocation {
+        monster:Monster;
+        num:number;
+    }
+
+
+    export interface Allocator {
+        (partySize: number, partyLevel: number, monsters: Array<Monster>): Array<Array<Allocation>>;
+    }
+
+
     // general purpose predicates
     export interface IPredicate<T> {
         (v:T): boolean;
@@ -53,6 +71,10 @@ module manticore.data {
         return (m:Monster) => m.kind === kind;
     }
 
+    function sourcePredicate(source:string) {
+        return (m:Monster) => m.book === source;
+    }
+
     function hasOneAttributePredicate(attributes:string[]) {
         return (m:Monster) => {
             var mattrs = m.attributes;
@@ -81,6 +103,11 @@ module manticore.data {
                     attributes.map(kindPredicate)
                 ));
             }
+            else if (key === "sources") {
+                predicates.push(anyPredicate<data.Monster>(
+                    attributes.map(sourcePredicate)
+                ));
+            }
             else if (key === "attributes") {
                 predicates.push(hasOneAttributePredicate(attributes));
             }
@@ -93,14 +120,6 @@ module manticore.data {
     }
 
 
-    export interface Allocation {
-        monster:Monster;
-        num:number;
-    }
 
-
-    export interface Allocator {
-        (partySize: number, partyLevel: number, monsters: Array<Monster>): Array<Array<Allocation>>;
-    }
 
 }

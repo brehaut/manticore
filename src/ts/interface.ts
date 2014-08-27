@@ -9,6 +9,10 @@ module manticore.interface {
         return Array.prototype.slice.apply(arrayLike);
     }
 
+    function cssClassName(text:string):string {
+        return text.replace(/[^-a-zA-Z0-9]+/g, "-");
+    }
+
     
     interface IView {
         _appendTo(parent: HTMLElement):void;
@@ -158,8 +162,8 @@ module manticore.interface {
            return selected;
         }
 
-        private toggleState(attribute:string) {
-            var li = <HTMLElement> this.el.querySelector("li[data-name=" + attribute + "]");
+        private toggleState(attribute:string) { 
+            var li = <HTMLElement> this.el.querySelector('li[data-name="' + attribute + '"]');
             li.classList.toggle("selected");
 
             this.onChanged.trigger(null);
@@ -198,6 +202,7 @@ module manticore.interface {
 
         public onFilterChanged: Event<string>;
 
+        private sourcesView: PropertyFilterView;
         private sizeView: PropertyFilterView;
         private kindView: PropertyFilterView;
         private attributesView: PropertyFilterView;
@@ -205,10 +210,13 @@ module manticore.interface {
         constructor(bestiary:bestiary.Bestiary) {
             this.onFilterChanged = new Event<string>();
 
+            this.sourcesView = new PropertyFilterView("Sources", bestiary.allSources());
+            
             this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
             this.kindView = new PropertyFilterView("Role", bestiary.allKinds());
             this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes().sort());
 
+            this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
             this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
             this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
             this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
@@ -218,6 +226,7 @@ module manticore.interface {
 
         public getFilters():{[index: string]: string[]} {
             return {
+                sources: this.sourcesView.getSelectedAttributes(),
                 size: this.sizeView.getSelectedAttributes(),
                 kind: this.kindView.getSelectedAttributes(),
                 attributes: this.attributesView.getSelectedAttributes(),
@@ -248,7 +257,7 @@ module manticore.interface {
                 ]
             );
 
-            [this.sizeView, this.kindView, this.attributesView]
+            [this.sourcesView, this.sizeView, this.kindView, this.attributesView]
                 .forEach(v => v._appendTo(this.el))
             ;
 
