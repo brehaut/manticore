@@ -16,6 +16,8 @@ interface Promise<T> {
 
 interface PromiseStatic {
     new<T> (ex:PromiseExecutor<T>): Promise<T>;
+    all<T>(ps:Promise<T>[]): Promise<T[]>;
+    of<T>(v:T): Promise<T>;
 }
 
 declare var Promise: PromiseStatic;

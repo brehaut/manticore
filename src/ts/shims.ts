@@ -47,11 +47,18 @@ function awaitAjax(url:string, method?:string):Promise<string> {
 // implement functors on promises so that .then isnt so gross.
 // 
 // exchanging one evil (duckwrapping) for another (monkeypatching a core type)
-if (typeof Promise.prototype.map == "undefined") {
-    Promise.prototype.map = function (fn) {
-        return this.then((data) => new Promise((resolve, _) => resolve(fn(data))));
+if (typeof Promise.of == "undefined") {
+    Promise.of = function (v) {
+        return new Promise((resolve, _) => resolve(v));
     };
 }
+
+if (typeof Promise.prototype.map == "undefined") {
+    Promise.prototype.map = function (fn) {
+        return this.then((data) => Promise.of(fn(data)));
+    };
+}
+
 
 
 // array polyfils taken from developer.mozilla.org
