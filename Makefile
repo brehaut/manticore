@@ -9,8 +9,13 @@ build: clean bundle_contrib_js
 	cp index.html target/
 	tsc src/ts/manticore.ts --removeComments --out target/static/js/main.js
 
+release: build_stock
+	echo '{"campaign": [\n    ["Example monster", 1, "normal", "troop", ["test", "tags"]]\n]}\n' > target/static/data/custom.json
+	zip manticore-release.zip -r target	
+
 clean:
 	rm -rf target
+	rm static/js/*
 
 bundle_contrib_js:
 	cat src/js/contrib/* > static/js/contrib.js

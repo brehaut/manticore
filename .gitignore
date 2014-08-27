@@ -15,3 +15,4 @@ out/*
 /static/js/main.js
 /static/js/main.js.map
 /static/data/custom.json
+/manticore-release.zip
