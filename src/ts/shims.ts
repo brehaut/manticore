@@ -35,8 +35,12 @@ function awaitAjax(url:string, method?:string):Promise<string> {
             cleanup();            
         };
 
-        req.onerror = reject;
-        req.ontimeout = reject;
+        if (req.onerror) {
+           req.onerror = reject;
+        }
+        if (req.ontimeout) {
+            req.ontimeout = reject;
+        }
 
         req.open(method || "GET", url, true);
         req.send();

@@ -181,9 +181,16 @@ section.filters li.selected {
     color: rgba(70, 27, 14, 1);
 }
 
-section.filters li.selected:before {
-    content: '■';
-    text-align: center;
+section.filters li.selected:after {
+    position: absolute;
+    display: inline-block;
+    content: ' ';
+    width: 0.52em;
+    height: 0.56em;
+    top: 0.612em;
+    left: 0.61em;
+    background: #444;
+    border-radius: 2px;
 }
 
 section.filters .selection-count {

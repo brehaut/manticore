@@ -352,7 +352,6 @@ module manticore.interface {
             var allocs = this.pendingAllocations.slice(this.currentIndex, this.currentIndex + window);
 
             allocs.forEach(alloc => {
-                if (alloc.length === 0) console.log(">>>", alloc);
                 this.resultsEl.appendChild(DOM.li(
                     {"class": "clearfix"}, 
                     alloc.map(al => this.allocationMarkup(al))
@@ -507,5 +506,5 @@ module manticore.interface {
 
         loadingUI(root, bestiary);
 
-    }
+    } 
 }
