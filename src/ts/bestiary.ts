@@ -132,13 +132,21 @@ module manticore.bestiary {
 
 
     function isViable(partyLevel:number, monster:data.Monster): boolean {
-        return !!relativeCost(relativeLevel(partyLevel, monster.level));
+        var levelDiff = relativeLevel(partyLevel, monster.level)
+
+        // monsters that are huge and 4 levels above the PCs are specifically
+        // omitted from the table.
+        if (levelDiff === 4 && monster.scale === "huge") return false;
+        return !!relativeCost(levelDiff);
     }
+
 
     function priceMonster(partyLevel:number, m:data.Monster) {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
         var multiplier = scaleFactor(m.scale, partyLevel);
 
+        // some monster are not viable; ideally they should already be
+        // filtered out but just incase.
         if (cost === null) return null;
 
         return new PricedMonster(m.name,
@@ -149,6 +157,7 @@ module manticore.bestiary {
                                  m.book,
                                  cost * multiplier);
     }
+
 
     function priceParty(characters:number) {
         return characters * scaleFactor("normal", 1) * relativeCost(0);
@@ -184,7 +193,7 @@ module manticore.bestiary {
             // we check points first, so that we can add the allocation to 
             // the list even if we have run out of monsters
             if (remainingPoints < allowedUnspent) {
-                allAllocations[allAllocations.length] = acc;
+                if (acc.length > 0) allAllocations[allAllocations.length] = acc;
                 return;
             }
 

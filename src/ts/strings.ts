@@ -13,7 +13,7 @@ module manticore.interface.strings {
         "Party size": "Party size",
         "Party level": "Party level",
         "[party summary]": "Set the size and level of the party. This is used to determine the cost of individual monsters, and set the size of the encounter.",
-        "[filter summary]": "Define rules for how monsters are selected from the bestiary.",
+        "[filter summary]": "Filters are used to determine the set of available monsters to use when generating encounters. The more monsters, the more potential encounters. You do not need to select filters in every category. The number of viable monsters takes into account the filters and the party level (above).",
         "[results summary]": "Encounters that fit these criteria",
 
         "generate encounters": "Generate encounters",

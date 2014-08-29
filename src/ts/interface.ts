@@ -303,17 +303,7 @@ module manticore.interface {
         public displayResults(party: data.IParty, allocs: data.Allocation[][]) {
             DOM.empty(this.resultsEl);
             
-            this.resultsEl.appendChild(
-                DOM.header(
-                    {"class": "results-summary"},
-                    [
-                        DOM.h1(null, [DOM.text(_("Possible encounters"))]),
-                        DOM.p(null, [DOM.text(template(_("{count} encounters for {num} level {level} characters."),
-                                                       {count: allocs.length,
-                                                        num: party.size,
-                                                        level: party.level}))])
-                    ])
-            );
+            this.resultsEl.appendChild(this.resultsSummary(party, allocs));
             this.resultsEl.classList.remove("outofdate");
             
             this.currentIndex = 0;
@@ -343,12 +333,26 @@ module manticore.interface {
             );                           
         }       
 
+        private resultsSummary(party: data.IParty, allocs: data.Allocation[][]) {
+            return DOM.header(
+                {"class": "results-summary"},
+                [
+                    DOM.h1(null, [DOM.text(_("Possible encounters"))]),
+                    DOM.p(null, [DOM.text(template(_("{count} encounters for {num} level {level} characters."),
+                                                   {count: allocs.length,
+                                                    num: party.size,
+                                                    level: party.level}))])
+                ]
+            );
+        }
+
         private show100() {
-            var window = 100;
+            var window = 100;           
 
             var allocs = this.pendingAllocations.slice(this.currentIndex, this.currentIndex + window);
 
             allocs.forEach(alloc => {
+                if (alloc.length === 0) console.log(">>>", alloc);
                 this.resultsEl.appendChild(DOM.li(
                     {"class": "clearfix"}, 
                     alloc.map(al => this.allocationMarkup(al))
@@ -409,6 +413,7 @@ module manticore.interface {
 
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
+    // UI also acts as the primary view controller for the application    
     class UI implements IView {
         private viewContainer: HTMLElement;
 
@@ -469,13 +474,13 @@ module manticore.interface {
 
     // testing utility
     function awaitDelay(t) {
-        return new Promise<any>((resolve, _) => setTimeout(resolve, t));
+        return (v) => new Promise<any>((resolve, _) => setTimeout(() => resolve(v), t));
     }
 
 
     // show a loading bezel while the json data is loading.
     function loadingUI(root, promise) {
-        var loading = DOM.div(null, [DOM.text("Loading...")])
+        var loading = DOM.div({"class": "loading"}, [DOM.text(_("Loading..."))])
         root.appendChild(loading);
 
         promise.then((_) => {
@@ -489,6 +494,8 @@ module manticore.interface {
     export function initialize(root, 
                                bestiary:Promise<bestiary.Bestiary>,
                                allocator) {
+        //bestiary = bestiary.then(awaitDelay(2000));
+
         bestiary
             .map<void>((bestiary) => {
                 new UI(allocator, bestiary, root);
