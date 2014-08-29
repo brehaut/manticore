@@ -131,13 +131,23 @@ module manticore.bestiary {
     }
 
 
-    function isViable(partyLevel:number, monster:data.Monster): boolean {
-        var levelDiff = relativeLevel(partyLevel, monster.level)
+    // this predicate repeats most of priceMonster in a different way
+    // TODO: refactor
+    function isViable(party:data.IParty, monster:data.Monster): boolean {
+        var levelDiff = relativeLevel(party.level, monster.level);
 
         // monsters that are huge and 4 levels above the PCs are specifically
         // omitted from the table.
         if (levelDiff === 4 && monster.scale === "huge") return false;
-        return !!relativeCost(levelDiff);
+        
+        var cost = relativeCost(levelDiff);
+        if (cost === null) return false;
+
+        // if the monsters cost is greater than the whole party's total price
+        // then it is not viable.
+        if (cost * scaleFactor(monster.scale, party.level) > priceParty(party.size)) return false;
+        
+        return true;
     }
 
 
@@ -273,7 +283,7 @@ module manticore.bestiary {
         public filteredBestiary(party: data.IParty,
                                 filter: data.IPredicate<data.Monster>) {
             return this.monsters
-                .filter(m => isViable(party.level, m))
+                .filter(m => isViable(party, m))
                 .filter(filter)
             ;
         }
