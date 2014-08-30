@@ -2,10 +2,11 @@ build_stock: build
 	rm target/static/data/custom.json
 
 build: clean bundle_contrib_js
-	mkdir -p target/static/{css,js,data}
+	mkdir -p target/static/{css,js,data,images}
 	cp static/data/* target/static/data/
 	cp static/css/* target/static/css/
 	cp static/js/* target/static/js/
+	cp static/images/* target/static/images/
 	cp index.html target/
 	tsc src/ts/manticore.ts --removeComments --out target/static/js/main.js
 

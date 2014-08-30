@@ -33,6 +33,7 @@ a {
 
 body >  header {
    margin-top: 3em;
+   position: relative;
 }
 
 body > header h1 {
@@ -46,6 +47,10 @@ body > header h2 {
     line-height: 1em;
     margin: 0;
     font-weight: normal;
+}
+
+body > header > .logo {
+    display: none;
 }
 
 
@@ -416,6 +421,14 @@ section.results .encounters li .allocation .kind .level:before {
         width: 66.666%;
     }
 
+    body > header > .logo {
+        display: block;
+        height: 100%;
+        max-height: 180px;
+        position: absolute;
+        bottom: -20px; right: 0;
+        -webkit-transform: scale(-1, 1);
+    }
 }
 
 @media screen and (min-width:960px) {
