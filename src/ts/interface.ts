@@ -478,7 +478,7 @@ module manticore.interface {
 
 
     // show a loading bezel while the json data is loading.
-    function loadingUI(root, promise) {
+    function loadingUI(root, promise) { 
         var loading = DOM.div({"class": "loading"}, [DOM.text(_("Loading..."))])
         root.appendChild(loading);
 

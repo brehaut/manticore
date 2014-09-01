@@ -1,28 +1,61 @@
-build_stock: build
-	rm target/static/data/custom.json
+SRC_ROOT = src
+STATIC_ROOT = static
+TARGET_ROOT = target
 
-build: clean bundle_contrib_js
-	mkdir -p target/static/{css,js,data,images}
-	cp static/data/* target/static/data/
-	cp static/css/* target/static/css/
-	cp static/js/* target/static/js/
-	cp static/images/* target/static/images/
-	cp index.html target/
-	tsc src/ts/manticore.ts --removeComments --out target/static/js/main.js
+SCRIPTS = $(STATIC_ROOT)/js
+STYLES = $(STATIC_ROOT)/css
+IMAGES = $(STATIC_ROOT)/images
+DATA = $(STATIC_ROOT)/data
 
-release: build_stock
-	echo '{"campaign": [\n    ["Example monster", 1, "normal", "troop", ["test", "tags"]]\n]}\n' > target/static/data/custom.json
-	zip manticore-release.zip -r target	
+MANIFEST = manifest.appcache
+
+TS_APP_SRC = $(SRC_ROOT)/ts/manticore.ts
+TS_APP_OUT = $(SCRIPTS)/main.js
+
+default: build_stock
 
 clean:
-	rm -rf target
+	rm -rf $(TARGET_ROOT)
 	rm static/js/*
 
 bundle_contrib_js:
-	cat src/js/contrib/* > static/js/contrib.js
+	cat src/js/contrib/* > $(SCRIPTS)/contrib.js
 
-watch: bundle_contrib_js
-	tsc -w src/ts/manticore.ts --sourcemap --out static/js/main.js
+manifest:
+	echo "CACHE MANIFEST\n\n# Generated:" > $(MANIFEST)
+	date -u +#\ %Y%m%d:%H%M%S >> $(MANIFEST)
+	echo >> $(MANIFEST)$
+
+	cat $(SRC_ROOT)/manifest-static >> $(MANIFEST);
+	for file in $(SCRIPTS)/*; do echo $$file >> $(MANIFEST); done
+	echo $(TS_APP_OUT) >> $(MANIFEST)
+	for file in $(STYLES)/*; do echo $$file >> $(MANIFEST); done
+	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
+	for file in $(IMAGES)/*; do echo $$file >> $(MANIFEST); done
+
+
+build_ts:
+	tsc $(SRC_ROOT)/ts/manticore.ts --removeComments --out $(TARGET_ROOT)/$(STATIC_ROOT)/js/main.js
+
+
+bundle_all: clean bundle_contrib_js build_ts manifest
+	mkdir -p $(TARGET_ROOT)/$(STATIC_ROOT)/{css,js,data,images}
+	cp $(DATA)/* $(TARGET_ROOT)/$(DATA)/
+	cp $(STYLES)/* $(TARGET_ROOT)/$(STYLES)/
+	cp $(SCRIPTS)/* $(TARGET_ROOT)/$(SCRIPTS)/
+	cp $(IMAGES)/* $(TARGET_ROOT)/$(IMAGES)/
+	cp $(MANIFEST) $(TARGET_ROOT)/
+	cp index.html $(TARGET_ROOT)/	
+
+build_stock: bundle_all manifest
+	rm target/static/data/custom.json
+
+release: clean build_stock manifest 
+	echo '{"campaign": [\n    ["Example monster", 1, "normal", "troop", ["test", "tags"]]\n]}\n' > $(TARGET_ROOT)/$(DATA)/custom.json
+	zip manticore-release.zip -r target	
+
+watch: bundle_contrib_js manifest
+	tsc -w $(TS_APP_SRC) --sourcemap --out static/js/main.js
 
 server:
 	python -m SimpleHTTPServer

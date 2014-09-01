@@ -16,3 +16,4 @@ out/*
 /static/js/main.js.map
 /static/data/custom.json
 /manticore-release.zip
+/manifest.appcache

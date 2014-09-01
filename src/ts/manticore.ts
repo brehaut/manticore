@@ -49,4 +49,14 @@ module manticore {
             bestiary.allocationsForParty
         );
     });
+
+    // appcache management
+    function updateReady (e?) {
+        applicationCache.swapCache();
+    }
+    
+    applicationCache.addEventListener("updateready", updateReady);
+    if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
+        updateReady();
+    }
 }
