@@ -1,3 +1,7 @@
+# programs
+TSC = node_modules/typescript/bin/tsc
+
+# files and paths
 SRC_ROOT = src
 STATIC_ROOT = static
 TARGET_ROOT = target
@@ -30,12 +34,13 @@ manifest:
 	for file in $(SCRIPTS)/*; do echo $$file >> $(MANIFEST); done
 	echo $(TS_APP_OUT) >> $(MANIFEST)
 	for file in $(STYLES)/*; do echo $$file >> $(MANIFEST); done
+	for file in $(STYLES)/alegreya/*; do echo $$file >> $(MANIFEST); done
 	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
 	for file in $(IMAGES)/*; do echo $$file >> $(MANIFEST); done
 
 
 build_ts:
-	tsc $(SRC_ROOT)/ts/manticore.ts --removeComments --out $(TARGET_ROOT)/$(STATIC_ROOT)/js/main.js
+	$(TSC) $(SRC_ROOT)/ts/manticore.ts --removeComments --out $(TARGET_ROOT)/$(STATIC_ROOT)/js/main.js
 
 
 bundle_all: clean bundle_contrib_js build_ts manifest
@@ -54,8 +59,13 @@ release: clean build_stock manifest
 	echo '{"campaign": [\n    ["Example monster", 1, "normal", "troop", ["test", "tags"]]\n]}\n' > $(TARGET_ROOT)/$(DATA)/custom.json
 	zip manticore-release.zip -r target	
 
+# development time utility targets
+
+deps:
+	npm install typescript
+
 watch: bundle_contrib_js manifest
-	tsc -w $(TS_APP_SRC) --sourcemap --out static/js/main.js
+	$(TSC) -w $(TS_APP_SRC) --sourcemap --out static/js/main.js
 
 server:
 	python -m SimpleHTTPServer

@@ -17,3 +17,5 @@ out/*
 /static/data/custom.json
 /manticore-release.zip
 /manifest.appcache
+*.DS_Store
+/node_modules/*

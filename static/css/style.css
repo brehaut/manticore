@@ -1,3 +1,40 @@
+@font-face {
+    font-family: 'alegreya';
+    src: url('alegreya/alegreya-regular-webfont.woff') format('woff'),
+         url('alegreya/alegreya-regular-webfont.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('alegreya/alegreya-italic-webfont.woff') format('woff'),
+         url('alegreya/alegreya-italic-webfont.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('alegreya/alegreya-bold-webfont.woff') format('woff'),
+         url('alegreya/alegreya-bold-webfont.ttf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('alegreya/alegreya-bolditalic-webfont.woff') format('woff'),
+         url('alegreya/alegreya-bolditalic-webfont.ttf') format('opentype');
+    font-weight: bold;
+    font-style: italic;
+
+}
+
+
+
 * {
     -moz-box-sizing: border-box; -webkit-box-sizing: border-box;  box-sizing: border-box;
 }
