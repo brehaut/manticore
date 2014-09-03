@@ -33,7 +33,7 @@ manifest:
 	cat $(SRC_ROOT)/manifest-static >> $(MANIFEST);
 	for file in $(SCRIPTS)/*; do echo $$file >> $(MANIFEST); done
 	echo $(TS_APP_OUT) >> $(MANIFEST)
-	for file in $(STYLES)/*; do echo $$file >> $(MANIFEST); done
+	for file in $(STYLES)/*.css; do echo $$file >> $(MANIFEST); done
 	for file in $(STYLES)/alegreya/*; do echo $$file >> $(MANIFEST); done
 	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
 	for file in $(IMAGES)/*; do echo $$file >> $(MANIFEST); done
@@ -46,7 +46,7 @@ build_ts:
 bundle_all: clean bundle_contrib_js build_ts manifest
 	mkdir -p $(TARGET_ROOT)/$(STATIC_ROOT)/{css,js,data,images}
 	cp $(DATA)/* $(TARGET_ROOT)/$(DATA)/
-	cp $(STYLES)/* $(TARGET_ROOT)/$(STYLES)/
+	cp -r $(STYLES)/* $(TARGET_ROOT)/$(STYLES)/
 	cp $(SCRIPTS)/* $(TARGET_ROOT)/$(SCRIPTS)/
 	cp $(IMAGES)/* $(TARGET_ROOT)/$(IMAGES)/
 	cp $(MANIFEST) $(TARGET_ROOT)/
