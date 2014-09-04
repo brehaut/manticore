@@ -40,9 +40,12 @@ module manticore.appcache {
     
     export function handleReloads () {        
         applicationCache.addEventListener("updateready", updateReady);
-
-        applicationCache.update();
-       
+        
+        try {
+            applicationCache.update();
+        }
+        catch (e) {}
+        
         updateReady();
     }
 } 
