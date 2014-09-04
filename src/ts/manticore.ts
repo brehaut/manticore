@@ -3,6 +3,7 @@
 /// <reference path="data.ts" />
 /// <reference path="bestiary.ts" />
 /// <reference path="interface.ts" />
+/// <reference path="appcache.ts" />
 
 module manticore {
     function mergeWith<T>(merge?:(a:T, b:T) => T) {
@@ -43,20 +44,12 @@ module manticore {
             .map<bestiary.Bestiary>(bestiary.createBestiary)
         ;
 
+        manticore.appcache.handleReloads();
+
         interface.initialize(
             root,
             dataset,
             bestiary.allocationsForParty
         );
     });
-
-    // appcache management
-    function updateReady (e?) {
-        applicationCache.swapCache();
-    }
-    
-    applicationCache.addEventListener("updateready", updateReady);
-    if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {
-        updateReady();
-    }
 }

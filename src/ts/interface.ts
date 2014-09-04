@@ -486,7 +486,7 @@ module manticore.interface {
             DOM.remove(loading);
         });
     }
-
+ 
     // initialize is the public interface tothe UI; it will 
     // instantiate everythign and do the basic procedures requred
     // to get a UI going for the given data.
@@ -500,9 +500,9 @@ module manticore.interface {
                 new UI(allocator, bestiary, root);
             })
             .catch((e) => {
-                console.log(e);
+                console.log(e); 
             })
-        ;
+        ; 
 
         loadingUI(root, bestiary);
 
