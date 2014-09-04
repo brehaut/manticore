@@ -156,8 +156,8 @@ section > header > p {
 .C.global-confirm {
     position: fixed;
     top: 1.25em;
-    left: 20%;
-    right: 20%;
+    left: 1em;
+    right: 1em;
     padding: 0.5em 0.5em 0.5em 2em;
     background: white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.5); 
@@ -507,6 +507,11 @@ section.results .encounters li .allocation .kind .level:before {
 
     body > header > .blurb > .unfair {
         display: block;
+    }
+
+    .C.global-confirm {
+        left: 20%;
+        right: 20%;
     }
 }
 
