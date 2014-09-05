@@ -169,6 +169,22 @@ module manticore.interface {
            return selected;
         }
 
+        public updateFilterCounts(filters:{[index: string]: number}) {
+             arrayFrom<HTMLElement>(this.el.querySelectorAll("li"))
+                .forEach((el) => {
+                    var name = el.getAttribute("data-name");
+                    var count = filters[name] || 0;
+
+                    if (count > 0) {
+                        el.classList.add("viable");
+                    } 
+                    else { 
+                        el.classList.remove("viable");
+                    }
+                });
+            
+        }
+
         private toggleState(attribute:string) { 
             var li = <HTMLElement> this.el.querySelector('li[data-name="' + attribute + '"]');
             li.classList.toggle("selected");
@@ -240,6 +256,13 @@ module manticore.interface {
             }
         }
 
+        public updateFilterCounts(filters:any) {
+            this.sourcesView.updateFilterCounts(filters.sources);
+            this.sizeView.updateFilterCounts(filters.sizes);
+            this.kindView.updateFilterCounts(filters.kinds);
+            this.attributesView.updateFilterCounts(filters.attributes);
+        }
+        
         public updateSelectedCount(count: number) {
             this.selectionCountEl.innerText = _("Number selected ") + count;
         }
@@ -435,6 +458,12 @@ module manticore.interface {
             this._appendTo(root);
 
             this.updateSelectionInfo();
+            this.updateEnabledFilters();
+        }
+
+        private updateEnabledFilters() {
+            var features = this.catalog.featureCounts(this.partyView.getPartyInfo());
+            this.filtersView.updateFilterCounts(features);
         }
 
         private updateSelectionInfo() {
@@ -448,8 +477,12 @@ module manticore.interface {
         }
 
         private bindEvents() {
+            this.partyView.onChanged.register(_ => {
+                this.updateEnabledFilters();
+                this.updateSelectionInfo()
+            });
+
             this.filtersView.onFilterChanged.register(_ => this.updateSelectionInfo());
-            this.partyView.onChanged.register(_ => this.updateSelectionInfo());
 
             this.resultsView.onRequestGenerate.register(_ => {
                 var selection = this.getSelection();

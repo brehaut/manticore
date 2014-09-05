@@ -257,9 +257,14 @@ section.filters li:hover {
     color: rgba(70, 27, 14, 0.8);
 }
 
+section.filters li.viable {
+    color: rgba(70, 27, 14, 0.8);
+}
+
 section.filters li.selected {
     color: rgba(70, 27, 14, 1);
 }
+
 
 section.filters li.selected:after {
     position: absolute;

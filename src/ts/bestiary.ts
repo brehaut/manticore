@@ -280,6 +280,34 @@ module manticore.bestiary {
             return attributes;
         }
 
+        public featureCounts(party: data.IParty) {
+            var viable = this.filteredBestiary(party, _ => true);
+
+            var counts = {
+                sources: {},
+                sizes: {},
+                kinds: {},
+                attributes: {}
+            };
+            
+            function inc (map, key:string) {
+                var v = map.hasOwnProperty(key) ? map[key] : 0;
+                map[key] = v + 1;
+            }
+
+            for (var i = 0, j = viable.length; i < j; i++) {
+                var m = viable[i];
+                inc(counts.sources, m.book);
+                inc(counts.sizes, m.size);
+                inc(counts.kinds, m.kind);
+                m.attributes.forEach(a => {
+                    inc(counts.attributes, a);
+                });
+            }
+
+            return counts;
+        }
+
         public filteredBestiary(party: data.IParty,
                                 filter: data.IPredicate<data.Monster>) {
             return this.monsters
