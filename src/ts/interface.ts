@@ -181,6 +181,7 @@ module manticore.interface {
                     else { 
                         el.classList.remove("viable");
                     }
+                    el.querySelector(".count").innerText = count;
                 });
             
         }
@@ -204,7 +205,10 @@ module manticore.interface {
                 },
                 this.attributes.map(key => {
                     var k = key.toString();
-                    return DOM.li({"data-name": k}, [DOM.text(_(k))]);
+                    return DOM.li({"data-name": k}, [
+                        DOM.text(_(k)),
+                        DOM.span({"class": "count"}, [])
+                    ]);
                 })
             );
             

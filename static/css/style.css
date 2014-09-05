@@ -252,6 +252,14 @@ section.filters li:before {
     border-radius: 2px;
 }
 
+section.filters li .count {
+    float: right;
+    font-style: italic;
+    color:  rgba(70, 27, 14, 0.4);
+    font-size: 0.8em;
+    display: none;
+}
+
 section.filters li:hover {
     background: rgba(9, 126, 108, 0.11);
     color: rgba(70, 27, 14, 0.8);
@@ -259,6 +267,10 @@ section.filters li:hover {
 
 section.filters li.viable {
     color: rgba(70, 27, 14, 0.8);
+}
+
+section.filters li.viable .count {
+    display: block;
 }
 
 section.filters li.selected {
