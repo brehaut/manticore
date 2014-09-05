@@ -22,7 +22,7 @@ The application is a simple client side web app, so you just need to place the `
  * It will never work in Internet Explorer 8 or lower.
  * There is no way to select specific monsters.
 
-See (Issues)[https://github.com/brehaut/manticore/issues] for more. 
+See [Issues](https://github.com/brehaut/manticore/issues) for more. 
 
 ## Thanks
 
