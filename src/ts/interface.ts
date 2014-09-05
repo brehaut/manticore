@@ -181,7 +181,7 @@ module manticore.interface {
                     else { 
                         el.classList.remove("viable");
                     }
-                    el.querySelector(".count").innerText = count;
+                    (<HTMLElement> el.querySelector(".count")).textContent = count.toString();
                 });
             
         }
@@ -268,7 +268,7 @@ module manticore.interface {
         }
         
         public updateSelectedCount(count: number) {
-            this.selectionCountEl.innerText = _("Number selected ") + count;
+            this.selectionCountEl.textContent = _("Number selected ") + count;
         }
 
         public _appendTo(element:HTMLElement) {

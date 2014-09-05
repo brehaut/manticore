@@ -38,12 +38,12 @@
   ["Gnoll ranger",3,"normal","archer",["gnoll", "humanoid"]],
   ["Gnoll savage",3,"normal","troop",["gnoll", "humanoid"]],
   ["Hell hound",3,"normal","wrecker",["beast"]],
-  ["Hungry star",3,"normal","wrecker",["abberation"]],
+  ["Hungry star",3,"normal","wrecker",["aberration"]],
   ["Imp",3,"normal","spoiler",["demon"]],
   ["Medium black dragon",3,"normal","wrecker",["black","dragon"]],
   ["Ochre jelly",3,"large","wrecker",["ooze"]],
   ["Ogre",3,"large","troop",["giant"]],
-  ["Otyugh",3,"large","blocker",["abberation"]],
+  ["Otyugh",3,"large","blocker",["aberration"]],
   ["Trog chanter",3,"normal","leader",["troglodyte", "humanoid"]],
 
   ["Blackamber skeletal legionnaire",4,"normal","troop",["skeleton","undead"]],
@@ -77,7 +77,7 @@
   ["Wyvern",5,"large","wrecker",["beast"]],
 
   ["Clay golem",6,"large","spoiler",["golem","construct"]],
-  ["Drider",6,"large","caster",["abberation"]],
+  ["Drider",6,"large","caster",["aberration"]],
   ["Hill giant",6,"large","troop",["giant"]],
   ["Large black dragon",6,"large","wrecker",["black","dragon"]],
   ["Manticore",6,"large","archer",["beast"]],
