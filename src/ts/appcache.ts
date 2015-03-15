@@ -35,7 +35,7 @@ module manticore.appcache {
 
         inPageConfirm(interface.strings._("There is a new version of this app available. "), 
                       interface.strings._("Reload?"))
-            .map<any>(_ => location.reload());
+            .then<any>(_ => location.reload());
     }
     
     export function handleReloads () {        

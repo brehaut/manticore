@@ -26,30 +26,44 @@ module manticore {
             return acc;
         }
     }
+   
 
-    document.addEventListener("DOMContentLoaded", (e) => {
-        var root = document.getElementById("application");
+    function awaitContentLoaded() {
+        return new Promise((resolve, reject) => {
+            document.addEventListener("DOMContentLoaded", _ => {
+                manticore.appcache.handleReloads();
+                resolve(null);
+            })
+        });
+    }
 
-        var dataset = Promise.all<string>([
-            awaitAjax("static/data/bestiary.json"),
-            awaitAjax("static/data/custom.json")
-                .then<string>(resp => Promise.of<string>(resp), 
-                              _ => Promise.of<string>("{}")
-                             )
-        ])
-        // this looks wacky, but is due to the additional arguments of map conflicting
-        // with the optional arguments parse
-            .map<any[]>((texts:string[]) => texts.map((s) => JSON.parse(s))) 
-            .map<any>(mergeWith<any[]>((a, b) => a.concat(b)))
-            .map<bestiary.Bestiary>(bestiary.createBestiary)
-        ;
 
-        manticore.appcache.handleReloads();
+    // Bootstrap application
+    //
+    // Immediately request the data. The interface waits on this and
+    // (in parallel) DOMContentLoaded before it appears.
+    // Not awaiting DOMContentLoaded to begin loading data ensures a faster
+    // turn around.
+   
+    var dataset = Promise.all<string>([
+        awaitAjax("static/data/bestiary.json"),
+        awaitAjax("static/data/custom.json")
+            .then<string>(resp => Promise.resolve<string>(resp), 
+                          _ => Promise.resolve<string>("{}")
+                         )
+    ])
+    // this looks wacky, but is due to the additional arguments of then conflicting
+    // with the optional arguments parse
+        .then<any[]>((texts:string[]) => texts.map((s) => JSON.parse(s))) 
+        .then<any>(mergeWith<any[]>((a, b) => a.concat(b)))
+        .then<bestiary.Bestiary>(bestiary.createBestiary)
+    ;
 
-        interface.initialize(
-            root,
-            dataset,
-            bestiary.allocationsForParty
-        );
-    });
+    interface.initialize(
+        document.getElementById("application"),
+        Promise.all([dataset, awaitContentLoaded()])
+            .then(all => all[0])
+            .catch(e => console.error("An error occured bootstrapping the application", e)),
+        bestiary.allocationsForParty
+    );
 }

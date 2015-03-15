@@ -118,8 +118,4 @@ module manticore.data {
 
         return allPredicate(predicates);
     }
-
-
-
-
 }

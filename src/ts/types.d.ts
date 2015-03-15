@@ -7,17 +7,52 @@ interface PromiseExecutor<T> {
 }
 
 interface Promise<T> {
-    then<NextT>(fulfilled?:(v:T)=>Promise<NextT>, rejected?:(err:any)=>Promise<NextT>):Promise<NextT>;
-    // variants of then that support functor map are not provided, instead map here is
-    // and is monkeypatched in in shims.ts\
-    map<NextT>(fn:(v:T) => NextT):Promise<NextT>;
+    then<NextT>(fulfilled?:(v:T)=>NextT|Promise<NextT>,
+                rejected?:(err:any)=>NextT|Promise<NextT>):Promise<NextT>;
     'catch'(handle:(err:any) => any): any;
 }
 
 interface PromiseStatic {
     new<T> (ex:PromiseExecutor<T>): Promise<T>;
+
+    resolve<T>(v:T|Promise<T>): Promise<T>;
+    reject<T>(v:T|Promise<T>): Promise<T>;
+    
     all<T>(ps:Promise<T>[]): Promise<T[]>;
-    of<T>(v:T): Promise<T>;
+    race<T>(ps:Promise<T>[]): Promise<T[]>;
+    
 }
 
 declare var Promise: PromiseStatic;
+
+
+// snaffled from ts es6.d.ts on github,
+// minus support for itereables
+interface ArrayLike<T> {
+    length: number;
+    [n: number]: T;
+}
+
+
+
+interface ArrayConstructor {
+    /**
+      * Creates an array from an array-like object.
+      * @param arrayLike An array-like object to convert to an array.
+      * @param mapfn A mapping function to call on every element of the array.
+      * @param thisArg Value of 'this' used to invoke the mapfn.
+      */
+    from<T, U>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): Array<U>;
+
+    /**
+      * Creates an array from an array-like object.
+      * @param arrayLike An array-like object to convert to an array.
+      */
+    from<T>(arrayLike: ArrayLike<T>): Array<T>;
+
+    /**
+      * Returns a new array from a set of elements.
+      * @param items A set of elements to include in the new array object.
+      */
+    of<T>(...items: T[]): Array<T>;
+}

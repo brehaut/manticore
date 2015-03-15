@@ -13,7 +13,7 @@ module manticore.bestiary {
                     level:number, 
                     size:string,
                     kind:string,
-                    attributes: Array<string>,
+                    attributes: string[],
                     book: string,
                     public price:number) { 
             super(name, level, size, kind, attributes, book);
@@ -175,7 +175,7 @@ module manticore.bestiary {
     
 
     // allocateMonster is the core algorithm of this application.
-    function repeatMonster(points, monster):Array<MonsterAllocation> {
+    function repeatMonster(points, monster):MonsterAllocation[] {
         var max = Math.floor(points / monster.price); 
         var repeats = [];
         for (var i = 1; i <= max; i++) {
@@ -185,7 +185,7 @@ module manticore.bestiary {
     }
 
 
-    function allocateMonsters(points:number, monsters:Array<PricedMonster>) {
+    function allocateMonsters(points:number, monsters:PricedMonster[]) {
         var allAllocations = [];     
         var allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
         
@@ -193,7 +193,7 @@ module manticore.bestiary {
 
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
-                          acc:Array<MonsterAllocation>) {
+                          acc:MonsterAllocation[]) {
 
             // cap runtime to 2 seconds
             if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
@@ -241,7 +241,7 @@ module manticore.bestiary {
 
     // public API:
     export function allocationsForParty(party:data.IParty, 
-                                        selectedMonsters:Array<data.Monster>) {
+                                        selectedMonsters:data.Monster[]) {
 
         return allocateMonsters(priceParty(party.size),
                                 selectedMonsters

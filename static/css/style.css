@@ -69,7 +69,8 @@ a {
 /* specifc styling */
 
 body >  header {
-   margin-top: 3em;
+    margin-top: 3em;
+    padding: 0 10px;
 }
 
 body > header h1 {
@@ -114,7 +115,7 @@ body > footer {
 body > footer > div {
     margin-top: 2em;
     margin-bottom: 0;
-    padding: 3em 0px;
+    padding: 3em 10px;
     line-height: 1.5;
 }
 
@@ -141,6 +142,16 @@ section > header {
     border-bottom: 1px solid rgba(70, 27, 14, 0.1);
     margin: 1em 0;
     padding: 1em 10px 0 10px;
+}
+
+#application > div > section {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+                                 
+#application > div > section > header {
+    margin-left: -10px;
+    margin-right: 10px;
 }
 
 section > header > h1 {
@@ -477,6 +488,37 @@ section.results .encounters li .allocation .kind .level:before {
     }
 
 
+    body > footer > div > section {
+        float: left;
+        width: 50%;
+        padding-left: 10px;
+    }
+
+    body > footer section > p:last-child {
+        margin-top: 0;
+    }
+    
+    body > footer section > p:last-child {
+        margin-bottom: 0;
+    }
+    
+    body > footer section.fire-opal {
+        padding-left: 0;
+        padding-right: 10px;
+        margin-bottom: 3em;
+    }
+    
+    body > footer section.code {
+        margin-top: 0;
+    }
+
+    body > footer section.illustration,
+    body > footer section.alegreya {
+        margin-top: 1em;
+        
+    }
+        
+
     section.results .encounters li .allocation {
         display: inline-block;
         float: left;
@@ -507,7 +549,6 @@ section.results .encounters li .allocation .kind .level:before {
 
 @media screen and (min-width:740px) {
     body > header > .blurb > p,
-    body > footer p,
     section > header > p 
     {
         width: 66.666%;

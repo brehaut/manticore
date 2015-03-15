@@ -5,10 +5,6 @@
 module manticore.interface {
     var _ = strings._;
 
-    function arrayFrom<T>(arrayLike):T[] {
-        return Array.prototype.slice.apply(arrayLike);
-    }
-
     function cssClassName(text:string):string {
         return text.replace(/[^-a-zA-Z0-9]+/g, "-");
     }
@@ -160,7 +156,7 @@ module manticore.interface {
         }
 
         public getSelectedAttributes() {            
-            var selected = arrayFrom<HTMLElement>(this.el.querySelectorAll("li"))
+            var selected = Array.from<Node>(this.el.querySelectorAll("li"))
                 .map<string>((el:HTMLElement) =>
                     el.classList.contains("selected") ? el.getAttribute("data-name") : null)
                .filter((attr) => !!attr)
@@ -170,8 +166,8 @@ module manticore.interface {
         }
 
         public updateFilterCounts(filters:{[index: string]: number}) {
-             arrayFrom<HTMLElement>(this.el.querySelectorAll("li"))
-                .forEach((el) => {
+             Array.from<Node>(this.el.querySelectorAll("li"))
+                .forEach((el:HTMLElement) => {
                     var name = el.getAttribute("data-name");
                     var count = filters[name] || 0;
 
@@ -533,7 +529,7 @@ module manticore.interface {
         //bestiary = bestiary.then(awaitDelay(2000));
 
         bestiary
-            .map<void>((bestiary) => {
+            .then<void>((bestiary) => {
                 new UI(allocator, bestiary, root);
             })
             .catch((e) => {
