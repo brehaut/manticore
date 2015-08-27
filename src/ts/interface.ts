@@ -219,11 +219,21 @@ module manticore.interface {
     }
 
 
-    class FiltersView implements IView {
+    interface IFilterSource {
+        onFilterChanged: Event<string>
+        
+        getFilters():{[index: string]: string[]};
+
+        updateSelectedCount(count: number);
+        updateFilterCounts(filters: any);
+    }
+    
+
+    class FiltersView implements IView, IFilterSource {
         private el:HTMLElement;
         private selectionCountEl:HTMLElement;
 
-        public onFilterChanged: Event<string>;
+        public onFilterChanged: Event<string> = new Event<string>();
 
         private sourcesView: PropertyFilterView;
         private sizeView: PropertyFilterView;
@@ -231,8 +241,6 @@ module manticore.interface {
         private attributesView: PropertyFilterView;
 
         constructor(bestiary:bestiary.Bestiary) {
-            this.onFilterChanged = new Event<string>();
-
             this.sourcesView = new PropertyFilterView("Sources", bestiary.allSources());
             
             this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
@@ -272,7 +280,7 @@ module manticore.interface {
         }
 
         private createElements() {
-            this.el = DOM.section(
+            this.el = DOM.div(
                 {
                     "class": "filters clearfix"
                 }, 
@@ -280,7 +288,6 @@ module manticore.interface {
                     DOM.header( 
                         null, 
                         [
-                            DOM.h1(null, [DOM.text(_("Filter bestiary"))]),
                             DOM.p(null, [DOM.text(_("[filter summary]"))])
                         ]
                     )
@@ -297,6 +304,120 @@ module manticore.interface {
         }
     }
 
+
+
+    class MonsterPickerView implements IView, IFilterSource{
+        private el: HTMLElement;
+
+        public onFilterChanged: Event<string> = new Event<string>();
+
+        private sourcesView: PropertyFilterView;
+        private byNameView: PropertyFilterView;
+        
+        constructor (private catalog: bestiary.Bestiary) {            
+            this.sourcesView = new PropertyFilterView("Sources", catalog.allSources());
+            this.byNameView = new PropertyFilterView("Sources", catalog.allNames());
+            
+            this.createElements();
+        }
+
+        public getFilters():{[index: string]: string[]} {
+            return {}; // TODO
+        }
+
+        public updateSelectedCount(count: number) {
+            // TODO
+        }
+
+        public updateFilterCounts(filters: any) {
+            // TODO
+            this.sourcesView.updateFilterCounts(filters.sources);
+        }
+        
+        private createElements() {
+            this.el = DOM.div(
+                {
+                    "class": "filters clearfix",                
+                },
+                [
+                    DOM.header(
+                        null,
+                        [
+                            DOM.p(null, [DOM.text(_("[select monsters]"))])
+                        ]
+                    )
+                ]
+            );
+
+            this.sourcesView._appendTo(this.el);
+            this.byNameView._appendTo(this.el);
+        }
+        
+        public _appendTo(html:HTMLElement) {
+            html.appendChild(this.el);
+        }
+    }
+    
+
+    // SelectionView wraps up the various methods of selecting monsters
+    //
+    // Elements from Filters view need to be hoisted into here (total selection summary
+    // and source summary frinstance)
+    class SelectionView implements IView, IFilterSource {
+        private el: HTMLElement;
+        private filtersView: FiltersView;
+        private pickersView: MonsterPickerView;
+
+        public onFilterChanged: Event<string> = new Event<string>();
+
+        constructor (catalog: bestiary.Bestiary) {
+            this.filtersView = new FiltersView(catalog);
+            this.pickersView = new MonsterPickerView(catalog);
+
+            this.filtersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
+            this.pickersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
+
+            this.createElements();
+        }
+        
+        public _appendTo(element:HTMLElement) {
+            element.appendChild(this.el);
+        }
+
+        public getFilters() {
+            return this.filtersView.getFilters(); // TODO: switch as appropriate
+        }
+
+        public updateSelectedCount(count: number) {
+            this.filtersView.updateSelectedCount(count);
+            this.pickersView.updateSelectedCount(count);
+        }
+
+        public updateFilterCounts(filters: any) {
+            this.filtersView.updateFilterCounts(filters);
+            this.pickersView.updateFilterCounts(filters);
+        }
+        
+        private createElements() {
+            this.el = DOM.section(
+                {
+                    "class": "selection clearfix",                
+                },
+                [
+                    DOM.header(
+                        null,
+                        [
+                            DOM.h1(null, [DOM.text(_("Filter monsters"))]),
+                            DOM.p(null, [DOM.text(_("[select monsters]"))])
+                        ]
+                    )
+                ]
+            );
+
+            this.filtersView._appendTo(this.el);
+            this.pickersView._appendTo(this.el);
+        }
+    }
 
 
     class ResultsView implements IView {
@@ -440,7 +561,7 @@ module manticore.interface {
         private viewContainer: HTMLElement;
 
         private partyView: PartyView;
-        private filtersView: FiltersView;
+        private selectionView: SelectionView;
         private resultsView: ResultsView;
         
         constructor(private allocator: data.Allocator, 
@@ -448,10 +569,10 @@ module manticore.interface {
                     root:HTMLElement) {
             this.viewContainer = DOM.div(null);
             this.partyView = new PartyView();
-            this.filtersView = new FiltersView(catalog);
+            this.selectionView = new SelectionView(catalog);
             this.resultsView = new ResultsView();
             
-            this.filtersView.updateSelectedCount(catalog.monsters.length);
+            this.selectionView.updateSelectedCount(catalog.monsters.length);
 
             this.bindEvents();
 
@@ -463,16 +584,16 @@ module manticore.interface {
 
         private updateEnabledFilters() {
             var features = this.catalog.featureCounts(this.partyView.getPartyInfo());
-            this.filtersView.updateFilterCounts(features);
+            this.selectionView.updateFilterCounts(features);
         }
 
         private updateSelectionInfo() {
-            this.filtersView.updateSelectedCount(this.getSelection().length);
+            this.selectionView.updateSelectedCount(this.getSelection().length);
             this.resultsView.markResultsAsOutOfDate();
         }
         
         private getSelection() {
-            var pred = data.predicateForFilters(this.filtersView.getFilters());
+            var pred = data.predicateForFilters(this.selectionView.getFilters());
             return this.catalog.filteredBestiary(this.partyView.getPartyInfo(), pred);
         }
 
@@ -482,7 +603,7 @@ module manticore.interface {
                 this.updateSelectionInfo()
             });
 
-            this.filtersView.onFilterChanged.register(_ => this.updateSelectionInfo());
+            this.selectionView.onFilterChanged.register(_ => this.updateSelectionInfo());
 
             this.resultsView.onRequestGenerate.register(_ => {
                 var selection = this.getSelection();
@@ -496,8 +617,8 @@ module manticore.interface {
         
         public _appendTo(element:HTMLElement) {
             this.partyView._appendTo(this.viewContainer);
-            this.filtersView._appendTo(this.viewContainer);
-            this.resultsView._appendTo(this.viewContainer);
+            this.selectionView._appendTo(this.viewContainer);
+            this.resultsView._appendTo(this.viewContainer);            
             
             element.appendChild(this.viewContainer);
         }

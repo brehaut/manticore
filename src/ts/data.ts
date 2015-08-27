@@ -75,6 +75,10 @@ module manticore.data {
         return (m:Monster) => m.book === source;
     }
 
+    function namePredicate(name:string) {
+        return (m:Monster) => m.name === name;
+    }
+    
     function hasOneAttributePredicate(attributes:string[]) {
         return (m:Monster) => {
             var mattrs = m.attributes;
@@ -93,7 +97,12 @@ module manticore.data {
             var attributes = filters[key];
             if (attributes === null || attributes.length == 0) continue;
 
-            if (key === "size") {
+            if (key === "name") {
+                predicates.push(anyPredicate<data.Monster>(
+                    attributes.map(namePredicate)
+                ));
+            }
+            else if (key === "size") {
                 predicates.push(anyPredicate<data.Monster>(
                     attributes.map(sizePredicate)
                 ));
@@ -110,7 +119,7 @@ module manticore.data {
             }
             else if (key === "attributes") {
                 predicates.push(hasOneAttributePredicate(attributes));
-            }
+            }            
             else {
                 throw new Error("unknown filter type: " + key);
             }            

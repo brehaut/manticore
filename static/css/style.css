@@ -240,7 +240,7 @@ section.party > .field > input
 
 /* filters */
 
-section.filters li {
+div.filters li {
     position: relative;
     color: rgba(70, 27, 14, 0.4);
     cursor: pointer;
@@ -249,7 +249,7 @@ section.filters li {
     text-transform: capitalize;
 }
 
-section.filters li:before {
+div.filters li:before {
     position: absolute;
     display: inline-block;
     line-height: 0.95em;
@@ -263,7 +263,7 @@ section.filters li:before {
     border-radius: 2px;
 }
 
-section.filters li .count {
+div.filters li .count {
     float: right;
     font-style: italic;
     color:  rgba(70, 27, 14, 0.4);
@@ -271,25 +271,25 @@ section.filters li .count {
     display: none;
 }
 
-section.filters li:hover {
+div.filters li:hover {
     background: rgba(9, 126, 108, 0.11);
     color: rgba(70, 27, 14, 0.8);
 }
 
-section.filters li.viable {
+div.filters li.viable {
     color: rgba(70, 27, 14, 0.8);
 }
 
-section.filters li.viable .count {
+div.filters li.viable .count {
     display: block;
 }
 
-section.filters li.selected {
+div.filters li.selected {
     color: rgba(70, 27, 14, 1);
 }
 
 
-section.filters li.selected:after {
+div.filters li.selected:after {
     position: absolute;
     display: inline-block;
     content: ' ';
@@ -301,7 +301,7 @@ section.filters li.selected:after {
     border-radius: 2px;
 }
 
-section.filters .selection-count {
+div.filters .selection-count {
     clear: both;
     width: 50%;
     margin-top: 1em;

@@ -260,6 +260,10 @@ module manticore.bestiary {
             return this.distinctValues((m) => m.book);
         }
 
+        public allNames() {
+            return this.distinctValues((m) => m.name);
+        }
+        
         public allSizes() {
             return this.distinctValues((m) => m.size);
         }
