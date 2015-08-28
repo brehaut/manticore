@@ -326,11 +326,13 @@ div.filters .selection-count {
     padding-left: 0;
 }
 
-.C.attribute-filter.-sources {
+.C.attribute-filter.-sources,
+.C.attribute-filter.-by-name {
     width: 100%;
 }
 
-.C.attribute-filter.-sources li {
+.C.attribute-filter.-sources li,
+.C.attribute-filter.-by-name li{
     float: left;
     width: 25%;
     margin: 0;
@@ -344,6 +346,10 @@ div.filters .selection-count {
     float: left;
     width: 50%;
     margin: 0;
+}
+
+.C.attribute-filter.-by-name li > .count {
+    display: none;
 }
 
 /* results */
@@ -593,7 +599,8 @@ section.results .encounters li .allocation .kind .level:before {
     }
     
 
-    .C.attribute-filter.-sources li {
+    .C.attribute-filter.-sources li,
+    .C.attribute-filter.-by-name li{
         width: 16.6666%;
     }
 

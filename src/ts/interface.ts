@@ -213,12 +213,12 @@ module manticore.interface {
             ]);
 
             this.el = DOM.div({
-                "class": "C attribute-filter -" + this.name.toLowerCase()
+                "class": "C attribute-filter -" + this.name.toLowerCase().replace(" ", "-")
             }, [header, ul]);
         }
     }
 
-
+    
     interface IFilterSource {
         onFilterChanged: Event<string>
         
@@ -253,6 +253,12 @@ module manticore.interface {
             this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
 
             this.createElements();
+
+            this.setVisibility(false);
+        }
+
+        public setVisibility(visible: boolean) {
+            this.el.style.display = visible ? "block" : "none";  
         }
 
         public getFilters():{[index: string]: string[]} {
@@ -311,27 +317,37 @@ module manticore.interface {
 
         public onFilterChanged: Event<string> = new Event<string>();
 
-        private sourcesView: PropertyFilterView;
+        //private sourcesView: PropertyFilterView;
         private byNameView: PropertyFilterView;
         
         constructor (private catalog: bestiary.Bestiary) {            
-            this.sourcesView = new PropertyFilterView("Sources", catalog.allSources());
-            this.byNameView = new PropertyFilterView("Sources", catalog.allNames());
+            //this.sourcesView = new PropertyFilterView("Sources", catalog.allSources());
+            this.byNameView = new PropertyFilterView("By Name", catalog.allNames().sort());
             
             this.createElements();
+
+            this.setVisibility(false);
         }
 
+        public setVisibility(visible: boolean) {
+            this.el.style.display = visible ? "block" : "none";  
+        }
+        
         public getFilters():{[index: string]: string[]} {
-            return {}; // TODO
+            return {
+                name: this.byNameView.getSelectedAttributes()
+            }; 
         }
 
         public updateSelectedCount(count: number) {
-            // TODO
+            
         }
 
         public updateFilterCounts(filters: any) {
             // TODO
-            this.sourcesView.updateFilterCounts(filters.sources);
+            var counts:{[index:string]: number} = {};
+            this.catalog.allNames().forEach(name => counts[name] = 1);
+            this.byNameView.updateFilterCounts(counts);
         }
         
         private createElements() {
@@ -349,7 +365,7 @@ module manticore.interface {
                 ]
             );
 
-            this.sourcesView._appendTo(this.el);
+            //this.sourcesView._appendTo(this.el);
             this.byNameView._appendTo(this.el);
         }
         
@@ -370,22 +386,46 @@ module manticore.interface {
 
         public onFilterChanged: Event<string> = new Event<string>();
 
+        private static filtersMode = {
+            "class": "filters",
+            
+            display: (view: SelectionView) => {
+                view.showChildView(true);
+            },
+
+            getFilters: (view: SelectionView) => view.filtersView.getFilters()
+        };
+
+        private static pickersMode = {
+            "class": "picker",
+            
+            display: (view: SelectionView) => {
+                view.showChildView(false);
+            },
+
+            getFilters: (view: SelectionView) => view.pickersView.getFilters()
+        };
+
+        private mode;
+        
         constructor (catalog: bestiary.Bestiary) {
             this.filtersView = new FiltersView(catalog);
             this.pickersView = new MonsterPickerView(catalog);
 
             this.filtersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
             this.pickersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
-
+           
             this.createElements();
-        }
+
+            this.setMode(SelectionView.filtersMode);
+        }         
         
         public _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
         public getFilters() {
-            return this.filtersView.getFilters(); // TODO: switch as appropriate
+            return this.mode.getFilters(this);
         }
 
         public updateSelectedCount(count: number) {
@@ -396,6 +436,20 @@ module manticore.interface {
         public updateFilterCounts(filters: any) {
             this.filtersView.updateFilterCounts(filters);
             this.pickersView.updateFilterCounts(filters);
+        }
+
+        private setMode(mode) {
+            this.mode = mode;
+            mode.display(this);
+            
+            Array.from(this.el.querySelectorAll("a.mode-switch")).forEach(el => (<HTMLElement>el).classList.remove("-active"));
+            var active = (<HTMLElement>this.el.querySelector("a.mode-switch.-" + this.mode["class"]));
+            if (active) active.classList.add("-active");
+        }
+        
+        private showChildView(filtersVisible: boolean) {
+            this.filtersView.setVisibility(filtersVisible);
+            this.pickersView.setVisibility(!filtersVisible);
         }
         
         private createElements() {
@@ -409,6 +463,30 @@ module manticore.interface {
                         [
                             DOM.h1(null, [DOM.text(_("Filter monsters"))]),
                             DOM.p(null, [DOM.text(_("[select monsters]"))])
+                        ]
+                    ),
+
+                    DOM.div(
+                        null,
+                        [ DOM.p(null, [DOM.text(_("[selection mode]"))]),
+                          DOM.a({
+                              "class": "mode-switch -filters",
+                              onclick:(e) => {
+                                  this.setMode(SelectionView.filtersMode);
+                                  e.preventDefault();
+                              }
+                          }, [
+                              DOM.text(_("[use filters]"))
+                          ]),
+                          DOM.a({
+                              "class": "mode-switch -picker",
+                              onclick:(e) => {
+                                  this.setMode(SelectionView.pickersMode);
+                                  e.preventDefault();
+                              }
+                          }, [
+                              DOM.text(_("[use pickers]"))
+                          ])
                         ]
                     )
                 ]
