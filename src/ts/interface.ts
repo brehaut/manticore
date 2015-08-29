@@ -317,11 +317,9 @@ module manticore.interface {
 
         public onFilterChanged: Event<string> = new Event<string>();
 
-        //private sourcesView: PropertyFilterView;
         private byNameView: PropertyFilterView;
         
         constructor (private catalog: bestiary.Bestiary) {            
-            //this.sourcesView = new PropertyFilterView("Sources", catalog.allSources());
             this.byNameView = new PropertyFilterView("By Name", catalog.allNames().sort());
 
             this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
@@ -376,9 +374,6 @@ module manticore.interface {
     
 
     // SelectionView wraps up the various methods of selecting monsters
-    //
-    // Elements from Filters view need to be hoisted into here (total selection summary
-    // and source summary frinstance)
     class SelectionView implements IView, IFilterSource {
         private el: HTMLElement;
         private filtersView: FiltersView;
