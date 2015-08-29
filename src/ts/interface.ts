@@ -359,7 +359,7 @@ module manticore.interface {
                     DOM.header(
                         null,
                         [
-                            DOM.p(null, [DOM.text(_("[select monsters]"))])
+                            DOM.p(null, [DOM.text(_("[pick monsters]"))])
                         ]
                     )
                 ]
@@ -468,25 +468,28 @@ module manticore.interface {
 
                     DOM.div(
                         null,
-                        [ DOM.p(null, [DOM.text(_("[selection mode]"))]),
-                          DOM.a({
-                              "class": "mode-switch -filters",
-                              onclick:(e) => {
-                                  this.setMode(SelectionView.filtersMode);
-                                  e.preventDefault();
-                              }
-                          }, [
-                              DOM.text(_("[use filters]"))
-                          ]),
-                          DOM.a({
-                              "class": "mode-switch -picker",
-                              onclick:(e) => {
-                                  this.setMode(SelectionView.pickersMode);
-                                  e.preventDefault();
-                              }
-                          }, [
-                              DOM.text(_("[use pickers]"))
-                          ])
+                        [ DOM.p(null, [
+                            DOM.text(_("[selection mode]")),
+                            DOM.text(" "),
+                            DOM.a({
+                                "class": "mode-switch -filters",
+                                onclick:(e) => {
+                                    this.setMode(SelectionView.filtersMode);
+                                    e.preventDefault();
+                                }
+                            }, [
+                                DOM.text(_("[use filters]"))
+                            ]),
+                            DOM.text(" "),
+                            DOM.a({
+                                "class": "mode-switch -picker",
+                                onclick:(e) => {
+                                    this.setMode(SelectionView.pickersMode);
+                                    e.preventDefault();
+                                }
+                            }, [
+                                DOM.text(_("[use pickers]"))
+                            ])]),                          
                         ]
                     )
                 ]

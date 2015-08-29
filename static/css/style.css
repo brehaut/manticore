@@ -240,6 +240,26 @@ section.party > .field > input
 
 /* filters */
 
+section.selection a.mode-switch {
+    display: inline-block;
+    padding: 0.3em;
+    border-radius: 0.3em;
+    border: 1px solid #bbb;
+    cursor: pointer;
+    color: #333;
+    background: #E8E8E0;
+}
+
+section.selection a.mode-switch:hover {
+    color: rgb(14, 0, 194);
+}
+
+section.selection a.mode-switch.-active {
+    background: #F9F9F0;
+}
+
+
+
 div.filters li {
     position: relative;
     color: rgba(70, 27, 14, 0.4);
@@ -350,6 +370,11 @@ div.filters .selection-count {
 
 .C.attribute-filter.-by-name li > .count {
     display: none;
+}
+
+.C.attribute-filter.-by-name li {
+    height: 3.5em;
+    line-height: 1em;
 }
 
 /* results */
