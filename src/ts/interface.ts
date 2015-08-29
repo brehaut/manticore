@@ -323,6 +323,8 @@ module manticore.interface {
         constructor (private catalog: bestiary.Bestiary) {            
             //this.sourcesView = new PropertyFilterView("Sources", catalog.allSources());
             this.byNameView = new PropertyFilterView("By Name", catalog.allNames().sort());
+
+            this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
             
             this.createElements();
 
@@ -344,10 +346,8 @@ module manticore.interface {
         }
 
         public updateFilterCounts(filters: any) {
-            // TODO
-            var counts:{[index:string]: number} = {};
-            this.catalog.allNames().forEach(name => counts[name] = 1);
-            this.byNameView.updateFilterCounts(counts);
+            console.log(filters.names);
+            this.byNameView.updateFilterCounts(filters.names);
         }
         
         private createElements() {

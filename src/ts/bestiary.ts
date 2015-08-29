@@ -291,7 +291,8 @@ module manticore.bestiary {
                 sources: {},
                 sizes: {},
                 kinds: {},
-                attributes: {}
+                attributes: {},
+                names: {},
             };
             
             function inc (map, key:string) {
@@ -304,6 +305,7 @@ module manticore.bestiary {
                 inc(counts.sources, m.book);
                 inc(counts.sizes, m.size);
                 inc(counts.kinds, m.kind);
+                inc(counts.names, m.name);
                 m.attributes.forEach(a => {
                     inc(counts.attributes, a);
                 });

@@ -312,12 +312,11 @@ div.filters li.selected {
 div.filters li.selected:after {
     position: absolute;
     display: inline-block;
-    content: ' ';
+    content: '✔';
     width: 0.52em;
     height: 0.56em;
-    top: 0.612em;
-    left: 0.61em;
-    background: #444;
+    top: 0.35em;
+    left: 0.41em;
     border-radius: 2px;
 }
 
