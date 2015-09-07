@@ -20,6 +20,7 @@ module manticore.interface.strings {
         "[use filters]": "Smart filters",
         "[use pickers]": "Manual monster selection",
         "[pick monsters]": "Select specific monsters by name.",
+        "[reset]": "Clear",
         
         "[results summary]": "Encounters that fit these criteria",
         

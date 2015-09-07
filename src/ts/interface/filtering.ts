@@ -35,6 +35,7 @@ module manticore.interface {
         public updateFilterCounts(filters:{[index: string]: number}) {
              Array.from<Node>(this.el.querySelectorAll("li"))
                 .forEach((el:HTMLElement) => {
+                    if (el.classList.contains("clear-selection")) return;
                     var name = el.getAttribute("data-name");
                     var count = filters[name] || 0;
 
@@ -49,20 +50,47 @@ module manticore.interface {
             
         }
 
+        private changeOccured() {
+            this.toggleClear();
+            this.onChanged.trigger(null);
+        }
+        
         private toggleState(attribute:string) { 
             var li = <HTMLElement> this.el.querySelector('li[data-name="' + attribute + '"]');
             li.classList.toggle("selected");
 
-            this.onChanged.trigger(null);
+            this.changeOccured();
         }
 
+        private toggleClear() {
+            if (this.allChoices().filter(li => li.classList.contains("selected")).length > 0) {
+                this.el.classList.add("active");
+            }
+            else {
+                this.el.classList.remove("active");
+            }
+        }
+
+        private allChoices():HTMLElement[] {
+            return <HTMLElement[]>Array.from<Node>(this.el.querySelectorAll("li[data-name]"));
+        }
+        
+        private clearAll() {
+            var all = this.allChoices();
+            all.forEach((li) => {
+                li.classList.remove("selected");
+            });
+
+            this.changeOccured();
+        }
+        
         private createElements() {
             var ul = DOM.ul(
                 {
                     "class": "clearfix",
 
                     onclick: (e) => {
-                        if (e.target.nodeName.toLowerCase() !== "li") return;
+                        if (e.target.nodeName.toLowerCase() !== "li") return;                        
                         this.toggleState(e.target.getAttribute("data-name"));
                     }
                 },
@@ -74,11 +102,22 @@ module manticore.interface {
                     ]);
                 })
             );
+
             
             var header = DOM.header(null, [
-                DOM.h2(null, [DOM.text(_(this.name))])
+                DOM.h2(null, [
+                    DOM.text(_(this.name)),
+                    DOM.a({
+                        "class": "reset",
+                        "onclick": (e) => {
+                            e.preventDefault();
+                            this.clearAll();
+                        }
+                    }, [DOM.text(_("[reset]"))])
+                ])
             ]);
 
+            
             this.el = DOM.div({
                 "class": "C attribute-filter -" + this.name.toLowerCase().replace(" ", "-")
             }, [header, ul]);

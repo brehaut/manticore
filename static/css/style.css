@@ -259,8 +259,18 @@ section.selection a.mode-switch.-active {
 }
 
 
+div.filters .selection-count {
+    clear: both;
+    width: 50%;
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid rgba(70, 27, 14, 0.1);
+    font-size: 0.9em;
+    color: #666;
+}
 
-div.filters li {
+
+.C.attribute-filter li {
     position: relative;
     color: rgba(70, 27, 14, 0.4);
     cursor: pointer;
@@ -269,7 +279,8 @@ div.filters li {
     text-transform: capitalize;
 }
 
-div.filters li:before {
+
+.C.attribute-filter li:before {
     position: absolute;
     display: inline-block;
     line-height: 0.95em;
@@ -283,7 +294,7 @@ div.filters li:before {
     border-radius: 2px;
 }
 
-div.filters li .count {
+.C.attribute-filter li .count {
     float: right;
     font-style: italic;
     color:  rgba(70, 27, 14, 0.4);
@@ -291,25 +302,25 @@ div.filters li .count {
     display: none;
 }
 
-div.filters li:hover {
+.C.attribute-filter li:hover {
     background: rgba(9, 126, 108, 0.11);
     color: rgba(70, 27, 14, 0.8);
 }
 
-div.filters li.viable {
+.C.attribute-filter li.viable {
     color: rgba(70, 27, 14, 0.8);
 }
 
-div.filters li.viable .count {
+.C.attribute-filter li.viable .count {
     display: block;
 }
 
-div.filters li.selected.viable {
+.C.attribute-filter li.selected.viable {
     color: rgba(70, 27, 14, 1);
 }
 
 
-div.filters li.selected:after {
+.C.attribute-filter li:after {
     position: absolute;
     display: inline-block;
     content: '✔';
@@ -318,17 +329,14 @@ div.filters li.selected:after {
     top: 0.35em;
     left: 0.41em;
     border-radius: 2px;
+    opacity: 0;
+    transition: 120ms opacity ease-in-out;
 }
 
-div.filters .selection-count {
-    clear: both;
-    width: 50%;
-    margin-top: 1em;
-    padding-top: 1em;
-    border-top: 1px solid rgba(70, 27, 14, 0.1);
-    font-size: 0.9em;
-    color: #666;
+.C.attribute-filter li.selected:after {
+    opacity: 1;
 }
+
 
 .C.attribute-filter {
     width: 25%;
@@ -339,6 +347,34 @@ div.filters .selection-count {
     font-size: 1.1em;
     font-weight: normal;
 }
+
+.C.attribute-filter h2 > .reset {
+    display: none;
+    border: none;
+    border-radius: 2px;
+    background: rgba(70, 27, 14, 0.4);    
+    font-size: 0.6em;
+    letter-spacing: 1px;
+    margin-left: 1em;
+    text-decoration: none;
+    color: #F2F2EB;
+    cursor: pointer;
+    padding: 2px 0.4em;
+    position: relative;
+    top: -1px;
+    text-transform: uppercase;
+    transition: background-color 200ms ease-in-out;
+}
+
+.C.attribute-filter h2 > .reset:hover {
+    background-color: rgba(70, 27, 14, 0.8);
+}
+    
+.C.attribute-filter.active h2 > .reset {
+    display: inline-block;
+}
+
+
 
 .C.attribute-filter ul {
     list-style: none;
