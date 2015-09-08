@@ -22,7 +22,7 @@ module manticore.interface {
             parent.appendChild(this.el);
         }
 
-        public getSelectedAttributes() {            
+        public getSelectedAttributes():string[] {            
             var selected = Array.from<Node>(this.el.querySelectorAll("li"))
                 .map<string>((el:HTMLElement) =>
                     el.classList.contains("selected") ? el.getAttribute("data-name") : null)

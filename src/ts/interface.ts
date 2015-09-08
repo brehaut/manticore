@@ -38,13 +38,15 @@ module manticore.interface {
         }
 
         private updateEnabledFilters() {
-            var features = this.catalog.featureCounts(this.partyView.getPartyInfo());
+            var features = this.catalog.featureCounts(this.partyView.getPartyInfo(),
+                                                      this.selectionView.getFilters());
             this.selectionView.updateFilterCounts(features);
         }
 
         private updateSelectionInfo() {
             this.selectionView.updateSelectedCount(this.getSelection().length);
             this.resultsView.markResultsAsOutOfDate();
+            this.updateEnabledFilters();
         }
         
         private getSelection() {

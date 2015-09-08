@@ -367,7 +367,7 @@ div.filters .selection-count {
 }
 
 .C.attribute-filter h2 > .reset:hover {
-    background-color: rgba(70, 27, 14, 0.8);
+    background-color: #097E6C;
 }
     
 .C.attribute-filter.active h2 > .reset {

@@ -284,9 +284,53 @@ module manticore.bestiary {
             return attributes;
         }
 
-        public featureCounts(party: data.IParty) {
-            var viable = this.filteredBestiary(party, _ => true);
 
+        public featureCounts(party: data.IParty, filters: {[index: string]: string[]}) {
+            var descriptors = [
+                {countKey: "sources", monsterKey: "book"},
+                {countKey: "sizes", monsterKey: "size"},
+                {countKey: "kinds", monsterKey: "kind"},
+                {countKey: "names", monsterKey: "name"},
+                {countKey: "attributes", monsterKey: "attributes"},
+            ];
+            
+            function filtersExcluding(key):{[index:string]: string[]} {
+                var fs:{[index:string]: string[]} = {};
+                Object.keys(filters).filter(k => k != key).forEach(k => fs[k] = filters[k]); 
+                return fs;
+            }
+            
+            function applicableFilters(descriptor) {
+                return {
+                    countKey: descriptor.countKey,
+                    monsterKey: descriptor.monsterKey,
+                    predicate: data.predicateForFilters(filtersExcluding(descriptor.monsterKey))
+                };
+            }
+                        
+            var viableForFilters = (descriptor) => {
+                var viable = this.filteredBestiary(party, descriptor.predicate);
+                var countMap = {};
+                
+                function inc (key:string) {
+                    var v = countMap.hasOwnProperty(key) ? countMap[key] : 0;
+                    countMap[key] = v + 1;
+                }
+                
+                for (var i = 0, j = viable.length; i < j; i++) {
+                    var m = viable[i];
+                    var attr = m[descriptor.monsterKey]
+                    if (attr instanceof Array) {
+                        attr.forEach(a => inc);
+                    }
+                    else {
+                        inc(attr);
+                    }                    
+                }
+
+                return countMap;
+            };
+            
             var counts = {
                 sources: {},
                 sizes: {},
@@ -294,26 +338,14 @@ module manticore.bestiary {
                 attributes: {},
                 names: {},
             };
+
+            descriptors.map(applicableFilters).forEach(d => {
+                counts[d.countKey] = viableForFilters(d)
+            })
             
-            function inc (map, key:string) {
-                var v = map.hasOwnProperty(key) ? map[key] : 0;
-                map[key] = v + 1;
-            }
-
-            for (var i = 0, j = viable.length; i < j; i++) {
-                var m = viable[i];
-                inc(counts.sources, m.book);
-                inc(counts.sizes, m.size);
-                inc(counts.kinds, m.kind);
-                inc(counts.names, m.name);
-                m.attributes.forEach(a => {
-                    inc(counts.attributes, a);
-                });
-            }
-
             return counts;
         }
-
+        
         public filteredBestiary(party: data.IParty,
                                 filter: data.IPredicate<data.Monster>) {
             return this.monsters
