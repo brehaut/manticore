@@ -287,11 +287,11 @@ module manticore.bestiary {
 
         public featureCounts(party: data.IParty, filters: {[index: string]: string[]}) {
             var descriptors = [
-                {countKey: "sources", monsterKey: "book"},
-                {countKey: "sizes", monsterKey: "size"},
-                {countKey: "kinds", monsterKey: "kind"},
-                {countKey: "names", monsterKey: "name"},
-                {countKey: "attributes", monsterKey: "attributes"},
+                {countKey: "sources", monsterKey: "book", filterKey: "sources"},
+                {countKey: "sizes", monsterKey: "size", filterKey: "size"},
+                {countKey: "kinds", monsterKey: "kind", filterKey: "kind"},
+                {countKey: "names", monsterKey: "name", filterKey: "name"},
+                {countKey: "attributes", monsterKey: "attributes", filterKey: "attributes"},
             ];
             
             function filtersExcluding(key):{[index:string]: string[]} {
@@ -304,7 +304,7 @@ module manticore.bestiary {
                 return {
                     countKey: descriptor.countKey,
                     monsterKey: descriptor.monsterKey,
-                    predicate: data.predicateForFilters(filtersExcluding(descriptor.monsterKey))
+                    predicate: data.predicateForFilters(filtersExcluding(descriptor.filterKey))
                 };
             }
                         
@@ -321,7 +321,7 @@ module manticore.bestiary {
                     var m = viable[i];
                     var attr = m[descriptor.monsterKey]
                     if (attr instanceof Array) {
-                        attr.forEach(a => inc);
+                        attr.forEach(inc);
                     }
                     else {
                         inc(attr);
