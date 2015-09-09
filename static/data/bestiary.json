@@ -72,7 +72,7 @@
   ["Huge white dragon",5,"huge","troop",["white","dragon"]],
   ["Hydra, 5 heads",5,"huge","wrecker",["hydra","beast"]],
   ["Medium blue dragon",5,"normal","caster",["dragon","blue"]],
-  ["Sahuagin",5,"normal","wrecker",["humanoid", "sahaugin"]],
+  ["Sahuagin",5,"normal","wrecker",["humanoid", "sahuagin"]],
   ["Wraith",5,"normal","spoiler",["undead"]],
   ["Wyvern",5,"large","wrecker",["beast"]],
 
@@ -367,7 +367,7 @@
   ["Lokkris", 6, "normal", "mook", ["beast"], 61], 
   ["Ogre mage knight", 6, "large", "wrecker", ["giant"], 152], 
   ["Parasitic dybbuk", 6, "large", "spoiler", ["demon"], 64], 
-  ["Sahuagin mutant", 6, "large", "wrecker", ["humanoid", "sahaugin"], 189], 
+  ["Sahuagin mutant", 6, "large", "wrecker", ["humanoid", "sahuagin"], 189], 
   ["Sparkscale naga", 6, "large", "leader", ["beast", "naga"], 144], 
   ["Spider mount", 6, "large", "troop", ["beast"], 60], 
   ["Winter beast", 6, "large", "troop", ["beast"], 79], 
