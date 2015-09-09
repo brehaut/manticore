@@ -346,6 +346,8 @@ module manticore.interface {
             Array.from(this.el.querySelectorAll("a.mode-switch")).forEach(el => (<HTMLElement>el).classList.remove("-active"));
             var active = (<HTMLElement>this.el.querySelector("a.mode-switch.-" + this.mode["class"]));
             if (active) active.classList.add("-active");
+
+            this.onFilterChanged.trigger("");
         }
         
         private showChildView(filtersVisible: boolean) {
