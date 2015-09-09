@@ -100,14 +100,19 @@ module manticore.interface {
         }
 
         private createElements() {
+            var clickGenerate = (e) => {
+                this.onRequestGenerate.trigger(null);
+                e.preventDefault();
+                e.stopPropagation();
+            };
+            
             this.el = interface.sectionMarkup("Encounters", "results", "[results summary]", [
                 DOM.div(
                     {
                         "class": "button generate",
                         
-                        onclick: (e) => {
-                            this.onRequestGenerate.trigger(null);
-                        }
+                        onclick: clickGenerate,
+                        ontouchend: clickGenerate
                     },
                     [
                         DOM.text(_("generate encounters"))
@@ -119,7 +124,8 @@ module manticore.interface {
                 {
                     "class":"button",
 
-                    onclick: (e) => this.show100()
+                    onclick: (e) => this.show100(),
+                    ontouchend: (e) => this.show100(),
                 }, 
                 [DOM.text(_("more"))]
             );

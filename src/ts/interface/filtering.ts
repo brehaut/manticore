@@ -85,14 +85,19 @@ module manticore.interface {
         }
         
         private createElements() {
+            var toggleClick = (e) => {
+                if (e.target.nodeName.toLowerCase() !== "li") return;                        
+                this.toggleState(e.target.getAttribute("data-name"));
+                e.preventDefault();
+                e.stopPropagation();
+            };
+            
             var ul = DOM.ul(
                 {
                     "class": "clearfix",
 
-                    onclick: (e) => {
-                        if (e.target.nodeName.toLowerCase() !== "li") return;                        
-                        this.toggleState(e.target.getAttribute("data-name"));
-                    }
+                    onclick: toggleClick,
+                    ontouchend: toggleClick,
                 },
                 this.attributes.map(key => {
                     var k = key.toString();
@@ -103,16 +108,19 @@ module manticore.interface {
                 })
             );
 
+            var clickReset = (e) => {
+                e.preventDefault();
+                this.clearAll();
+                e.stopPropagation();
+            };
             
             var header = DOM.header(null, [
                 DOM.h2(null, [
                     DOM.text(_(this.name)),
                     DOM.a({
                         "class": "reset",
-                        "onclick": (e) => {
-                            e.preventDefault();
-                            this.clearAll();
-                        }
+                        "onclick": clickReset,
+                        ontouchend: clickReset,
                     }, [DOM.text(_("[reset]"))])
                 ])
             ]);
@@ -250,7 +258,6 @@ module manticore.interface {
         }
 
         public updateFilterCounts(filters: any) {
-            console.log(filters.names);
             this.byNameView.updateFilterCounts(filters.names);
         }
         
@@ -356,6 +363,18 @@ module manticore.interface {
         }
         
         private createElements() {
+            var filtersMode = (e) => {
+                this.setMode(SelectionView.filtersMode);
+                e.preventDefault();
+                e.stopPropagation();
+            };
+
+            var pickerMode = (e) => {
+                this.setMode(SelectionView.pickersMode);
+                e.preventDefault();
+                e.stopPropagation();
+            };
+            
             this.el = interface.sectionMarkup("Filter monsters", "selection", "[select monsters]",
                 [
                     DOM.div(
@@ -365,20 +384,16 @@ module manticore.interface {
                             DOM.text(" "),
                             DOM.a({
                                 "class": "mode-switch -filters",
-                                onclick:(e) => {
-                                    this.setMode(SelectionView.filtersMode);
-                                    e.preventDefault();
-                                }
+                                onclick: filtersMode,
+                                ontouchend: filtersMode
                             }, [
                                 DOM.text(_("[use filters]"))
                             ]),
                             DOM.text(" "),
                             DOM.a({
                                 "class": "mode-switch -picker",
-                                onclick:(e) => {
-                                    this.setMode(SelectionView.pickersMode);
-                                    e.preventDefault();
-                                }
+                                onclick: pickerMode,
+                                ontouchend: pickerMode
                             }, [
                                 DOM.text(_("[use pickers]"))
                             ])]),                          
