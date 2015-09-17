@@ -3,7 +3,7 @@
 /// <reference path="../data.ts" />
 /// <reference path="common.ts" />
 
-module manticore.interface {
+module manticore.ui {
     import _ = strings._;
     
     class PropertyFilterView implements IView {
@@ -97,7 +97,7 @@ module manticore.interface {
                     "class": "clearfix",
 
                     onclick: toggleClick,
-                    ontouchend: toggleClick,
+//                    ontouchend: toggleClick,
                 },
                 this.attributes.map(key => {
                     var k = key.toString();
@@ -120,7 +120,7 @@ module manticore.interface {
                     DOM.a({
                         "class": "reset",
                         "onclick": clickReset,
-                        ontouchend: clickReset,
+//                        ontouchend: clickReset,
                     }, [DOM.text(_("[reset]"))])
                 ])
             ]);
@@ -375,7 +375,7 @@ module manticore.interface {
                 e.stopPropagation();
             };
             
-            this.el = interface.sectionMarkup("Filter monsters", "selection", "[select monsters]",
+            this.el = ui.sectionMarkup("Filter monsters", "selection", "[select monsters]",
                 [
                     DOM.div(
                         null,
@@ -385,7 +385,7 @@ module manticore.interface {
                             DOM.a({
                                 "class": "mode-switch -filters",
                                 onclick: filtersMode,
-                                ontouchend: filtersMode
+//                                ontouchend: filtersMode
                             }, [
                                 DOM.text(_("[use filters]"))
                             ]),
@@ -393,7 +393,7 @@ module manticore.interface {
                             DOM.a({
                                 "class": "mode-switch -picker",
                                 onclick: pickerMode,
-                                ontouchend: pickerMode
+//                                ontouchend: pickerMode
                             }, [
                                 DOM.text(_("[use pickers]"))
                             ])]),                          

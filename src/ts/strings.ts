@@ -1,4 +1,4 @@
-module manticore.interface.strings {
+module manticore.ui.strings {
     export enum Locale {
         EN
     }

@@ -2,11 +2,11 @@
 /// <reference path="../strings.ts" />
 /// <reference path="../dom.ts" />
 /// <reference path="common.ts" />
-/// <reference path="../interface.ts" />
+/// <reference path="../ui.ts" />
 
-module manticore.interface {
+module manticore.ui {
     import _ = strings._;
-    import Event = manticore.interface.Event;
+    import Event = manticore.ui.Event;
 
     
     class NumericField implements IView {
@@ -92,7 +92,7 @@ module manticore.interface {
             var size = this.labeledNumericField(_("Party size"), "size", 4, 10);
             var level = this.labeledNumericField(_("Party level"), "level", 2, 10);
 
-            this.el = interface.sectionMarkup("Party", "party", "[party summary]", [
+            this.el = ui.sectionMarkup("Party", "party", "[party summary]", [
                 size,
                 level
             ]);

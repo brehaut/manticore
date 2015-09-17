@@ -4,7 +4,7 @@
 /// <reference path="common.ts" />
 
 
-module manticore.interface {
+module manticore.ui {
     var _ = strings._;
 
     export class ResultsView implements IView {
@@ -106,13 +106,13 @@ module manticore.interface {
                 e.stopPropagation();
             };
             
-            this.el = interface.sectionMarkup("Encounters", "results", "[results summary]", [
+            this.el = ui.sectionMarkup("Encounters", "results", "[results summary]", [
                 DOM.div(
                     {
                         "class": "button generate",
                         
                         onclick: clickGenerate,
-                        ontouchend: clickGenerate
+//                        ontouchend: clickGenerate
                     },
                     [
                         DOM.text(_("generate encounters"))
@@ -125,7 +125,7 @@ module manticore.interface {
                     "class":"button",
 
                     onclick: (e) => this.show100(),
-                    ontouchend: (e) => this.show100(),
+//                    ontouchend: (e) => this.show100(),
                 }, 
                 [DOM.text(_("more"))]
             );

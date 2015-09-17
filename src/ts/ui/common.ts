@@ -2,7 +2,7 @@
 /// <reference path="../strings.ts" />
 /// <reference path="../dom.ts" />
 
-module manticore.interface {
+module manticore.ui {
     import _ = strings._;
     
     export function cssClassName(text:string):string {

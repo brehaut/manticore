@@ -2,7 +2,7 @@
 /// <reference path="shims.ts" />
 /// <reference path="data.ts" />
 /// <reference path="bestiary.ts" />
-/// <reference path="interface.ts" />
+/// <reference path="ui.ts" />
 /// <reference path="appcache.ts" />
 
 module manticore {
@@ -59,7 +59,7 @@ module manticore {
         .then<bestiary.Bestiary>(bestiary.createBestiary)
     ;
 
-    interface.initialize(
+    ui.initialize(
         document.getElementById("application"),
         Promise.all([dataset, awaitContentLoaded()])
             .then(all => all[0])

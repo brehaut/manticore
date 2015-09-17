@@ -33,8 +33,8 @@ module manticore.appcache {
         if(applicationCache.status !== applicationCache.UPDATEREADY) return;
         applicationCache.swapCache();
 
-        inPageConfirm(interface.strings._("There is a new version of this app available. "), 
-                      interface.strings._("Reload?"))
+        inPageConfirm(ui.strings._("There is a new version of this app available. "), 
+                      ui.strings._("Reload?"))
             .then<any>(_ => location.reload());
     }
     

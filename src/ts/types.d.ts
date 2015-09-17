@@ -28,11 +28,6 @@ declare var Promise: PromiseStatic;
 
 // snaffled from ts es6.d.ts on github,
 // minus support for itereables
-interface ArrayLike<T> {
-    length: number;
-    [n: number]: T;
-}
-
 
 
 interface ArrayConstructor {

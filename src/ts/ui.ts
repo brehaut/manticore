@@ -1,13 +1,13 @@
 /// <reference path="data.ts" />
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
-/// <reference path="interface/common.ts" />
-/// <reference path="interface/party.ts" />
-/// <reference path="interface/filtering.ts" />
-/// <reference path="interface/results.ts" />
+/// <reference path="ui/common.ts" />
+/// <reference path="ui/party.ts" />
+/// <reference path="ui/filtering.ts" />
+/// <reference path="ui/results.ts" />
 
-module manticore.interface {
-    var _ = strings._;
+module manticore.ui {
+    import _ = strings._;
 
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
