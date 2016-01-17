@@ -294,6 +294,10 @@ div.filters .selection-count {
     border-radius: 2px;
 }
 
+.C.attribute-filter li > input[type=checkbox] {
+    display: none;
+}
+
 .C.attribute-filter li .count {
     float: right;
     font-style: italic;

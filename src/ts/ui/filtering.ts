@@ -6,6 +6,7 @@
 module manticore.ui {
     import _ = strings._;
     
+    
     class PropertyFilterView implements IView {
         private el:HTMLElement;
 
@@ -86,23 +87,34 @@ module manticore.ui {
         
         private createElements() {
             var toggleClick = (e) => {
-                if (e.target.nodeName.toLowerCase() !== "li") return;                        
-                this.toggleState(e.target.getAttribute("data-name"));
+                var nodeName = e.target.nodeName.toLowerCase();
+                if (nodeName === "li") {
+                    this.toggleState(e.target.getAttribute("data-name"));
+                }
+                else if (nodeName === "label" || nodeName === "span") {
+                    this.toggleState(e.target.parentNode.getAttribute("data-name"));
+                }
                 e.preventDefault();
                 e.stopPropagation();
             };
+
+            function checkbox(key: string) {
+                return DOM.documentFragment(
+                    [DOM.input({"type": "checkbox", "name": key}),
+                     DOM.label({"for": key}, [DOM.text(_(key))])]
+                );                
+            }
             
             var ul = DOM.ul(
                 {
                     "class": "clearfix",
 
                     onclick: toggleClick,
-//                    ontouchend: toggleClick,
                 },
                 this.attributes.map(key => {
                     var k = key.toString();
                     return DOM.li({"data-name": k}, [
-                        DOM.text(_(k)),
+                        checkbox(k),
                         DOM.span({"class": "count"}, [])
                     ]);
                 })
@@ -120,7 +132,6 @@ module manticore.ui {
                     DOM.a({
                         "class": "reset",
                         "onclick": clickReset,
-//                        ontouchend: clickReset,
                     }, [DOM.text(_("[reset]"))])
                 ])
             ]);

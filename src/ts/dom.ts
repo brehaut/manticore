@@ -22,6 +22,16 @@ module manticore {
         }
      }
 
+
+    function documentFragment(children) {
+        var df = document.createDocumentFragment();
+        for (var i = 0; i < children.length; i++) {
+            df.appendChild(children[i]);
+        }
+        return df;
+    }
+
+    
     export var DOM = {
         remove: (n:Node) => {
             if (n.parentNode) n.parentNode.removeChild(n);
@@ -33,6 +43,8 @@ module manticore {
 
         text: (s:string) => document.createTextNode(s),
 
+        documentFragment: documentFragment,
+        
         div: makeEl("div"),
         span: makeEl("span"),
         a: makeEl("a"),
@@ -57,6 +69,7 @@ module manticore {
         form: makeEl("form"),
         button: makeEl("button"),
         input: makeEl("input"),
-        label: makeEl("label")
+        label: makeEl("label"),
     };
 }
+
