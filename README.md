@@ -31,6 +31,6 @@ William Byrd provided feedback and revision to a very early draft of this progra
 
 This program uses trademarks and/or copyrights owned by Fire Opal Media, which are used under the Fire Opal Media, 13th Age Community Use Policy. We are expressly prohibited from charging you to use or access this content. This program is not published, endorsed, or specifically approved by Fire Opal Media. For more information about Fire Opal Media's 13th Age Community Use Policy, please visit [www.fireopalmedia.com/communityuse](http://www.fireopalmedia.com/communityuse). For more information about Fire Opal Media and *13th Age* products, please visit [www.fireopalmedia.com](http://www.fireopalmedia.com) and [www.pelgranepress.com](http://www.pelgranepress.com).
 
-Source code copyright © 2014 Andrew Brehaut
+Source code copyright © 2014-2015 Andrew Brehaut
 
 Distributed under the Eclipse Public License
