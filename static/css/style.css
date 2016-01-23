@@ -319,26 +319,26 @@ div.filters .selection-count {
     display: block;
 }
 
-.C.attribute-filter li.selected.viable {
+.C.attribute-filter li.viable > input:checked + label {
     color: rgba(70, 27, 14, 1);
 }
 
 
-.C.attribute-filter li:after {
+.C.attribute-filter li > label:after {
     position: absolute;
     display: inline-block;
-    content: '✔';
+    content: ' ';
     width: 0.52em;
     height: 0.56em;
     top: 0.35em;
     left: 0.41em;
     border-radius: 2px;
     opacity: 0;
-    transition: 120ms opacity ease-in-out;
 }
 
-.C.attribute-filter li.selected:after {
+.C.attribute-filter li > input:checked + label:after {
     opacity: 1;
+    content: '✔';
 }
 
 

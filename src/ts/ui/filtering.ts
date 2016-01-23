@@ -57,8 +57,9 @@ module manticore.ui {
         }
         
         private toggleState(attribute:string) { 
-            var li = <HTMLElement> this.el.querySelector('li[data-name="' + attribute + '"]');
-            li.classList.toggle("selected");
+            var checkbox = <HTMLInputElement> this.el.querySelector('input[type=checkbox][name="' + attribute + '"]');
+            
+            checkbox.checked = !checkbox.checked;
 
             this.changeOccured();
         }
