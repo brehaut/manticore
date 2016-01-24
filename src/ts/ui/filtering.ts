@@ -24,10 +24,8 @@ module manticore.ui {
         }
 
         public getSelectedAttributes():string[] {            
-            var selected = Array.from<Node>(this.el.querySelectorAll("li"))
-                .map<string>((el:HTMLElement) =>
-                    el.classList.contains("selected") ? el.getAttribute("data-name") : null)
-               .filter((attr) => !!attr)
+            var selected = Array.from<Node>(this.el.querySelectorAll("li > input:checked"))
+                .map<string>((el:HTMLElement) => el.name)
            ;
 
            return selected;
@@ -37,7 +35,7 @@ module manticore.ui {
              Array.from<Node>(this.el.querySelectorAll("li"))
                 .forEach((el:HTMLElement) => {
                     if (el.classList.contains("clear-selection")) return;
-                    var name = el.getAttribute("data-name");
+                    var name = el.querySelector("input[type=checkbox]").name;
                     var count = filters[name] || 0;
 
                     if (count > 0) {
@@ -58,7 +56,7 @@ module manticore.ui {
         
         private toggleState(attribute:string) { 
             var checkbox = <HTMLInputElement> this.el.querySelector('input[type=checkbox][name="' + attribute + '"]');
-            
+
             checkbox.checked = !checkbox.checked;
 
             this.changeOccured();
