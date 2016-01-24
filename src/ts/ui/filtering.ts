@@ -25,7 +25,7 @@ module manticore.ui {
 
         public getSelectedAttributes():string[] {            
             var selected = Array.from<Node>(this.el.querySelectorAll("li > input:checked"))
-                .map<string>((el:HTMLElement) => el.name)
+                .map<string>((el:HTMLInputElement) => el.name)
            ;
 
            return selected;
@@ -35,7 +35,7 @@ module manticore.ui {
              Array.from<Node>(this.el.querySelectorAll("li"))
                 .forEach((el:HTMLElement) => {
                     if (el.classList.contains("clear-selection")) return;
-                    var name = el.querySelector("input[type=checkbox]").name;
+                    var name = (<HTMLInputElement>el.querySelector("input[type=checkbox]")).name;
                     var count = filters[name] || 0;
 
                     if (count > 0) {
