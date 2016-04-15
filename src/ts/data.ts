@@ -1,3 +1,5 @@
+/// <reference path="types.d.ts" />
+
 module manticore.data {  
     export class Monster {
         public scale:string;
@@ -35,7 +37,7 @@ module manticore.data {
 
 
     export interface Allocator {
-        (party: IParty, monsters: Array<Monster>): Array<Array<Allocation>>;
+        (party: IParty, monsters: Array<Monster>): Promise<Array<Array<Allocation>>>;
     }
 
 

@@ -19,3 +19,4 @@ out/*
 /manifest.appcache
 *.DS_Store
 /node_modules/*
+static/js/worker.js

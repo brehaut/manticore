@@ -4,6 +4,7 @@
 /// <reference path="bestiary.ts" />
 /// <reference path="ui.ts" />
 /// <reference path="appcache.ts" />
+/// <reference path="typed-workers.ts" />
 
 module manticore {
     function mergeWith<T>(merge?:(a:T, b:T) => T) {
@@ -58,12 +59,24 @@ module manticore {
         .then<any>(mergeWith<any[]>((a, b) => a.concat(b)))
         .then<bestiary.Bestiary>(bestiary.createBestiary)
     ;
+    
+    
+    function allocate(party: data.IParty, monsters: data.Monster[]) {
+        const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>("/static/js/worker.js");
+        
+        return new Promise(resolve => {
+            allocationWorker.onmessage = (message) => {
+                resolve(message.data);
+            };
+            allocationWorker.postMessage([party, monsters]);
+        });
+    }
 
     ui.initialize(
         document.getElementById("application"),
         Promise.all([dataset, awaitContentLoaded()])
             .then(all => all[0])
             .catch(e => console.error("An error occured bootstrapping the application", e)),
-        bestiary.allocationsForParty
+        allocate
     );
 }

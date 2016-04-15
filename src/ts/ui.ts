@@ -1,4 +1,6 @@
+/// <reference path="types.d.ts" />
 /// <reference path="data.ts" />
+/// <reference path="bestiary.ts" />
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
 /// <reference path="ui/common.ts" />
@@ -65,10 +67,9 @@ module manticore.ui {
             this.resultsView.onRequestGenerate.register(_ => {
                 var selection = this.getSelection();
 
-                var alloc = this.allocator(this.partyView.getPartyInfo(),
-                                           selection);
-
-                this.resultsView.displayResults(this.partyView.getPartyInfo(), alloc);
+                this.allocator(this.partyView.getPartyInfo(),
+                               selection)
+                    .then(alloc => this.resultsView.displayResults(this.partyView.getPartyInfo(), alloc));
             });
         }
         

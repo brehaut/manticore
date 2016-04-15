@@ -1,3 +1,5 @@
+/// <reference path="data.ts" />
+
 module manticore.bestiary {
     // Monster records
     //
@@ -49,7 +51,7 @@ module manticore.bestiary {
             if (partyLevel === 1) {
                 return base / 3;
             }
-            else if (partyLevel === 2) {
+            else if (partyLevel === 2) { 
                 return base / 4;
             }
             else {
