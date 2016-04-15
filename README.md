@@ -1,17 +1,16 @@
 # Manticore
 
-An experimental typescript program to generate encounters for [*13th Age*](http://13thage.com/). 
+An typescript program to generate encounters for [*13th Age*](http://13thage.com/). 
 
 ## Usage
 
-This project is currently a WIP.
-
 The easy way is just to visit the online instance at [http://manticore.brehaut.net](http://manticore.brehaut.net).
 	
-If you want to run/develop it locally you will need node.js and make installed to build this project:
+If you want to run/develop it locally you will need [Node JS](https://nodejs.org/), [Gulp](http://gulpjs.com), and `make` installed to build this project:
 
-    $ make deps
-    $ make
+    $ npm install
+    $ gulp
+    $ make manifest
 
 will install the typescript compiler in the project, and compile the typescript source and move it and other resources into the `target` directory ready for deployment. 
 
@@ -19,7 +18,7 @@ The application is a simple client side web app, so you just need to place the `
 
 ##  Known issues:
 
- * It will never work in Internet Explorer 8 or lower.
+ * It will never work in Internet Explorer 10 or lower (Version 0.4 works in IE9), but [you shouldn’t be using IE10 or earlier](https://www.microsoft.com/en-us/WindowsForBusiness/End-of-IE-support) anyway.
 
 See [Issues](https://github.com/brehaut/manticore/issues) for more. 
 

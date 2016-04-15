@@ -32,7 +32,6 @@ manifest:
 
 	cat $(SRC_ROOT)/manifest-static >> $(MANIFEST);
 	for file in $(SCRIPTS)/*; do echo $$file >> $(MANIFEST); done
-	echo $(TS_APP_OUT) >> $(MANIFEST)
 	for file in $(STYLES)/*.css; do echo $$file >> $(MANIFEST); done
 	for file in $(STYLES)/alegreya/*; do echo $$file >> $(MANIFEST); done
 	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
@@ -40,7 +39,8 @@ manifest:
 
 
 build_ts:
-	$(TSC) $(SRC_ROOT)/ts/manticore.ts --removeComments --out $(TARGET_ROOT)/$(STATIC_ROOT)/js/main.js
+	echo "Deprecation warning: `make build_ts` is now legacy; switch to `gulp` for build."
+	gulp default
 
 
 bundle_all: clean bundle_contrib_js build_ts manifest
@@ -61,11 +61,9 @@ release: clean build_stock manifest
 
 # development time utility targets
 
-deps:
-	npm install typescript
-
 watch: bundle_contrib_js manifest
-	$(TSC) -w $(TS_APP_SRC) --sourcemap --out static/js/main.js
+	echo "Deprecation warning: `make watch` is now legacy; switch to `gulp watch` for a better dev watcher."	
+	gulp watch
 
 server:
 	python -m SimpleHTTPServer
