@@ -5,6 +5,8 @@
 /// <reference path="ui.ts" />
 /// <reference path="appcache.ts" />
 /// <reference path="typed-workers.ts" />
+/// <reference path="messaging.ts" />
+/// <reference path="model/party.ts" /> 
 
 module manticore {
     function mergeWith<T>(merge?:(a:T, b:T) => T) {
@@ -62,7 +64,7 @@ module manticore {
     
     
     function allocate(party: data.IParty, monsters: data.Monster[]) {
-        const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>("/static/js/worker.js");
+        const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>("/static/js/processing.js");
         
         return new Promise(resolve => {
             allocationWorker.onmessage = (message) => {

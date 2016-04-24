@@ -10,10 +10,18 @@ var uiProject = ts({
 
 var generationWorkerProject = ts({
     noImplicitAny: false,
-    out: 'worker.js',
+    out: 'processing.js',
     removeComments: true,
     noLib: true,
 })
+
+var dataAccessWorkerProject = ts({
+    noImplicitAny: false,
+    out: 'dataAcess.js',
+    removeComments: true,
+    noLib: true,
+})
+
 
 gulp.task('default', function() {
     var ui = gulp.src('src/ts/manticore.ts')
@@ -26,9 +34,15 @@ gulp.task('default', function() {
         .pipe(gulp.dest('static/js'))
         ;
    
+    var dataAccessWorker = gulp.src('src/ts/workers/data-access.ts')
+        .pipe(dataAccessWorkerProject)
+        .pipe(gulp.dest('static/js'))
+        ;
+   
     return merge([
         ui,
-        processingWorker
+        processingWorker,
+        dataAccessWorker
     ])
 });
 

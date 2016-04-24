@@ -3,9 +3,14 @@
 /// <reference path="../data.ts" />
 
 module manticore.workers.processing {
-    onmessage = (message) => {
-        const [party, monsters]:[data.IParty, data.Monster[]] = message.data;
+    interface ProcessingMessageEvent extends MessageEvent {
+        data: [data.IParty, data.Monster[]];
+    }
+    
+    onmessage = (message:ProcessingMessageEvent) => {
+        const [party, monsters] = message.data;
         
         postMessage(bestiary.allocationsForParty(party, monsters));
+        close();
     };
 } 
