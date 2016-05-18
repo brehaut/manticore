@@ -17,7 +17,7 @@ var generationWorkerProject = ts({
 
 var dataAccessWorkerProject = ts({
     noImplicitAny: false,
-    out: 'dataAcess.js',
+    out: 'data-access.js',
     removeComments: true,
     noLib: true,
 })

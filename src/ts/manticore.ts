@@ -6,6 +6,7 @@
 /// <reference path="appcache.ts" />
 /// <reference path="typed-workers.ts" />
 /// <reference path="messaging.ts" />
+/// <reference path="model/bestiary.ts" />
 /// <reference path="model/party.ts" /> 
 
 module manticore {
@@ -64,7 +65,7 @@ module manticore {
     
     
     function allocate(party: data.IParty, monsters: data.Monster[]) {
-        const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>("/static/js/processing.js");
+        const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>("static/js/processing.js");
         
         return new Promise(resolve => {
             allocationWorker.onmessage = (message) => {

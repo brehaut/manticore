@@ -42,6 +42,10 @@ module manticore.ui {
                 
             });
         }
+        
+        public setValue(value: number) {
+            this.el.value = value.toString();
+        }
 
         _appendTo(el) {
             el.appendChild(this.el);
@@ -51,13 +55,18 @@ module manticore.ui {
     
     
     export class PartyView implements IView {
-        private el:HTMLElement;b
+        private el:HTMLElement;
+        private size: NumericField;
+        private level: NumericField;
+        private worker = manticore.model.partyWorker(); 
+        
 
         public onChanged: Event<data.IParty>;
 
         constructor () {
             this.onChanged = new Event<data.IParty>();
             this.createElements();
+            this.worker.onmessage = (message:workers.ILightWeightMessageEvent<data.IParty>) => this.storageChanged(message.data);
         }
 
         public getPartyInfo():data.IParty {
@@ -74,9 +83,9 @@ module manticore.ui {
         private labeledNumericField(label:string, 
                                     className:string, 
                                     val:number, 
-                                    max?:number) {
+                                    max?:number):[HTMLElement, NumericField] {
             var input = new NumericField(val, max); 
-            input.onChanged.register(_ => this.onChanged.trigger(this.getPartyInfo()));
+            input.onChanged.register(_ => this.fieldChanged());
 
             var div = DOM.div(
                 {"class": "field " + className},
@@ -85,16 +94,31 @@ module manticore.ui {
 
             input._appendTo(div); 
 
-            return div;
+            return [div, input];
+        }
+        
+        private storageChanged(data: data.IParty) {
+            console.log(data);
+            this.size.setValue(data.size);
+            this.level.setValue(data.level);
+        }
+        
+        private fieldChanged() {
+            const partyInfo = this.getPartyInfo();
+            this.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
+            this.onChanged.trigger(partyInfo);
         }
 
         private createElements() {
-            var size = this.labeledNumericField(_("Party size"), "size", 4, 10);
-            var level = this.labeledNumericField(_("Party level"), "level", 2, 10);
+            var [sizeEl, sizeField] = this.labeledNumericField(_("Party size"), "size", 4, 10);
+            var [levelEl, levelField] = this.labeledNumericField(_("Party level"), "level", 2, 10);
+            
+            this.size = sizeField;
+            this.level = levelField;
 
             this.el = ui.sectionMarkup("Party", "party", "[party summary]", [
-                size,
-                level
+                sizeEl,
+                levelEl
             ]);
         }
     }

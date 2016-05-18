@@ -36,6 +36,9 @@ manifest:
 	for file in $(STYLES)/alegreya/*; do echo $$file >> $(MANIFEST); done
 	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
 	for file in $(IMAGES)/*; do echo $$file >> $(MANIFEST); done
+	
+	# a hack because gulp is doing dumb things with file timestamps
+	for file in $(SCRIPTS)/*; do touch $$file; done
 
 
 build_ts:

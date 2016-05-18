@@ -14,6 +14,19 @@ module manticore.workers {
     }  
     
     
+    // wrap a workerlike object in a promise for other consumers
+    export function workerPromise<TIn, TOut>(workerlike: { 
+            onmessage: (message: {data: TOut}) => any;
+            onclose?: () => any;
+        }):Promise<TOut> {
+        return new Promise((resolve, reject) => {
+            workerlike.onmessage = (message) => resolve(message.data);  
+            if (workerlike.onclose) {
+                workerlike.onclose = () => reject(null);
+            }
+        })
+    }
+    
     // internal workers are worker like objects that do not own the process space 
     // that the execute in. 
     export interface ILightWeightMessageEvent<TRecv>  {

@@ -4,7 +4,7 @@
 /// <reference path="../messaging.ts" />
 
 module manticore.workers.dataAccess {
-    interface DataAccessMessgeEvent extends MessageEvent {
+    interface DataAccessMessageEvent extends MessageEvent {
         data: any
     }
     
