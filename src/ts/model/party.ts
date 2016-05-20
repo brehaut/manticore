@@ -19,7 +19,7 @@ module manticore.model {
         
         (<any>window).addEventListener('storage', function(e) {
             postData();
-        }) 
+        })                
         
         worker.onmessage = (message) => {
             const data = message.data;
@@ -35,6 +35,10 @@ module manticore.model {
                 // TODO: Post error
             }     
         }
+        
+        // immediately post any stored data / default values but do so the next
+        // go round the event loop to ensure that any listeners can be bound before the data arrives
+        setTimeout(() => postData(), 0);
     }
     
     export function partyWorker () {

@@ -366,28 +366,43 @@ var manticore;
 (function (manticore) {
     var messaging;
     (function (messaging) {
+        function message(key, payload) {
+            return { key: key, payload: payload };
+        }
         var dataAccess;
         (function (dataAccess) {
+            var PartyGetKey = "party.get";
+            var PartyPutKey = "party.put";
+            var PartyDataKey = "party.data";
             function isPartyMessage(msg) {
-                return (msg.key === "Party.Get" || msg.key === "Party.Put");
+                return (msg.key === PartyGetKey || msg.key === PartyPutKey);
             }
             dataAccess.isPartyMessage = isPartyMessage;
             function isPartyGet(msg) {
-                return (msg.key === "Party.Get");
+                return (msg.key === PartyGetKey);
             }
             dataAccess.isPartyGet = isPartyGet;
             function isPartyPut(msg) {
-                return (msg.key === "Party.Put");
+                return (msg.key === PartyPutKey);
             }
             dataAccess.isPartyPut = isPartyPut;
+            function isPartyData(msg) {
+                return (msg.key === PartyDataKey);
+            }
+            dataAccess.isPartyData = isPartyData;
             function partyPutMessage(data) {
-                return { key: "Party.Put", payload: data };
+                return { key: PartyPutKey, payload: data };
             }
             dataAccess.partyPutMessage = partyPutMessage;
             function partyGetMessage() {
-                return { key: "Party.Get", payload: undefined };
+                return { key: PartyGetKey, payload: undefined };
             }
             dataAccess.partyGetMessage = partyGetMessage;
+            function partyDataMessage(data) {
+                return { key: PartyDataKey, payload: data };
+            }
+            dataAccess.partyDataMessage = partyDataMessage;
+            var BestiaryGetKey = "bestiary.get";
             function isBestiaryMessage(msg) {
                 return (msg.key === "Bestiary.Get");
             }
@@ -396,6 +411,10 @@ var manticore;
                 return (msg.key === "Bestiary.Get");
             }
             dataAccess.isBestiaryGet = isBestiaryGet;
+            function bestiaryGetMessage(resourceName) {
+                return { key: BestiaryGetKey, payload: { getResource: resourceName } };
+            }
+            dataAccess.bestiaryGetMessage = bestiaryGetMessage;
         })(dataAccess = messaging.dataAccess || (messaging.dataAccess = {}));
     })(messaging = manticore.messaging || (manticore.messaging = {}));
 })(manticore || (manticore = {}));

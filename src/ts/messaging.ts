@@ -13,35 +13,60 @@ module manticore.messaging {
         payload: TPayload;
     }
    
+    export type GenericMessage = IMessage<string, any>;
+    
+    function message(key: string, payload: any): GenericMessage {
+        return { key: key, payload: payload };
+    } 
     
     export module dataAccess {
         // messages for accessing party information       
-        export type PartyGet = IMessage<"Party.Get", void>;
-        export type PartyPut = IMessage<"Party.Put", data.IParty>;
-        export type PartyMessage = PartyGet | PartyPut;      
+        type PartyGetKeyT = "party.get";   
+        const PartyGetKey: PartyGetKeyT = "party.get";    
+        type PartyPutKeyT = "party.put";   
+        const PartyPutKey: PartyPutKeyT = "party.put"; 
+        type PartyDataKeyT = "party.data";
+        const PartyDataKey: PartyDataKeyT = "party.data";
+        
+        export type PartyGet = IMessage<PartyGetKeyT, void>;
+        export type PartyPut = IMessage<PartyPutKeyT, data.IParty>;
+        export type PartyData = IMessage<PartyDataKeyT, data.IParty>;
+        export type PartyMessage = PartyGet | PartyPut | PartyData;      
         
         export function isPartyMessage(msg:IMessage<any, any>): msg is PartyMessage {
-            return (msg.key === "Party.Get" || msg.key === "Party.Put");
+            return (msg.key === PartyGetKey || msg.key === PartyPutKey);
         }
         
         export function isPartyGet(msg:PartyMessage): msg is PartyGet {
-            return (msg.key === "Party.Get");
+            return (msg.key === PartyGetKey);
         }
         
         export function isPartyPut(msg:PartyMessage): msg is PartyPut {
-            return (msg.key === "Party.Put");
+            return (msg.key === PartyPutKey);
+        }
+        
+        export function isPartyData(msg:PartyMessage): msg is PartyData {
+            return (msg.key === PartyDataKey);
         }
         
         export function partyPutMessage(data: data.IParty): PartyMessage {
-            return {key: "Party.Put", payload: data};
+            return {key: PartyPutKey, payload: data};
         }
         
         export function partyGetMessage(): PartyMessage {
-            return {key: "Party.Get", payload: undefined};
+            return {key:PartyGetKey, payload: undefined};
         }
         
+        export function partyDataMessage(data: data.IParty): PartyMessage {
+            return {key: PartyDataKey, payload: data};
+        }
+        
+        
         // messages for accessing bestiary data.
-        export type BestiaryGet = IMessage<"Bestiary.Get", {getResource: "standard" | "custom" }>;
+        type BestiaryGetKeyT = "bestiary.get";
+        const BestiaryGetKey: BestiaryGetKeyT = "bestiary.get";
+        
+        export type BestiaryGet = IMessage<BestiaryGetKeyT, {getResource: "standard" | "custom" }>;
         
         export type BestiaryMessage = BestiaryGet;
         
@@ -52,5 +77,9 @@ module manticore.messaging {
         export function isBestiaryGet(msg:BestiaryMessage): msg is BestiaryGet {
             return (msg.key === "Bestiary.Get");
         } 
+        
+        export function bestiaryGetMessage(resourceName: "standard" | "custom") : BestiaryMessage {
+            return { key: BestiaryGetKey, payload: { getResource: resourceName }  };
+        }
     }
 }
