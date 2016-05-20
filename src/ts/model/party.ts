@@ -8,7 +8,7 @@ module manticore.model {
     const PARTY_STATE_KEY = "state.party";
     
     function getOrDefault<T>(key: string, def:T):T {
-        const val = (<any>window).localStorage.getItem(key);
+        const val = window.localStorage.getItem(key);
         return val !== null ? JSON.parse(val) : def; 
     } 
     
@@ -17,7 +17,7 @@ module manticore.model {
             worker.postMessage(getOrDefault(PARTY_STATE_KEY, { size: 4, level: 2 }));
         }
         
-        (<any>window).addEventListener('storage', function(e) {
+        window.addEventListener('storage', function(e) {
             postData();
         })                
         

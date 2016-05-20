@@ -1,3 +1,4 @@
+/// <reference path="../../node_modules/typescript/lib/lib.es6.d.ts" />
 /// <reference path="types.d.ts" />
 /// <reference path="shims.ts" />
 /// <reference path="data.ts" />

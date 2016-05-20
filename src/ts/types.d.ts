@@ -12,7 +12,7 @@ interface Promise<T> {
     'catch'(handle:(err:any) => any): any;
 }
 
-interface PromiseStatic {
+interface PromiseConstructor {
     new<T> (ex:PromiseExecutor<T>): Promise<T>;
 
     resolve<T>(v:T|Promise<T>): Promise<T>;
@@ -23,7 +23,7 @@ interface PromiseStatic {
     
 }
 
-declare var Promise: PromiseStatic;
+declare var Promise: PromiseConstructor;
 
 
 // snaffled from ts es6.d.ts on github,
