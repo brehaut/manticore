@@ -1,26 +1,48 @@
 /// <reference path="types.d.ts" />
 
 module manticore.data {  
-    export class Monster {
-        public scale:string;
- 
-        constructor(public name:string, 
-                    public level:number, 
-                    public size:string,
-                    public kind:string,
-                    public attributes: Array<string>,
-                    public book?:string) { 
-            if (kind === "mook") {
-                this.scale = "mook";
-            }
-            else {
-                this.scale = size;
-            }                
-        }
-
-        public toString() {
-            return this.name + "(level " + this.level + " " + this.kind + ")";
-        }
+    export type MonsterSize = "normal" | "large" | "huge";
+    export type MonsterScale = "mook" | MonsterSize;
+    
+                              // name, level, size,           , type ,  tags
+    export type MonsterRecord = [string, number, data.MonsterSize, string, string[]];
+    
+    export type DataSet = {[index:string]: MonsterRecord[]};
+    
+    export interface Monster {
+        name:string; 
+        level:number; 
+        size: MonsterSize;
+        kind:string;
+        scale: MonsterScale
+        attributes: string[];
+        book?:string;
+    }
+        
+    function monsterToString() {
+        return this.name + "(level " + this.level + " " + this.kind + ")";
+    }
+    
+    export function newMonster(name:string, 
+                               level:number,
+                               size: MonsterSize,
+                               kind: string,
+                               attributes: string[],
+                               book:string) 
+                              : Monster {
+        var scale:MonsterScale = (kind === "mook") ? "mook" : size;
+        
+        return {
+            name: name,
+            level: level,
+            size: size,
+            kind: kind,
+            scale: scale,
+            attributes: attributes,
+            book: book,
+            
+            toString: monsterToString
+        }                                    
     }
 
 
@@ -31,7 +53,7 @@ module manticore.data {
 
 
     export interface Allocation {
-        monster:Monster;
+        monster: Monster;
         num:number;
     }
 

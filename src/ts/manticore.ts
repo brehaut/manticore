@@ -78,8 +78,9 @@ module manticore {
 
     ui.initialize(
         document.getElementById("application"),
+        model.dataAccessWorker(),
         Promise.all([dataset, awaitContentLoaded()])
-            .then(all => all[0])
+            .then(([dataset, _]) => dataset)
             .catch(e => console.error("An error occured bootstrapping the application", e)),
         allocate
     );

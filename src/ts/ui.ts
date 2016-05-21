@@ -22,6 +22,7 @@ module manticore.ui {
         private resultsView: ResultsView;
         
         constructor(private allocator: data.Allocator, 
+                    private dataAccessWorker: model.DataAccessWorker,
                     private catalog: bestiary.Bestiary, 
                     root:HTMLElement) {
             this.viewContainer = DOM.div(null);
@@ -103,13 +104,14 @@ module manticore.ui {
     // instantiate everythign and do the basic procedures requred
     // to get a UI going for the given data.
     export function initialize(root, 
+                               dataAccessWorker: model.DataAccessWorker,
                                bestiary:Promise<bestiary.Bestiary>,
                                allocator) {
         //bestiary = bestiary.then(awaitDelay(2000));
 
         bestiary
             .then<void>((bestiary) => {
-                new UI(allocator, bestiary, root);
+                new UI(allocator, dataAccessWorker, bestiary, root);
             })
             .catch((e) => {
                 console.log(e); 

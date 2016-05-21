@@ -66,7 +66,11 @@ module manticore.messaging {
         type BestiaryGetKeyT = "bestiary.get";
         const BestiaryGetKey: BestiaryGetKeyT = "bestiary.get";
         
-        export type BestiaryGet = IMessage<BestiaryGetKeyT, {getResource: "standard" | "custom" }>;
+        type BestiaryDataKeyT = "bestiary.data";
+        const BestiaryDataKey: BestiaryDataKeyT = "bestiary.data";
+                
+        export type BestiaryGet = IMessage<BestiaryGetKeyT, void>;
+        export type BestiaryData = IMessage<BestiaryDataKeyT, void>;
         
         export type BestiaryMessage = BestiaryGet;
         
@@ -78,8 +82,8 @@ module manticore.messaging {
             return (msg.key === "Bestiary.Get");
         } 
         
-        export function bestiaryGetMessage(resourceName: "standard" | "custom") : BestiaryMessage {
-            return { key: BestiaryGetKey, payload: { getResource: resourceName }  };
+        export function bestiaryGetMessage() : BestiaryMessage {
+            return { key: BestiaryGetKey, payload: undefined  };
         }
     }
 }

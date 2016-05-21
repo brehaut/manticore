@@ -3,7 +3,9 @@
 /// <reference path="../typed-workers.ts" /> 
 
 module manticore.model {
-      export function bestiaryWorker() {
+    export type DataAccessWorker = workers.ITypedWorker<messaging.dataAccess.BestiaryMessage, messaging.dataAccess.BestiaryMessage>;
+    
+      export function dataAccessWorker():DataAccessWorker {
           return manticore.workers.newWorker<any, any>("static/js/data-access.js");
       }
 } 

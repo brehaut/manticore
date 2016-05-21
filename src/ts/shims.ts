@@ -5,11 +5,8 @@ function awaitAjax(url:string, method?:string):Promise<string> {
     return new Promise<any>((resolve, reject) => {
         var req = null;
 
-        if ((<any>window).ActiveXObject) {
-	    req = new ActiveXObject('Microsoft.XMLHTTP');
-        }        
-        else if ((<any>window).XMLHttpRequest) {
-	    req = new XMLHttpRequest();
+        if ((<any>self).XMLHttpRequest) {
+	          req = new XMLHttpRequest();
         }
         else {
             reject(new Error("No XMLHttpReqest support"));
@@ -46,6 +43,8 @@ function awaitAjax(url:string, method?:string):Promise<string> {
         req.send();
     });
 }
+
+
 
 
 

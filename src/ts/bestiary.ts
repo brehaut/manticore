@@ -1,25 +1,25 @@
 /// <reference path="data.ts" />
 
 module manticore.bestiary {
+    type Tier = "adventurer" | "champion" | "epic";
+    
     // Monster records
-    //
-    // These two types simply represent records for monsters.
-    // the PricedMonster has the additional information for
-    // a monster priced relative to a party. 
-    // 
-    // a bit hideous to have a subclass, but the overall
-    // nasty contained.
-
-    class PricedMonster extends data.Monster {
-        constructor(name:string,  
-                    level:number, 
-                    size:string,
-                    kind:string,
-                    attributes: string[],
-                    book: string,
-                    public price:number) { 
-            super(name, level, size, kind, attributes, book);
-        }
+    interface PricedMonster extends data.Monster {
+         price: number;    
+    }   
+   
+    function newPricedMonster(name:string,  
+                              level:number, 
+                              size:data.MonsterSize,
+                              kind:string,
+                              attributes: string[],
+                              book: string,
+                              price:number) 
+                              : PricedMonster { 
+        // type hint to convince the compiler that we are going to mix in the new values                                  
+        var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book);
+        mon.price = price;
+        return mon;    
     }
 
 
@@ -44,7 +44,7 @@ module manticore.bestiary {
     //
     // the size values for the non-mook sizes are calculated to result in
     // an even number for a mook at each size.
-    function scaleFactor(scale: string, partyLevel: number) {
+    function scaleFactor(scale: data.MonsterScale, partyLevel: number) {
         var base = (3 * 4 * 5);
 
         if (scale === "mook") {
@@ -72,7 +72,7 @@ module manticore.bestiary {
     }
 
 
-    function tierAdjustment(tier) {
+    function tierAdjustment(tier:Tier) {
         return ({
             adventurer: 0,
             champion: 1,
@@ -81,8 +81,8 @@ module manticore.bestiary {
     }
 
 
-    function levelToTier(level) {
-        return [
+    function levelToTier(level:number):Tier {
+        return <Tier>[
             null, // adventurer level 0
             "adventurer",
             "adventurer",
@@ -123,13 +123,13 @@ module manticore.bestiary {
     }
 
 
-    function monsterFromRecord(book) {
-        return (record:any[]) => new data.Monster(record[0], 
-                                                  record[1],
-                                                  record[2],
-                                                  record[3],
-                                                  record[4],
-                                                  book);
+    function monsterFromRecord(book: string) {
+        return (record:data.MonsterRecord) => data.newMonster(record[0], 
+                                                              record[1],
+                                                              record[2],
+                                                              record[3],
+                                                              record[4],
+                                                              book);
     }
 
 
@@ -153,7 +153,7 @@ module manticore.bestiary {
     }
 
 
-    function priceMonster(partyLevel:number, m:data.Monster) {
+    function priceMonster(partyLevel:number, m:data.Monster): PricedMonster {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
         var multiplier = scaleFactor(m.scale, partyLevel);
 
@@ -161,17 +161,17 @@ module manticore.bestiary {
         // filtered out but just incase.
         if (cost === null) return null;
 
-        return new PricedMonster(m.name,
-                                 m.level,
-                                 m.size,
-                                 m.kind,
-                                 m.attributes,
-                                 m.book,
-                                 cost * multiplier);
+        return newPricedMonster(m.name,
+                                m.level,
+                                m.size,
+                                m.kind,
+                                m.attributes,
+                                m.book,
+                                cost * multiplier);
     }
 
 
-    function priceParty(characters:number) {
+    function priceParty(characters:number): number {
         return characters * scaleFactor("normal", 1) * relativeCost(0);
     }
     
@@ -369,14 +369,15 @@ module manticore.bestiary {
     }
 
 
-    export function createBestiary(dataset) {
-        var catalog = [];
+
+    
+    export function createBestiary(dataset:DataSet) {
+        var catalog:data.Monster[] = [];
         for (var key in dataset) if (dataset.hasOwnProperty(key)) {
             catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
         }
 
         return new Bestiary(catalog);
     }
-
 }
 
