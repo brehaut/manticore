@@ -1,8 +1,8 @@
 /// <reference path="../../../node_modules/typescript/lib/lib.webworker.d.ts" />
-/// <reference path="../bestiary.ts" />
-/// <reference path="../data.ts" />
-/// <reference path="../messaging.ts" />
-/// <reference path="../shims.ts" />
+/// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/data.ts" />
+/// <reference path="../common/messaging.ts" />
+/// <reference path="../common/shims.ts" />
 
 /* the dataAccess worker wraps up network (and in future, indexdb) requests
  * to the raw bestiary data. 

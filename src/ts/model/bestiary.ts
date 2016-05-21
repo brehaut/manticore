@@ -1,6 +1,6 @@
-/// <reference path="../data.ts" />
-/// <reference path="../messaging.ts" />
-/// <reference path="../typed-workers.ts" /> 
+/// <reference path="../common/data.ts" />
+/// <reference path="../common/messaging.ts" />
+/// <reference path="../common/typed-workers.ts" /> 
 
 module manticore.model {
     export type DataAccessWorker = workers.ITypedWorker<messaging.dataAccess.BestiaryMessage, messaging.dataAccess.BestiaryMessage>;

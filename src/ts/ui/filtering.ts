@@ -1,6 +1,6 @@
-/// <reference path="../strings.ts" />
-/// <reference path="../dom.ts" />
-/// <reference path="../data.ts" />
+/// <reference path="strings.ts" />
+/// <reference path="dom.ts" />
+/// <reference path="../common/data.ts" />
 /// <reference path="common.ts" />
 
 module manticore.ui {

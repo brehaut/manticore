@@ -1,6 +1,6 @@
 /// <reference path="../../../node_modules/typescript/lib/lib.webworker.d.ts" />
-/// <reference path="../bestiary.ts" />
-/// <reference path="../data.ts" />
+/// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/data.ts" />
 
 module manticore.workers.processing {
     interface ProcessingMessageEvent extends MessageEvent {

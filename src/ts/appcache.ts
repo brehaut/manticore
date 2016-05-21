@@ -1,5 +1,5 @@
-/// <reference path="dom.ts" />
-/// <reference path="strings.ts" />
+/// <reference path="ui/dom.ts" />
+/// <reference path="ui/strings.ts" />
 
 // this module wraps up the application cache with a basic behaviour to allow users 
 // to reload.
