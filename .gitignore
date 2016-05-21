@@ -20,3 +20,5 @@ out/*
 *.DS_Store
 /node_modules/*
 static/js/worker.js
+static/js/data-access.js
+static/js/processing.js

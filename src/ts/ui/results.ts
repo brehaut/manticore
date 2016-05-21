@@ -7,7 +7,7 @@
 module manticore.ui {
     var _ = strings._;
 
-    export class ResultsView implements IView {
+    export class ResultsView {
         private el: HTMLElement;
         private resultsEl: HTMLElement;
         private moreButton: HTMLElement;
@@ -17,13 +17,15 @@ module manticore.ui {
         private currentIndex: number;
         private pendingAllocations
 
-        constructor () {
+        constructor (private parent:HTMLElement) {
             this.onRequestGenerate = new Event<void>();
             
             this.createElements();
+            
+            this._appendTo(this.parent);
         }
 
-        public _appendTo(el:HTMLElement) {
+        private _appendTo(el:HTMLElement) {
             el.appendChild(this.el);
         }
 
@@ -112,7 +114,6 @@ module manticore.ui {
                         "class": "button generate",
                         
                         onclick: clickGenerate,
-//                        ontouchend: clickGenerate
                     },
                     [
                         DOM.text(_("generate encounters"))
@@ -125,7 +126,6 @@ module manticore.ui {
                     "class":"button",
 
                     onclick: (e) => this.show100(),
-//                    ontouchend: (e) => this.show100(),
                 }, 
                 [DOM.text(_("more"))]
             );

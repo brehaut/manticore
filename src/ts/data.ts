@@ -19,10 +19,6 @@ module manticore.data {
         book?:string;
     }
         
-    function monsterToString() {
-        return this.name + "(level " + this.level + " " + this.kind + ")";
-    }
-    
     export function newMonster(name:string, 
                                level:number,
                                size: MonsterSize,
@@ -40,8 +36,6 @@ module manticore.data {
             scale: scale,
             attributes: attributes,
             book: book,
-            
-            toString: monsterToString
         }                                    
     }
 

@@ -14,21 +14,21 @@ module manticore.ui {
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
     // UI also acts as the primary view controller for the application    
-    class UI implements IView {
+    class UI {
         private viewContainer: HTMLElement;
 
         private partyView: PartyView;
         private selectionView: SelectionView;
         private resultsView: ResultsView;
         
-        constructor(private allocator: data.Allocator, 
+        constructor(private root: HTMLElement,
+                    private allocator: data.Allocator, 
                     private dataAccessWorker: model.DataAccessWorker,
-                    private catalog: bestiary.Bestiary, 
-                    root:HTMLElement) {
+                    private catalog: bestiary.Bestiary) {
             this.viewContainer = DOM.div(null);
-            this.partyView = new PartyView();
-            this.selectionView = new SelectionView(catalog);
-            this.resultsView = new ResultsView();
+            this.partyView = new PartyView(this.viewContainer);
+            this.selectionView = new SelectionView(this.viewContainer, catalog);
+            this.resultsView = new ResultsView(this.viewContainer);
             
             this.selectionView.updateSelectedCount(catalog.monsters.length);
 
@@ -75,10 +75,6 @@ module manticore.ui {
         }
         
         public _appendTo(element:HTMLElement) {
-            this.partyView._appendTo(this.viewContainer);
-            this.selectionView._appendTo(this.viewContainer);
-            this.resultsView._appendTo(this.viewContainer);            
-            
             element.appendChild(this.viewContainer);
         }
     }
@@ -111,7 +107,7 @@ module manticore.ui {
 
         bestiary
             .then<void>((bestiary) => {
-                new UI(allocator, dataAccessWorker, bestiary, root);
+                new UI(root, allocator, dataAccessWorker, bestiary);
             })
             .catch((e) => {
                 console.log(e); 

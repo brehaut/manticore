@@ -9,12 +9,12 @@ module manticore.ui {
     import Event = manticore.ui.Event;
 
     
-    class NumericField implements IView {
+    class NumericField {
         private el: HTMLInputElement;
 
         public onChanged: Event<number>;
 
-        constructor (val:number, max?:number) {
+        constructor (parent: HTMLElement, val:number, max?:number) {
             this.onChanged = new Event<number>();
 
             this.el = <HTMLInputElement> DOM.input({
@@ -41,20 +41,22 @@ module manticore.ui {
                 }
                 
             });
+            
+            this._appendTo(parent);
         }
         
         public setValue(value: number) {
             this.el.value = value.toString();
         }
 
-        _appendTo(el) {
+        private _appendTo(el) {
             el.appendChild(this.el);
         }
     }
 
     
     
-    export class PartyView implements IView {
+    export class PartyView {
         private el:HTMLElement;
         private size: NumericField;
         private level: NumericField;
@@ -63,10 +65,12 @@ module manticore.ui {
 
         public onChanged: Event<data.IParty>;
 
-        constructor () {
+        constructor (private parent: HTMLElement) {
             this.onChanged = new Event<data.IParty>();
             this.createElements();
             this.worker.onmessage = (message:workers.ILightWeightMessageEvent<data.IParty>) => this.storageChanged(message.data);
+            
+            this._appendTo(parent);
         }
 
         public getPartyInfo():data.IParty {
@@ -76,29 +80,29 @@ module manticore.ui {
             };
         }
 
-        public _appendTo(element:HTMLElement) {
+        private _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
-        private labeledNumericField(label:string, 
+        private labeledNumericField(parent: HTMLElement,
+                                    label:string, 
                                     className:string, 
                                     val:number, 
-                                    max?:number):[HTMLElement, NumericField] {
-            var input = new NumericField(val, max); 
-            input.onChanged.register(_ => this.fieldChanged());
-
+                                    max?:number): NumericField {
             var div = DOM.div(
                 {"class": "field " + className},
                 [DOM.label(null, [DOM.text(label)])]
             );
+                                                                               
+            var input = new NumericField(div, val, max); 
+            input.onChanged.register(_ => this.fieldChanged());
 
-            input._appendTo(div); 
+            parent.appendChild(div);
 
-            return [div, input];
+            return input;
         }
         
         private storageChanged(data: data.IParty) {
-            console.log(data);
             this.size.setValue(data.size);
             this.level.setValue(data.level);
         }
@@ -109,17 +113,11 @@ module manticore.ui {
             this.onChanged.trigger(partyInfo);
         }
 
-        private createElements() {
-            var [sizeEl, sizeField] = this.labeledNumericField(_("Party size"), "size", 4, 10);
-            var [levelEl, levelField] = this.labeledNumericField(_("Party level"), "level", 2, 10);
+        private createElements() {            
+            this.el = ui.sectionMarkup("Party", "party", "[party summary]", []);
             
-            this.size = sizeField;
-            this.level = levelField;
-
-            this.el = ui.sectionMarkup("Party", "party", "[party summary]", [
-                sizeEl,
-                levelEl
-            ]);
+            this.size = this.labeledNumericField(this.el, _("Party size"), "size", 4, 10);
+            this.level = this.labeledNumericField(this.el, _("Party level"), "level", 2, 10);
         }
     }
 }

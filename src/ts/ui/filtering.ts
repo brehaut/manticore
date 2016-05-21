@@ -7,19 +7,22 @@ module manticore.ui {
     import _ = strings._;
     
     
-    class PropertyFilterView implements IView {
+    class PropertyFilterView {
         private el:HTMLElement;
 
         public onChanged: Event<void>;
 
-        constructor (private name: string, 
+        constructor (parent: HTMLElement,
+                     private name: string, 
                      private attributes:{toString:()=>string}[]) {
             this.onChanged = new Event<void>();
 
             this.createElements();
+            
+            this._appendTo(parent);
         } 
 
-        public _appendTo(parent:HTMLElement) {
+        private _appendTo(parent:HTMLElement) {
             parent.appendChild(this.el);
         }
 
@@ -153,9 +156,10 @@ module manticore.ui {
     }
     
 
-    class FiltersView implements IView, IFilterSource {
+    class FiltersView implements IFilterSource {
         private el:HTMLElement;
         private selectionCountEl:HTMLElement;
+        private filtersContainer: HTMLElement;
 
         public onFilterChanged: Event<string> = new Event<string>();
 
@@ -164,21 +168,23 @@ module manticore.ui {
         private kindView: PropertyFilterView;
         private attributesView: PropertyFilterView;
 
-        constructor(bestiary:bestiary.Bestiary) {
-            this.sourcesView = new PropertyFilterView("Sources", bestiary.allSources());
+        constructor(parent: HTMLElement, bestiary:bestiary.Bestiary) {           
+            this.createElements();
             
-            this.sizeView = new PropertyFilterView("Size", bestiary.allSizes());
-            this.kindView = new PropertyFilterView("Role", bestiary.allKinds());
-            this.attributesView = new PropertyFilterView("Tags", bestiary.allAttributes().sort());
+            this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", bestiary.allSources());
+            
+            this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", bestiary.allSizes());
+            this.kindView = new PropertyFilterView(this.filtersContainer, "Role", bestiary.allKinds());
+            this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", bestiary.allAttributes().sort());
 
             this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
             this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
             this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
             this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
 
-            this.createElements();
-
             this.setVisibility(false);
+            
+            this._appendTo(parent);
         }
 
         public setVisibility(visible: boolean) {
@@ -205,7 +211,7 @@ module manticore.ui {
             this.selectionCountEl.textContent = _("Number selected ") + count;
         }
 
-        public _appendTo(element:HTMLElement) {
+        private _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
@@ -224,9 +230,8 @@ module manticore.ui {
                 ]
             );
 
-            [this.sourcesView, this.sizeView, this.kindView, this.attributesView]
-                .forEach(v => v._appendTo(this.el))
-            ;
+            this.filtersContainer = DOM.div({});
+            this.el.appendChild(this.filtersContainer);
 
             this.selectionCountEl = DOM.div({"class": "selection-count"});
 
@@ -236,21 +241,23 @@ module manticore.ui {
 
 
 
-    class MonsterPickerView implements IView, IFilterSource{
+    class MonsterPickerView implements IFilterSource {
         private el: HTMLElement;
 
         public onFilterChanged: Event<string> = new Event<string>();
 
         private byNameView: PropertyFilterView;
         
-        constructor (private catalog: bestiary.Bestiary) {            
-            this.byNameView = new PropertyFilterView("By Name", catalog.allNames().sort());
+        constructor (parent: HTMLElement, private catalog: bestiary.Bestiary) {           
+            this.createElements();
+                        
+            this.byNameView = new PropertyFilterView(this.el, "By Name", catalog.allNames().sort());
 
             this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
             
-            this.createElements();
-
             this.setVisibility(false);
+            
+            this._appendTo(parent);
         }
 
         public setVisibility(visible: boolean) {
@@ -285,19 +292,16 @@ module manticore.ui {
                     )
                 ]
             );
-
-            //this.sourcesView._appendTo(this.el);
-            this.byNameView._appendTo(this.el);
         }
         
-        public _appendTo(html:HTMLElement) {
+        private _appendTo(html:HTMLElement) {
             html.appendChild(this.el);
         }
     }
     
 
     // SelectionView wraps up the various methods of selecting monsters
-    export class SelectionView implements IView, IFilterSource {
+    export class SelectionView implements IFilterSource {
         private el: HTMLElement;
         private filtersView: FiltersView;
         private pickersView: MonsterPickerView;
@@ -326,19 +330,21 @@ module manticore.ui {
 
         private mode;
         
-        constructor (catalog: bestiary.Bestiary) {
-            this.filtersView = new FiltersView(catalog);
-            this.pickersView = new MonsterPickerView(catalog);
+        constructor (private parent: HTMLElement, catalog: bestiary.Bestiary) {                      
+            this.createElements();
+            
+            this.filtersView = new FiltersView(this.el, catalog);
+            this.pickersView = new MonsterPickerView(this.el, catalog);
 
             this.filtersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
             this.pickersView.onFilterChanged.register(v => this.onFilterChanged.trigger(v));
-           
-            this.createElements();
 
             this.setMode(SelectionView.filtersMode);
+            
+            this._appendTo(parent);
         }         
         
-        public _appendTo(element:HTMLElement) {
+        private _appendTo(element:HTMLElement) {
             element.appendChild(this.el);
         }
 
@@ -411,9 +417,6 @@ module manticore.ui {
                     )
                 ]
             );
-
-            this.filtersView._appendTo(this.el);
-            this.pickersView._appendTo(this.el);
         }
     }
 }

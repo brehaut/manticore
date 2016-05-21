@@ -34,11 +34,6 @@ module manticore.ui {
         );
     }
     
-    
-    export interface IView {
-        _appendTo(parent: HTMLElement):void;
-    }
-
 
     export class Event<T> {
         private handlers: Array<(v:T) => void>;
