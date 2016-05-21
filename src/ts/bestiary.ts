@@ -368,10 +368,8 @@ module manticore.bestiary {
         }
     }
 
-
-
     
-    export function createBestiary(dataset:DataSet) {
+    export function createBestiary(dataset:data.DataSet) {
         var catalog:data.Monster[] = [];
         for (var key in dataset) if (dataset.hasOwnProperty(key)) {
             catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
