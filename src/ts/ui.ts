@@ -17,21 +17,27 @@ module manticore.ui {
     class UI {
         private viewContainer: HTMLElement;
 
+        private catalog: Atom<bestiary.Bestiary>;
+
         private partyView: PartyView;
         private selectionView: SelectionView;
         private resultsView: ResultsView;
-        
+                        
         constructor(private root: HTMLElement,
                     private allocator: data.Allocator, 
-                    private dataAccessWorker: model.DataAccessWorker,
-                    private catalog: bestiary.Bestiary) {
+                    private dataAccessWorker: model.DataAccessWorker) {
+            this.catalog = new Atom(bestiary.createBestiary({}));                        
+                        
             this.viewContainer = DOM.div(null);
             this.partyView = new PartyView(this.viewContainer);
-            this.selectionView = new SelectionView(this.viewContainer, catalog);
+            this.selectionView = new SelectionView(this.viewContainer, this.catalog);
             this.resultsView = new ResultsView(this.viewContainer);
             
-            this.selectionView.updateSelectedCount(catalog.monsters.length);
-
+            this.selectionView.updateSelectedCount(this.catalog.get().monsters.length);
+            
+            this.dataAccessWorker.onmessage = (message) => this.updateBestiary(message.data);
+            this.dataAccessWorker.postMessage(messaging.dataAccess.bestiaryGetMessage());
+            
             this.bindEvents();
 
             this._appendTo(root);
@@ -40,9 +46,22 @@ module manticore.ui {
             this.updateEnabledFilters();
         }
 
+        private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
+            if (messaging.dataAccess.isBestiaryData(message)) {
+                this.changeCatalog(bestiary.createBestiary(message.payload));
+            }
+            else {
+                console.warn("Unexpected message", message);
+            }
+        }
+
+        private changeCatalog(newCatalog: bestiary.Bestiary) {
+            this.catalog.swap((_) => newCatalog);   
+        }
+
         private updateEnabledFilters() {
-            var features = this.catalog.featureCounts(this.partyView.getPartyInfo(),
-                                                      this.selectionView.getFilters());
+            var features = this.catalog.get().featureCounts(this.partyView.getPartyInfo(),
+                                                            this.selectionView.getFilters());
             this.selectionView.updateFilterCounts(features);
         }
 
@@ -54,14 +73,19 @@ module manticore.ui {
         
         private getSelection() {
             var pred = data.predicateForFilters(this.selectionView.getFilters());
-            return this.catalog.filteredBestiary(this.partyView.getPartyInfo(), pred);
+            return this.catalog.get().filteredBestiary(this.partyView.getPartyInfo(), pred);
         }
 
         private bindEvents() {
             this.partyView.onChanged.register(_ => {
                 this.updateEnabledFilters();
-                this.updateSelectionInfo()
+                this.updateSelectionInfo();
             });
+
+            this.catalog.onChange.register(catalog => {
+                this.updateEnabledFilters();
+                this.updateSelectionInfo();
+            })
 
             this.selectionView.onFilterChanged.register(_ => this.updateSelectionInfo());
 
@@ -101,20 +125,20 @@ module manticore.ui {
     // to get a UI going for the given data.
     export function initialize(root, 
                                dataAccessWorker: model.DataAccessWorker,
-                               bestiary:Promise<bestiary.Bestiary>,
+                               ready:Promise<void>,
                                allocator) {
         //bestiary = bestiary.then(awaitDelay(2000));
 
-        bestiary
-            .then<void>((bestiary) => {
-                new UI(root, allocator, dataAccessWorker, bestiary);
+        ready
+            .then<void>((_) => {
+                new UI(root, allocator, dataAccessWorker);
             })
             .catch((e) => {
                 console.log(e); 
             })
         ; 
 
-        loadingUI(root, bestiary);
+        loadingUI(root, ready);
 
     } 
 }

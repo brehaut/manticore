@@ -51,4 +51,20 @@ module manticore.ui {
             this.handlers.push(handler);
         }
     }
+    
+    
+    export class Atom<T> {       
+        public onChange:Event<T> = new Event<T>();
+        
+        constructor(private value:T) { }        
+        
+        public swap(f:(T) => T) {
+            this.value = f(this.value);
+            this.onChange.trigger(this.value);
+        }
+        
+        public get():T {
+            return this.value;
+        }
+    }
 }

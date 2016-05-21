@@ -21,6 +21,10 @@ module manticore.ui {
             
             this._appendTo(parent);
         } 
+        
+        public remove() {
+            this.el.remove();
+        }
 
         private _appendTo(parent:HTMLElement) {
             parent.appendChild(this.el);
@@ -168,25 +172,39 @@ module manticore.ui {
         private kindView: PropertyFilterView;
         private attributesView: PropertyFilterView;
 
-        constructor(parent: HTMLElement, bestiary:bestiary.Bestiary) {           
+        constructor(parent: HTMLElement, private bestiary:Atom<bestiary.Bestiary>) {           
             this.createElements();
+            this.createSubViews(bestiary.get());
+
+            this.setVisibility(false);
             
-            this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", bestiary.allSources());
+            this.bestiary.onChange.register(bestiary => this.catalogChanged(bestiary));
+                        
+            this._appendTo(parent);
+        }
+
+        private createSubViews(newCatalog: bestiary.Bestiary) {
+            this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", newCatalog.allSources());
             
-            this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", bestiary.allSizes());
-            this.kindView = new PropertyFilterView(this.filtersContainer, "Role", bestiary.allKinds());
-            this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", bestiary.allAttributes().sort());
+            this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", newCatalog.allSizes());
+            this.kindView = new PropertyFilterView(this.filtersContainer, "Role", newCatalog.allKinds());
+            this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", newCatalog.allAttributes().sort());
 
             this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
             this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
             this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
             this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
-
-            this.setVisibility(false);
-            
-            this._appendTo(parent);
         }
 
+        private catalogChanged(newCatalog: bestiary.Bestiary) {
+            this.sourcesView.remove();
+            this.sizeView.remove();
+            this.kindView.remove();
+            this.attributesView.remove();
+            
+            this.createSubViews(newCatalog);   
+        }
+        
         public setVisibility(visible: boolean) {
             this.el.style.display = visible ? "block" : "none";  
         }
@@ -248,17 +266,29 @@ module manticore.ui {
 
         private byNameView: PropertyFilterView;
         
-        constructor (parent: HTMLElement, private catalog: bestiary.Bestiary) {           
+        constructor (parent: HTMLElement, private catalog: Atom<bestiary.Bestiary>) {           
             this.createElements();
                         
-            this.byNameView = new PropertyFilterView(this.el, "By Name", catalog.allNames().sort());
-
-            this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
+            this.createSubViews(catalog.get());
+            this.catalog.onChange.register(bestiary => this.catalogChanged(bestiary));
             
             this.setVisibility(false);
             
             this._appendTo(parent);
         }
+        
+        private createSubViews(newCatalog: bestiary.Bestiary) {
+            this.byNameView = new PropertyFilterView(this.el, "By Name", newCatalog.allNames().sort());
+
+            this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
+        }
+
+        private catalogChanged(newCatalog: bestiary.Bestiary) {
+            this.byNameView.remove();
+            
+            this.createSubViews(newCatalog);   
+        }
+        
 
         public setVisibility(visible: boolean) {
             this.el.style.display = visible ? "block" : "none";  
@@ -330,7 +360,7 @@ module manticore.ui {
 
         private mode;
         
-        constructor (private parent: HTMLElement, catalog: bestiary.Bestiary) {                      
+        constructor (private parent: HTMLElement, catalog: Atom<bestiary.Bestiary>) {                      
             this.createElements();
             
             this.filtersView = new FiltersView(this.el, catalog);

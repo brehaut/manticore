@@ -70,20 +70,29 @@ module manticore.messaging {
         const BestiaryDataKey: BestiaryDataKeyT = "bestiary.data";
                 
         export type BestiaryGet = IMessage<BestiaryGetKeyT, void>;
-        export type BestiaryData = IMessage<BestiaryDataKeyT, void>;
+        export type BestiaryData = IMessage<BestiaryDataKeyT, data.DataSet>;
         
-        export type BestiaryMessage = BestiaryGet;
+        export type BestiaryMessage = BestiaryGet | BestiaryData;
         
         export function isBestiaryMessage(msg:IMessage<any, any>): msg is BestiaryMessage {
-            return (msg.key === "Bestiary.Get");
+            return (msg.key === BestiaryGetKey
+                 || msg.key === BestiaryDataKey);
         }
         
         export function isBestiaryGet(msg:BestiaryMessage): msg is BestiaryGet {
-            return (msg.key === "Bestiary.Get");
+            return (msg.key === BestiaryGetKey);
         } 
+        
+        export function isBestiaryData(msg:BestiaryMessage): msg is BestiaryData {
+            return (msg.key === BestiaryDataKey);
+        }         
         
         export function bestiaryGetMessage() : BestiaryMessage {
             return { key: BestiaryGetKey, payload: undefined  };
+        }
+        
+        export function bestiaryDataMessage(data:data.DataSet) {
+            return { key: BestiaryDataKey, payload: data };
         }
     }
 }

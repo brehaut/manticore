@@ -57,6 +57,14 @@ module manticore.workers.dataAccess {
     
     
     onmessage = (message) => {
-        var data = message.data;     
+        var data:messaging.GenericMessage = message.data;
+             
+        if (messaging.dataAccess.isBestiaryMessage(data)) {
+            if (messaging.dataAccess.isBestiaryGet(data)) {
+                dataset.then(dataset => {
+                    postMessage(messaging.dataAccess.bestiaryDataMessage(dataset))
+                });
+            }
+        }
     }
 }
