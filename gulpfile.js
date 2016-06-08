@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var merge = require('merge2'); 
+var manifest = require("gulp-manifest");
 
 var uiProject = ts({
     noImplicitAny: false,
@@ -23,7 +24,7 @@ var dataAccessWorkerProject = ts({
 })
 
 
-gulp.task('default', function() {
+gulp.task('build', function() {
     var ui = gulp.src('src/ts/manticore.ts')
         .pipe(uiProject)
         .pipe(gulp.dest('static/js'))
@@ -45,6 +46,38 @@ gulp.task('default', function() {
         dataAccessWorker
     ])
 });
+
+
+gulp.task('dist', ['build'], function () {
+    function copy(src, dest) {
+        return gulp.src(src).pipe(gulp.dest(dest));
+    }
+    return merge([
+        copy('index.html', 'dist'),
+        copy('static/**/*', 'dist/static'),
+    ])
+});
+
+
+gulp.task('manifest', ['dist'], function () {
+    return gulp.src(["dist/**/*"])
+        .pipe(manifest({
+            filename: "manifest.appcache",
+            hash: true,
+            exclude: [
+                "manifest.appcache",
+                "**/Thumbs.db"
+            ],
+            network: [
+
+            ]
+        }))
+        .pipe(gulp.dest("./dist/"))
+        ;
+})
+
+
+gulp.task('default', ['manifest']);
 
 
 gulp.task('watch', [], function() {

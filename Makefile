@@ -4,7 +4,7 @@ TSC = node_modules/typescript/bin/tsc
 # files and paths
 SRC_ROOT = src
 STATIC_ROOT = static
-TARGET_ROOT = target
+TARGET_ROOT = dist
 
 SCRIPTS = $(STATIC_ROOT)/js
 STYLES = $(STATIC_ROOT)/css
@@ -26,20 +26,8 @@ bundle_contrib_js:
 	cat src/js/contrib/* > $(SCRIPTS)/contrib.js
 
 manifest:
-	echo "CACHE MANIFEST\n\n# Generated:" > $(MANIFEST)
-	date -u +#\ %Y%m%d:%H%M%S >> $(MANIFEST)
-	echo >> $(MANIFEST)$
-
-	cat $(SRC_ROOT)/manifest-static >> $(MANIFEST);
-	for file in $(SCRIPTS)/*; do echo $$file >> $(MANIFEST); done
-	for file in $(STYLES)/*.css; do echo $$file >> $(MANIFEST); done
-	for file in $(STYLES)/alegreya/*; do echo $$file >> $(MANIFEST); done
-	for file in $(DATA)/*; do echo $$file >> $(MANIFEST); done
-	for file in $(IMAGES)/*; do echo $$file >> $(MANIFEST); done
-	
-	# a hack because gulp is doing dumb things with file timestamps
-	for file in $(SCRIPTS)/*; do touch $$file; done
-
+	echo "Deprecation warning: `make manifest` is now legacy; switch to `gulp` for manifest."
+	gulp manifest
 
 build_ts:
 	echo "Deprecation warning: `make build_ts` is now legacy; switch to `gulp` for build."
@@ -59,6 +47,7 @@ build_stock: bundle_all manifest
 	rm target/static/data/custom.json
 
 release: clean build_stock manifest 
+	gulp dist
 	echo '{"campaign": [\n    ["Example monster", 1, "normal", "troop", ["test", "tags"]]\n]}\n' > $(TARGET_ROOT)/$(DATA)/custom.json
 	zip manticore-release.zip -r target	
 
@@ -69,4 +58,5 @@ watch: bundle_contrib_js manifest
 	gulp watch
 
 server:
+	cd dist
 	python -m SimpleHTTPServer
