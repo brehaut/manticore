@@ -176,9 +176,18 @@ module manticore.bestiary {
     }
     
 
+    function monsterIsSolitary(monster:data.Monster): boolean {
+        return monster.attributes.indexOf("dragon") >= 0 || monster.name == "Vampire";
+    }
+
     // allocateMonster is the core algorithm of this application.
+    // TODO: this should respect caps on monster numbers 
     function repeatMonster(points, monster):MonsterAllocation[] {
-        var max = Math.floor(points / monster.price); 
+        var max = Math.floor(points / monster.price);
+        if (monsterIsSolitary(monster)) {
+            max = Math.min(max, 1);
+        }  
+
         var repeats = [];
         for (var i = 1; i <= max; i++) {
             repeats[repeats.length] = new MonsterAllocation(monster, i);
@@ -195,7 +204,8 @@ module manticore.bestiary {
 
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
-                          acc:MonsterAllocation[]) {
+                          acc:MonsterAllocation[],
+                          solitarySeen=false) {
 
             // cap runtime to 2 seconds
             if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
@@ -212,8 +222,17 @@ module manticore.bestiary {
             if (monstersIdx >= monsters.length) return;
 
             // recursive behaviour follows
+            // skip any solitary monsters if we have already encountered a solitary monster
+            // TODO: clean up this logic to work for any kind on tracked constraint
+            var monster = monsters[monstersIdx]
+            while (solitarySeen && monsterIsSolitary(monster)) {
+                monstersIdx += 1;
+                if (monstersIdx >= monsters.length) return;
+                monster = monsters[monstersIdx];
+            }
+            solitarySeen = solitarySeen || monsterIsSolitary(monster);
 
-            var repeats = repeatMonster(remainingPoints, monsters[monstersIdx]);
+            var repeats = repeatMonster(remainingPoints, monster);
             var cur = acc;
 
             // skip this monster
@@ -226,7 +245,7 @@ module manticore.bestiary {
 
                 cur[cur.length] = alloc;
 
-                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur);
+                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, solitarySeen);
             }
         }
 
