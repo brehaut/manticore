@@ -198,11 +198,33 @@ module manticore.bestiary {
     }
 
 
-    function allocateMonsters(points:number, monsters:PricedMonster[]) {
-        var allAllocations = [];     
-        var allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
-        
-        var startT = +new Date();
+
+
+    function groupMonsters(allocations:data.Encounters): data.GroupedEncounters {
+        function genKey(encounter:data.Allocation[]): string {
+            return encounter.map(a => a.monster.name).join(";");
+        }
+
+        const groups:{[index:string]: data.Encounters} = {};
+
+        for (let i = 0, j = allocations.length; i < j; i++) {
+            const alloc = allocations[i];
+            const key = genKey(alloc);
+            if (!groups.hasOwnProperty(key)) groups[key] = [];
+            groups[key].push(alloc);
+        }
+
+        const result = [];
+        for (let k in groups) if (groups.hasOwnProperty(k)) {
+            result[result.length] = groups[k];
+        }
+        return result;
+    }
+
+
+    function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {
+        const allAllocations = [];     
+        const allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
 
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
@@ -210,8 +232,8 @@ module manticore.bestiary {
                           typeCount = 0,
                           territorialSeen=false) {
 
-            // cap runtime to 2 seconds
-            if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
+            // cap total generations at 10000; thats already getting silly
+            if (allAllocations.length == 10000) throw { message: "Ran too long; Results truncated" };
 
             // if we are out of monsters, or have run out 
             // of points to spend, then stop recursing.
@@ -231,7 +253,7 @@ module manticore.bestiary {
             // recursive behaviour follows
             // skip any solitary monsters if we have already encountered a solitary monster
             // TODO: clean up this logic to work for any kind on tracked constraint
-            var monster = monsters[monstersIdx]
+            let monster = monsters[monstersIdx]
             while (territorialSeen && monsterIsTerritorial(monster)) {
                 monstersIdx += 1;
                 if (monstersIdx >= monsters.length) return;
@@ -239,8 +261,8 @@ module manticore.bestiary {
             }
             territorialSeen = territorialSeen || monsterIsTerritorial(monster);
 
-            var repeats = repeatMonster(remainingPoints, monster);
-            var cur = acc;
+            const repeats = repeatMonster(remainingPoints, monster);
+            let cur = acc;
 
             // skip this monster
             allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
@@ -264,7 +286,7 @@ module manticore.bestiary {
             // pass;  
         }
 
-        return allAllocations;
+        return groupMonsters(allAllocations);
     }
 
 

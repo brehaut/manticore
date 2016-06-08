@@ -15,7 +15,7 @@ module manticore.ui {
         public onRequestGenerate: Event<void>;
 
         private currentIndex: number;
-        private pendingAllocations
+        private pendingAllocations:data.GroupedEncounters;
 
         constructor (private parent:HTMLElement) {
             this.onRequestGenerate = new Event<void>();
@@ -33,19 +33,37 @@ module manticore.ui {
             this.resultsEl.classList.add("outofdate");
         }
 
-        public displayResults(party: data.IParty, allocs: data.Allocation[][]) {
+        public displayResults(party: data.IParty, allocs: data.GroupedEncounters) {
             DOM.empty(this.resultsEl);
             
             this.resultsEl.appendChild(this.resultsSummary(party, allocs));
             this.resultsEl.classList.remove("outofdate");
             
-            this.currentIndex = 0;
+            this.currentIndex = 0; 
+            
             this.pendingAllocations = allocs;
 
             this.show100();
         }
 
-        private allocationMarkup(alloc: data.Allocation) {
+        private allocationGroupMarkup(encounters: data.Encounters) {
+            if (encounters.length === 1) {
+                return encounters[0].map(al => this.allocationMarkup(al));
+            }   
+            else {
+                const summary:Node[] = encounters[0].map(al => this.allocationMarkup(al, false));
+                summary.push(DOM.ul({"style": "clear:left"}, encounters.map(enc => DOM.li({"class": "clearfix"}, enc.map(al => this.allocationMarkup(al))))));
+
+                return [DOM.div({
+                    "class": "allocation-group",
+                },
+                [
+                    DOM.div({}, summary)
+                ])];
+            }                       
+        }     
+
+        private allocationMarkup(alloc: data.Allocation, showcount = true) {
             return DOM.div(
                 {"class": "allocation " + alloc.monster.size},
                 [
@@ -59,14 +77,14 @@ module manticore.ui {
                     DOM.em({"class": "name"}, [
                         DOM.text(_(alloc.monster.name))
                     ]),
-                    DOM.span({"class": "number"}, [
+                    showcount ? DOM.span({"class": "number"}, [
                         DOM.text(" ×" + alloc.num.toString())
-                    ])
+                    ]) : DOM.span({"class": "number"})
                 ]
             );                           
         }       
 
-        private resultsSummary(party: data.IParty, allocs: data.Allocation[][]) {
+        private resultsSummary(party: data.IParty, allocs: data.GroupedEncounters) {
             return DOM.header(
                 {"class": "results-summary"},
                 [
@@ -80,14 +98,14 @@ module manticore.ui {
         }
 
         private show100() {
-            var window = 100;           
+            const window = 100;           
 
-            var allocs = this.pendingAllocations.slice(this.currentIndex, this.currentIndex + window);
+            const allocs = this.pendingAllocations.slice(this.currentIndex, this.currentIndex + window);
 
-            allocs.forEach(alloc => {
+            allocs.forEach(group => {
                 this.resultsEl.appendChild(DOM.li(
                     {"class": "clearfix"}, 
-                    alloc.map(al => this.allocationMarkup(al))
+                    this.allocationGroupMarkup(group)
                 ));
             });
 

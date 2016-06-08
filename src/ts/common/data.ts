@@ -51,9 +51,11 @@ module manticore.data {
         num:number;
     }
 
+    export type Encounters = Allocation[][];
+    export type GroupedEncounters = Encounters[];
 
     export interface Allocator {
-        (party: IParty, monsters: Array<Monster>): Promise<Array<Array<Allocation>>>;
+        (party: IParty, monsters: Monster[]): Promise<GroupedEncounters>;
     }
 
 
