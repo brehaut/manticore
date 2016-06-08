@@ -2,6 +2,8 @@
 
 module manticore.bestiary {
     type Tier = "adventurer" | "champion" | "epic";
+
+    const MAXIMUM_TYPES = 6;
     
     // Monster records
     interface PricedMonster extends data.Monster {
@@ -205,6 +207,7 @@ module manticore.bestiary {
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
                           acc:MonsterAllocation[],
+                          typeCount = 0,
                           territorialSeen=false) {
 
             // cap runtime to 2 seconds
@@ -219,6 +222,10 @@ module manticore.bestiary {
                 return;
             }
 
+            // if we have more than 7 types of monsters but we still havent
+            // exhausted the budget, move on.
+            if (typeCount > MAXIMUM_TYPES) return;
+            
             if (monstersIdx >= monsters.length) return;
 
             // recursive behaviour follows
@@ -236,7 +243,7 @@ module manticore.bestiary {
             var cur = acc;
 
             // skip this monster
-            allocate(remainingPoints, monstersIdx + 1, cur); 
+            allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
 
             // produce allocations for all the available numbers of this monster
             for (var i = 0, j = repeats.length; i < j; i++) {
@@ -245,7 +252,8 @@ module manticore.bestiary {
 
                 cur[cur.length] = alloc;
 
-                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, territorialSeen);
+                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
+                         typeCount + 1, territorialSeen);
             }
         }
 
