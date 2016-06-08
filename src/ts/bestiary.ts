@@ -176,7 +176,7 @@ module manticore.bestiary {
     }
     
 
-    function monsterIsSolitary(monster:data.Monster): boolean {
+    function monsterIsTerritorial(monster:data.Monster): boolean {
         return monster.attributes.indexOf("dragon") >= 0 || monster.name == "Vampire";
     }
 
@@ -184,7 +184,7 @@ module manticore.bestiary {
     // TODO: this should respect caps on monster numbers 
     function repeatMonster(points, monster):MonsterAllocation[] {
         var max = Math.floor(points / monster.price);
-        if (monsterIsSolitary(monster)) {
+        if (monsterIsTerritorial(monster)) {
             max = Math.min(max, 1);
         }  
 
@@ -205,7 +205,7 @@ module manticore.bestiary {
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
                           acc:MonsterAllocation[],
-                          solitarySeen=false) {
+                          territorialSeen=false) {
 
             // cap runtime to 2 seconds
             if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
@@ -225,12 +225,12 @@ module manticore.bestiary {
             // skip any solitary monsters if we have already encountered a solitary monster
             // TODO: clean up this logic to work for any kind on tracked constraint
             var monster = monsters[monstersIdx]
-            while (solitarySeen && monsterIsSolitary(monster)) {
+            while (territorialSeen && monsterIsTerritorial(monster)) {
                 monstersIdx += 1;
                 if (monstersIdx >= monsters.length) return;
                 monster = monsters[monstersIdx];
             }
-            solitarySeen = solitarySeen || monsterIsSolitary(monster);
+            territorialSeen = territorialSeen || monsterIsTerritorial(monster);
 
             var repeats = repeatMonster(remainingPoints, monster);
             var cur = acc;
@@ -245,7 +245,7 @@ module manticore.bestiary {
 
                 cur[cur.length] = alloc;
 
-                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, solitarySeen);
+                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, territorialSeen);
             }
         }
 
