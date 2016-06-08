@@ -10,11 +10,10 @@ If you want to run/develop it locally you will need [Node JS](https://nodejs.org
 
     $ npm install
     $ gulp
-    $ make manifest
 
-will install the typescript compiler in the project, and compile the typescript source and move it and other resources into the `target` directory ready for deployment. 
+will install the typescript compiler in the project, and compile the typescript source and move it and other resources into the `dist` directory ready for deployment. 
 
-The application is a simple client side web app, so you just need to place the `target` directory into your webserver and point your browser there. If you have python installed running `make server` will launch a simple http server on port 8080 for testing.
+The application is a simple client side web app, so you just need to place the `dist` directory into your webserver and point your browser there. If you have python installed running `make server` will launch a simple http server on port 8080 for testing.
 
 ##  Known issues:
 
