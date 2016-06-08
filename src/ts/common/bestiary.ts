@@ -2,6 +2,8 @@
 
 module manticore.bestiary {
     type Tier = "adventurer" | "champion" | "epic";
+
+    const MAXIMUM_TYPES = 6;
     
     // Monster records
     interface PricedMonster extends data.Monster {
@@ -176,9 +178,18 @@ module manticore.bestiary {
     }
     
 
+    function monsterIsTerritorial(monster:data.Monster): boolean {
+        return monster.attributes.indexOf("dragon") >= 0 || monster.name == "Vampire";
+    }
+
     // allocateMonster is the core algorithm of this application.
+    // TODO: this should respect caps on monster numbers 
     function repeatMonster(points, monster):MonsterAllocation[] {
-        var max = Math.floor(points / monster.price); 
+        var max = Math.floor(points / monster.price);
+        if (monsterIsTerritorial(monster)) {
+            max = Math.min(max, 1);
+        }  
+
         var repeats = [];
         for (var i = 1; i <= max; i++) {
             repeats[repeats.length] = new MonsterAllocation(monster, i);
@@ -195,7 +206,9 @@ module manticore.bestiary {
 
         function allocate(remainingPoints:number, 
                           monstersIdx:number, 
-                          acc:MonsterAllocation[]) {
+                          acc:MonsterAllocation[],
+                          typeCount = 0,
+                          territorialSeen=false) {
 
             // cap runtime to 2 seconds
             if (+new Date() - startT >= 2000) throw { message: "Ran too long; Results truncated" };
@@ -209,15 +222,28 @@ module manticore.bestiary {
                 return;
             }
 
+            // if we have more than 7 types of monsters but we still havent
+            // exhausted the budget, move on.
+            if (typeCount > MAXIMUM_TYPES) return;
+            
             if (monstersIdx >= monsters.length) return;
 
             // recursive behaviour follows
+            // skip any solitary monsters if we have already encountered a solitary monster
+            // TODO: clean up this logic to work for any kind on tracked constraint
+            var monster = monsters[monstersIdx]
+            while (territorialSeen && monsterIsTerritorial(monster)) {
+                monstersIdx += 1;
+                if (monstersIdx >= monsters.length) return;
+                monster = monsters[monstersIdx];
+            }
+            territorialSeen = territorialSeen || monsterIsTerritorial(monster);
 
-            var repeats = repeatMonster(remainingPoints, monsters[monstersIdx]);
+            var repeats = repeatMonster(remainingPoints, monster);
             var cur = acc;
 
             // skip this monster
-            allocate(remainingPoints, monstersIdx + 1, cur); 
+            allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
 
             // produce allocations for all the available numbers of this monster
             for (var i = 0, j = repeats.length; i < j; i++) {
@@ -226,7 +252,8 @@ module manticore.bestiary {
 
                 cur[cur.length] = alloc;
 
-                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur);
+                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
+                         typeCount + 1, territorialSeen);
             }
         }
 

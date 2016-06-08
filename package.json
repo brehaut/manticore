@@ -5,16 +5,18 @@
   "author": "Andrew Brehaut <andrew@brehaut.net>",
   "license": "Eclipse Public License, 13th Age Community Use Policy",
   "private": true,
-  
   "repository": {
     "type": "git",
     "url": "https://github.com/brehaut/manticore"
   },
-  
   "devDependencies": {
     "gulp": "^3.9.1",
-    "typescript": "^1.8.10",
+    "gulp-concat": "^2.6.0",
+    "gulp-manifest": "^0.1.1",
+    "gulp-rimraf": "^0.2.0",
     "gulp-typescript": "^2.13.0",
-    "merge2": "^1.0.2"    
+    "gulp-uglify": "^1.5.3",
+    "merge2": "^1.0.2",
+    "typescript": "^1.8.10"
   }
 }
