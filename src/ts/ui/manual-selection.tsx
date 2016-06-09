@@ -18,23 +18,23 @@ module manticore.ui.filters {
         counts: any;
     }
 
-    export class ManualSelection extends React.Component<{catalog: Atom<bestiary.Bestiary>}, ManualSelectionState> {
+    interface ManualSelectionProps {
+        catalog: bestiary.Bestiary;
+        onChanged?: (v:[string, {[index: string]: string[]}]) => void;
+    }
+
+
+    export class ManualSelection extends React.Component<ManualSelectionProps, ManualSelectionState> {
         public onChanged = new Event<[string, string[]]>();
 
-        constructor(props: {catalog: Atom<bestiary.Bestiary>}) {
+        constructor(props: ManualSelectionProps) {
             super(props);
 
             this.state = {
-                catalog: props.catalog.get(),
+                catalog: props.catalog,
                 filterSelections: { name: [] },
                 counts: {}
             };
-
-            props.catalog.onChange.register((catalog) => this.setState({
-                catalog: catalog, 
-                filterSelections: this.state.filterSelections,
-                counts: this.state.counts
-            }));
         }
 
         public render() {
@@ -82,6 +82,7 @@ module manticore.ui.filters {
             });
 
             this.onChanged.trigger([filterName, selectedAttrs]);
+            if (this.props.onChanged) this.props.onChanged([filterName, sels as any]);
         } 
     }
 

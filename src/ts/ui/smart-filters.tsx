@@ -20,14 +20,20 @@ module manticore.ui.filters {
         totalSelected: number;
     }
 
-    export class SmartFilter extends React.Component<{catalog: Atom<bestiary.Bestiary>}, SmartFilterState> {
+    interface SmartFilterProps {
+        catalog: bestiary.Bestiary;
+        onChanged?: (v:[string, {[index: string]: string[]}]) => void;
+    }
+
+
+    export class SmartFilter extends React.Component<SmartFilterProps, SmartFilterState> {
         public onChanged = new Event<[string, string[]]>();
 
-        constructor(props: {catalog: Atom<bestiary.Bestiary>}) {
+        constructor(props: SmartFilterProps) {
             super(props);
 
             this.state = {
-                catalog: props.catalog.get(),
+                catalog: props.catalog,
                 filterSelections: {
                     source: [],
                     size: [],
@@ -37,13 +43,6 @@ module manticore.ui.filters {
                 counts: {},
                 totalSelected: 0
             };
-
-            props.catalog.onChange.register((catalog) => this.setState({
-                catalog: catalog, 
-                filterSelections: this.state.filterSelections,
-                counts: this.state.counts,
-                totalSelected: 0
-            }));
         }
 
         public render() {
@@ -114,6 +113,7 @@ module manticore.ui.filters {
             });
 
             this.onChanged.trigger([filterName, selectedAttrs]);
+            if (this.props.onChanged) this.props.onChanged([filterName, sels as any]);
         }        
     }
 
