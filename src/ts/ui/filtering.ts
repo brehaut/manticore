@@ -11,7 +11,7 @@ module manticore.ui {
     class PropertyFilterView {
         private el:HTMLElement;
 
-        public onChanged: Event<void>;
+        public onChanged: Event<void | string[]>;
         private filter: selection.AttributeFilter;
 
         constructor (parent: HTMLElement,
@@ -33,125 +33,19 @@ module manticore.ui {
         }
 
         public getSelectedAttributes():string[] {            
-            var selected = Array.from<Node>(this.el.querySelectorAll("li > input:checked"))
-                .map<string>((el:HTMLInputElement) => el.name)
-           ;
-
-           return selected;
+            return this.filter.getSelectedAttributes();
         }
 
         public updateFilterCounts(filters:{[index: string]: number}) {
-            this.filter.updateCounts(filters);
-            //  Array.from<Node>(this.el.querySelectorAll("li"))
-            //     .forEach((el:HTMLElement) => {
-            //         if (el.classList.contains("clear-selection")) return;
-            //         var name = (<HTMLInputElement>el.querySelector("input[type=checkbox]")).name;
-            //         var count = filters[name] || 0;
-
-            //         if (count > 0) {
-            //             el.classList.add("viable");
-            //         } 
-            //         else { 
-            //             el.classList.remove("viable");
-            //         }
-            //         (<HTMLElement> el.querySelector(".count")).textContent = count.toString();
-            //     });
-            
-        }
-
-        private changeOccured() {
-            this.toggleClear();
-            this.onChanged.trigger(null);
+            this.filter.updateCounts(filters);            
         }
         
-        private toggleState(attribute:string) { 
-            var checkbox = <HTMLInputElement> this.el.querySelector('input[type=checkbox][name="' + attribute + '"]');
-
-            checkbox.checked = !checkbox.checked;
-
-            this.changeOccured();
-        }
-
-        private toggleClear() {
-            if (this.allChoices().filter(li => li.classList.contains("selected")).length > 0) {
-                this.el.classList.add("active");
-            }
-            else {
-                this.el.classList.remove("active");
-            }
-        }
-
-        private allChoices():HTMLElement[] {
-            return <HTMLElement[]>Array.from<Node>(this.el.querySelectorAll("li[data-name]"));
-        }
-        
-        private clearAll() {
-            var all = this.allChoices();
-            all.forEach((li) => {
-                li.classList.remove("selected");
-            });
-
-            this.changeOccured();
-        }
-        
-        private createElements() {
-            // var toggleClick = (e) => {
-            //     var nodeName = e.target.nodeName.toLowerCase();
-            //     if (nodeName === "li") {
-            //         this.toggleState(e.target.getAttribute("data-name"));
-            //     }
-            //     else if (nodeName === "label" || nodeName === "span") {
-            //         this.toggleState(e.target.parentNode.getAttribute("data-name"));
-            //     }
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            // };
-
-            // function checkbox(key: string) {
-            //     return DOM.documentFragment(
-            //         [DOM.input({"type": "checkbox", "name": key}),
-            //          DOM.label({"for": key}, [DOM.text(_(key))])]
-            //     );                
-            // }
-            
-            // var ul = DOM.ul(
-            //     {
-            //         "class": "clearfix",
-
-            //         onclick: toggleClick,
-            //     },
-            //     this.attributes.map(key => {
-            //         var k = key.toString();
-            //         return DOM.li({"data-name": k}, [
-            //             checkbox(k),
-            //             DOM.span({"class": "count"}, [])
-            //         ]);
-            //     })
-            // );
-
-            // var clickReset = (e) => {
-            //     e.preventDefault();
-            //     this.clearAll();
-            //     e.stopPropagation();
-            // };
-            
-            // var header = DOM.header(null, [
-            //     DOM.h2(null, [
-            //         DOM.text(_(this.name)),
-            //         DOM.a({
-            //             "class": "reset",
-            //             "onclick": clickReset,
-            //         }, [DOM.text(_("[reset]"))])
-            //     ])
-            // ]);
-
-            
+        private createElements() {           
             this.el = DOM.div(null, []);
             const props = {name: this.name, attributes: this.attributes.map(a => a.toString())};
-            // this.filter = new selection.AttributeFilter(props);
-            // (<any>window).filter = this.filter;
-            // ReactDOM.render(this.filter.render(), this.el);
+
             this.filter = selection.install(this.el, props);
+            this.filter.onChanged.register(v => this.onChanged.trigger(v));
         }
     }
 
