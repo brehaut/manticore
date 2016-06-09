@@ -58,18 +58,18 @@ module manticore.ui.filters {
                         <AttributeFilter name="Sources" 
                                          attributes={catalog.allSources()} 
                                          selected={filterSelections.source}
-                                         counts={counts.source}
+                                         counts={counts.sources}
                                          onChanged={(attrs) => this.filterChanged("source", attrs)} />
  
                         <AttributeFilter name="Size" 
                                          attributes={catalog.allSizes()}
                                          selected={filterSelections.size} 
-                                         counts={counts.size}
+                                         counts={counts.sizes}
                                          onChanged={(attrs) => this.filterChanged("size", attrs)} />
                         <AttributeFilter name="Role" 
                                          attributes={catalog.allKinds()} 
                                          selected={filterSelections.kind}
-                                         counts={counts.kind}
+                                         counts={counts.kinds}
                                          onChanged={(attrs) => this.filterChanged("kind", attrs)} />
                         <AttributeFilter name="Tags" 
                                          attributes={catalog.allAttributes().sort()}

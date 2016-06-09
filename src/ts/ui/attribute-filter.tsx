@@ -52,10 +52,19 @@ module manticore.ui.filters {
 
         constructor(props: AttributeFilterProps) {
             super(props);
+
+            this.state = this.calculateStateFromProps(props);
+        }
+
+        private calculateStateFromProps(props: AttributeFilterProps): AttributeFilterState {
             const selected:{[index: string]: boolean} = {};
             (this.props.selected || []).forEach(attr => selected[attr] = true);
-            this.state = { counts: this.props.counts || {}, selected: selected };
+            return { counts: this.props.counts || {}, selected: selected };
         }
+
+        public componentWillReceiveProps(props: AttributeFilterProps) {
+            this.setState(this.calculateStateFromProps(props));
+        } 
 
         public render() { 
             const classname = `C attribute-filter -${this.props.name.toLowerCase().replace(" ", "-")} ${this.anySelected() ? "active" : ""}`;
