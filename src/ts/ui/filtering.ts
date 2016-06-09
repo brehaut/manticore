@@ -11,15 +11,13 @@ module manticore.ui {
     class PropertyFilterView {
         private el:HTMLElement;
 
-        public onChanged: Event<void | string[]>;
+        public onChanged = new Event<void | string[]>();
         private filter: selection.AttributeFilter;
 
         constructor (parent: HTMLElement,
-                     private name: string, 
-                     private attributes:{toString:()=>string}[]) {
-            this.onChanged = new Event<void>();
-
-            this.createElements();
+                     name: string, 
+                     attributes:{toString:()=>string}[]) {
+            this.createElements(name, attributes);
             
             this._appendTo(parent);
         } 
@@ -40,12 +38,13 @@ module manticore.ui {
             this.filter.updateCounts(filters);            
         }
         
-        private createElements() {           
+        private createElements(name, attributes) {           
             this.el = DOM.div(null, []);
-            const props = {name: this.name, attributes: this.attributes.map(a => a.toString())};
+            const props = {name: name, attributes: attributes.map(a => a.toString())};
 
             this.filter = selection.install(this.el, props);
-            this.filter.onChanged.register(v => this.onChanged.trigger(v));
+            // TODO: figure out this required setTimeout hack that is causing the render to not occur
+            this.filter.onChanged.register(v => setTimeout(() => this.onChanged.trigger(v), 0));
         }
     }
 

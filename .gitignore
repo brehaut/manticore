@@ -22,3 +22,4 @@ out/*
 static/js/worker.js
 static/js/data-access.js
 static/js/processing.js
+static/js/contrib.js

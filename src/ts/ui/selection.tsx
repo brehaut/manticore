@@ -52,7 +52,7 @@ module manticore.ui.selection {
     }
 
     export class AttributeFilter extends React.Component<AttributeFilterProps, AttributeFilterState> {
-        public onChanged: Event<string[]>;
+        public onChanged = new Event<string[]>();
 
         constructor(props: AttributeFilterProps) {
             super(props);
@@ -114,6 +114,7 @@ module manticore.ui.selection {
             selected[key] = selected.hasOwnProperty(key) ? !selected[key] : true;
 
             this.setState({counts: this.state.counts, selected: selected});
+            
             this.onChanged.trigger(this.calculateSelected(selected));
         } 
     }
