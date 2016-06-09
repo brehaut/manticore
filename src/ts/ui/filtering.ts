@@ -2,6 +2,7 @@
 /// <reference path="dom.ts" />
 /// <reference path="../common/data.ts" />
 /// <reference path="common.ts" />
+/// <reference path="selection.tsx" />
 
 module manticore.ui {
     import _ = strings._;
@@ -11,6 +12,7 @@ module manticore.ui {
         private el:HTMLElement;
 
         public onChanged: Event<void>;
+        private filter: selection.AttributeFilter;
 
         constructor (parent: HTMLElement,
                      private name: string, 
@@ -39,20 +41,21 @@ module manticore.ui {
         }
 
         public updateFilterCounts(filters:{[index: string]: number}) {
-             Array.from<Node>(this.el.querySelectorAll("li"))
-                .forEach((el:HTMLElement) => {
-                    if (el.classList.contains("clear-selection")) return;
-                    var name = (<HTMLInputElement>el.querySelector("input[type=checkbox]")).name;
-                    var count = filters[name] || 0;
+            this.filter.updateCounts(filters);
+            //  Array.from<Node>(this.el.querySelectorAll("li"))
+            //     .forEach((el:HTMLElement) => {
+            //         if (el.classList.contains("clear-selection")) return;
+            //         var name = (<HTMLInputElement>el.querySelector("input[type=checkbox]")).name;
+            //         var count = filters[name] || 0;
 
-                    if (count > 0) {
-                        el.classList.add("viable");
-                    } 
-                    else { 
-                        el.classList.remove("viable");
-                    }
-                    (<HTMLElement> el.querySelector(".count")).textContent = count.toString();
-                });
+            //         if (count > 0) {
+            //             el.classList.add("viable");
+            //         } 
+            //         else { 
+            //             el.classList.remove("viable");
+            //         }
+            //         (<HTMLElement> el.querySelector(".count")).textContent = count.toString();
+            //     });
             
         }
 
@@ -92,60 +95,63 @@ module manticore.ui {
         }
         
         private createElements() {
-            var toggleClick = (e) => {
-                var nodeName = e.target.nodeName.toLowerCase();
-                if (nodeName === "li") {
-                    this.toggleState(e.target.getAttribute("data-name"));
-                }
-                else if (nodeName === "label" || nodeName === "span") {
-                    this.toggleState(e.target.parentNode.getAttribute("data-name"));
-                }
-                e.preventDefault();
-                e.stopPropagation();
-            };
+            // var toggleClick = (e) => {
+            //     var nodeName = e.target.nodeName.toLowerCase();
+            //     if (nodeName === "li") {
+            //         this.toggleState(e.target.getAttribute("data-name"));
+            //     }
+            //     else if (nodeName === "label" || nodeName === "span") {
+            //         this.toggleState(e.target.parentNode.getAttribute("data-name"));
+            //     }
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            // };
 
-            function checkbox(key: string) {
-                return DOM.documentFragment(
-                    [DOM.input({"type": "checkbox", "name": key}),
-                     DOM.label({"for": key}, [DOM.text(_(key))])]
-                );                
-            }
+            // function checkbox(key: string) {
+            //     return DOM.documentFragment(
+            //         [DOM.input({"type": "checkbox", "name": key}),
+            //          DOM.label({"for": key}, [DOM.text(_(key))])]
+            //     );                
+            // }
             
-            var ul = DOM.ul(
-                {
-                    "class": "clearfix",
+            // var ul = DOM.ul(
+            //     {
+            //         "class": "clearfix",
 
-                    onclick: toggleClick,
-                },
-                this.attributes.map(key => {
-                    var k = key.toString();
-                    return DOM.li({"data-name": k}, [
-                        checkbox(k),
-                        DOM.span({"class": "count"}, [])
-                    ]);
-                })
-            );
+            //         onclick: toggleClick,
+            //     },
+            //     this.attributes.map(key => {
+            //         var k = key.toString();
+            //         return DOM.li({"data-name": k}, [
+            //             checkbox(k),
+            //             DOM.span({"class": "count"}, [])
+            //         ]);
+            //     })
+            // );
 
-            var clickReset = (e) => {
-                e.preventDefault();
-                this.clearAll();
-                e.stopPropagation();
-            };
+            // var clickReset = (e) => {
+            //     e.preventDefault();
+            //     this.clearAll();
+            //     e.stopPropagation();
+            // };
             
-            var header = DOM.header(null, [
-                DOM.h2(null, [
-                    DOM.text(_(this.name)),
-                    DOM.a({
-                        "class": "reset",
-                        "onclick": clickReset,
-                    }, [DOM.text(_("[reset]"))])
-                ])
-            ]);
+            // var header = DOM.header(null, [
+            //     DOM.h2(null, [
+            //         DOM.text(_(this.name)),
+            //         DOM.a({
+            //             "class": "reset",
+            //             "onclick": clickReset,
+            //         }, [DOM.text(_("[reset]"))])
+            //     ])
+            // ]);
 
             
-            this.el = DOM.div({
-                "class": "C attribute-filter -" + this.name.toLowerCase().replace(" ", "-")
-            }, [header, ul]);
+            this.el = DOM.div(null, []);
+            const props = {name: this.name, attributes: this.attributes.map(a => a.toString())};
+            // this.filter = new selection.AttributeFilter(props);
+            // (<any>window).filter = this.filter;
+            // ReactDOM.render(this.filter.render(), this.el);
+            this.filter = selection.install(this.el, props);
         }
     }
 

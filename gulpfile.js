@@ -9,7 +9,8 @@ var rm = require('gulp-rimraf');
 var uiProject = ts({
     noImplicitAny: false,
     out: 'main.js',
-    removeComments: true
+    removeComments: true,
+    jsx: "react"
 });
 
 var generationWorkerProject = ts({
@@ -35,7 +36,11 @@ gulp.task("clean",
 
 
 gulp.task('build:contrib', function () {
-	return gulp.src('src/js/contrib/promise-1.0.0.min.js')
+	return gulp.src([
+            'src/js/contrib/promise-1.0.0.min.js',
+            'src/js/contrib/react.min.js',
+            'src/js/contrib/react-dom.min.js'
+        ])
         .pipe(concat('contrib.js'))
         .pipe(gulp.dest('static/js/'));
 })
