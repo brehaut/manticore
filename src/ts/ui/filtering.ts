@@ -4,52 +4,12 @@
 /// <reference path="common.ts" />
 /// <reference path="attribute-filter.tsx" />
 /// <reference path="smart-filters.tsx" />
+/// <reference path="manual-selection.tsx" />
 
 module manticore.ui {
     import _ = strings._;
     
-    
-    class PropertyFilterView {
-        private el:HTMLElement;
 
-        public onChanged = new Event<void | string[]>();
-        private filter: filters.AttributeFilter;
-
-        constructor (parent: HTMLElement,
-                     name: string, 
-                     attributes:{toString:()=>string}[]) {
-            this.createElements(name, attributes);
-            
-            this._appendTo(parent);
-        } 
-        
-        public remove() {
-            this.el.remove();
-        }
-
-        private _appendTo(parent:HTMLElement) {
-            parent.appendChild(this.el);
-        }
-
-        public getSelectedAttributes():string[] {            
-            return this.filter.getSelectedAttributes();
-        }
-
-        public updateFilterCounts(filters:{[index: string]: number}) {
-            this.filter.updateCounts(filters);            
-        }
-        
-        private createElements(name, attributes) {           
-            this.el = DOM.div(null, []);
-            const props = {name: name, attributes: attributes.map(a => a.toString())};
-
-            this.filter = filters.install(this.el, props);
-            // TODO: figure out this required setTimeout hack that is causing the render to not occur
-            this.filter.onChanged.register(v => setTimeout(() => this.onChanged.trigger(v), 0));
-        }
-    }
-
-    
     interface IFilterSource {
         onFilterChanged: Event<string>
         
@@ -67,46 +27,16 @@ module manticore.ui {
 
         public onFilterChanged: Event<string> = new Event<string>();
 
-        private sourcesView: PropertyFilterView;
-        private sizeView: PropertyFilterView;
-        private kindView: PropertyFilterView;
-        private attributesView: PropertyFilterView;
-
         private filters: filters.SmartFilter;
 
         constructor(parent: HTMLElement, private bestiary:Atom<bestiary.Bestiary>) {           
             this.createElements();
-            //this.createSubViews(bestiary.get());
 
             this.setVisibility(false);
-            
-            this.bestiary.onChange.register(bestiary => this.catalogChanged(bestiary));
-                        
+                                    
             this._appendTo(parent);
         }
 
-        private createSubViews(newCatalog: bestiary.Bestiary) {
-            // this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", newCatalog.allSources());
-            
-            // this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", newCatalog.allSizes());
-            // this.kindView = new PropertyFilterView(this.filtersContainer, "Role", newCatalog.allKinds());
-            // this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", newCatalog.allAttributes().sort());
-
-            // this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
-            // this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
-            // this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
-            // this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
-        }
-
-        private catalogChanged(newCatalog: bestiary.Bestiary) {
-            // this.sourcesView.remove();
-            // this.sizeView.remove();
-            // this.kindView.remove();
-            // this.attributesView.remove();
-            
-            // this.createSubViews(newCatalog);   
-        }
-        
         public setVisibility(visible: boolean) {
             this.el.style.display = visible ? "block" : "none";  
         }
@@ -117,14 +47,10 @@ module manticore.ui {
 
         public updateFilterCounts(filters:any) {
             this.filters.updateFilterCounts(filters);
-            // this.sourcesView.updateFilterCounts(filters.sources);
-            // this.sizeView.updateFilterCounts(filters.sizes);
-            // this.kindView.updateFilterCounts(filters.kinds);
-            // this.attributesView.updateFilterCounts(filters.attributes);
         }
         
         public updateSelectedCount(count: number) {
-            // this.selectionCountEl.textContent = _("Number selected ") + count;
+            this.filters.updateSelectedCount(count);
         }
 
         private _appendTo(element:HTMLElement) {
@@ -146,29 +72,14 @@ module manticore.ui {
 
         public onFilterChanged: Event<string> = new Event<string>();
 
-        private byNameView: PropertyFilterView;
+        private filters: filters.ManualSelection;
         
         constructor (parent: HTMLElement, private catalog: Atom<bestiary.Bestiary>) {           
             this.createElements();
-                        
-            this.createSubViews(catalog.get());
-            this.catalog.onChange.register(bestiary => this.catalogChanged(bestiary));
             
             this.setVisibility(false);
             
             this._appendTo(parent);
-        }
-        
-        private createSubViews(newCatalog: bestiary.Bestiary) {
-            this.byNameView = new PropertyFilterView(this.el, "By Name", newCatalog.allNames().sort());
-
-            this.byNameView.onChanged.register(_ => this.onFilterChanged.trigger("names"));
-        }
-
-        private catalogChanged(newCatalog: bestiary.Bestiary) {
-            this.byNameView.remove();
-            
-            this.createSubViews(newCatalog);   
         }
         
 
@@ -177,9 +88,7 @@ module manticore.ui {
         }
         
         public getFilters():{[index: string]: string[]} {
-            return {
-                name: this.byNameView.getSelectedAttributes()
-            }; 
+            return this.filters.getFilters();
         }
 
         public updateSelectedCount(count: number) {
@@ -187,23 +96,14 @@ module manticore.ui {
         }
 
         public updateFilterCounts(filters: any) {
-            this.byNameView.updateFilterCounts(filters.names);
+            this.filters.updateFilterCounts(filters);
         }
         
         private createElements() {
-            this.el = DOM.div(
-                {
-                    "class": "filters clearfix",                
-                },
-                [
-                    DOM.header(
-                        null,
-                        [
-                            DOM.p(null, [DOM.text(_("[pick monsters]"))])
-                        ]
-                    )
-                ]
-            );
+            this.el = DOM.div({})
+            this.filters = filters.installManualSelection(this.el, this.catalog);
+            // TODO: remove set timeout
+            this.filters.onChanged.register(([name, attrs]) => setTimeout(() => this.onFilterChanged.trigger(name), 0));
         }
         
         private _appendTo(html:HTMLElement) {

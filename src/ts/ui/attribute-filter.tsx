@@ -130,8 +130,4 @@ module manticore.ui.filters {
             this.onChanged.trigger(attrs);
         }
     }
-
-    export function install(el, props):AttributeFilter {
-        return ReactDOM.render(<AttributeFilter name={props.name} attributes={props.attributes} />, el) as AttributeFilter;
-    }
 }

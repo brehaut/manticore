@@ -15,8 +15,9 @@ module manticore.ui.filters {
 
     interface SmartFilterState {
         catalog: bestiary.Bestiary;
-        filterSelections: FilterSelections
+        filterSelections: FilterSelections;
         counts: any;
+        totalSelected: number;
     }
 
     export class SmartFilter extends React.Component<{catalog: Atom<bestiary.Bestiary>}, SmartFilterState> {
@@ -33,13 +34,15 @@ module manticore.ui.filters {
                     kind: [],
                     attributes: []
                 },
-                counts: {}
+                counts: {},
+                totalSelected: 0
             };
 
             props.catalog.onChange.register((catalog) => this.setState({
                 catalog: catalog, 
                 filterSelections: this.state.filterSelections,
-                counts: this.state.counts
+                counts: this.state.counts,
+                totalSelected: 0
             }));
         }
 
@@ -78,7 +81,7 @@ module manticore.ui.filters {
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
                     </div>
 
-                    <div class="selection-count">{_("Number selected ")} </div>
+                    <div class="selection-count">{_("Number selected ")} {this.state.totalSelected}</div>
                 </div>
             );
         }
@@ -88,7 +91,11 @@ module manticore.ui.filters {
         }
 
         public updateFilterCounts(filters: any) {
-            this.setState({catalog: this.state.catalog, filterSelections: this.state.filterSelections, counts: filters})
+            this.setState({catalog: this.state.catalog, filterSelections: this.state.filterSelections, counts: filters, totalSelected: this.state.totalSelected})
+        }
+
+        public updateSelectedCount(count: number) {
+            this.setState({catalog: this.state.catalog, filterSelections: this.state.filterSelections, counts: this.state.counts, totalSelected: count})
         }
 
         private filterChanged(filterName: string, selectedAttrs: string[]) {
@@ -102,7 +109,8 @@ module manticore.ui.filters {
             this.setState({
                 catalog: this.state.catalog, 
                 filterSelections: sels as FilterSelections,
-                counts: this.state.counts
+                counts: this.state.counts,
+                totalSelected: this.state.totalSelected
             });
 
             this.onChanged.trigger([filterName, selectedAttrs]);
