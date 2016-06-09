@@ -2,7 +2,8 @@
 /// <reference path="dom.ts" />
 /// <reference path="../common/data.ts" />
 /// <reference path="common.ts" />
-/// <reference path="selection.tsx" />
+/// <reference path="attribute-filter.tsx" />
+/// <reference path="smart-filters.tsx" />
 
 module manticore.ui {
     import _ = strings._;
@@ -12,7 +13,7 @@ module manticore.ui {
         private el:HTMLElement;
 
         public onChanged = new Event<void | string[]>();
-        private filter: selection.AttributeFilter;
+        private filter: filters.AttributeFilter;
 
         constructor (parent: HTMLElement,
                      name: string, 
@@ -42,7 +43,7 @@ module manticore.ui {
             this.el = DOM.div(null, []);
             const props = {name: name, attributes: attributes.map(a => a.toString())};
 
-            this.filter = selection.install(this.el, props);
+            this.filter = filters.install(this.el, props);
             // TODO: figure out this required setTimeout hack that is causing the render to not occur
             this.filter.onChanged.register(v => setTimeout(() => this.onChanged.trigger(v), 0));
         }
@@ -71,9 +72,11 @@ module manticore.ui {
         private kindView: PropertyFilterView;
         private attributesView: PropertyFilterView;
 
+        private filters: filters.SmartFilter;
+
         constructor(parent: HTMLElement, private bestiary:Atom<bestiary.Bestiary>) {           
             this.createElements();
-            this.createSubViews(bestiary.get());
+            //this.createSubViews(bestiary.get());
 
             this.setVisibility(false);
             
@@ -83,25 +86,25 @@ module manticore.ui {
         }
 
         private createSubViews(newCatalog: bestiary.Bestiary) {
-            this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", newCatalog.allSources());
+            // this.sourcesView = new PropertyFilterView(this.filtersContainer, "Sources", newCatalog.allSources());
             
-            this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", newCatalog.allSizes());
-            this.kindView = new PropertyFilterView(this.filtersContainer, "Role", newCatalog.allKinds());
-            this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", newCatalog.allAttributes().sort());
+            // this.sizeView = new PropertyFilterView(this.filtersContainer, "Size", newCatalog.allSizes());
+            // this.kindView = new PropertyFilterView(this.filtersContainer, "Role", newCatalog.allKinds());
+            // this.attributesView = new PropertyFilterView(this.filtersContainer, "Tags", newCatalog.allAttributes().sort());
 
-            this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
-            this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
-            this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
-            this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
+            // this.sourcesView.onChanged.register(_ => this.onFilterChanged.trigger("source"));
+            // this.sizeView.onChanged.register(_ => this.onFilterChanged.trigger("size"));
+            // this.kindView.onChanged.register(_ => this.onFilterChanged.trigger("kind"));
+            // this.attributesView.onChanged.register(_ => this.onFilterChanged.trigger("attributes"));
         }
 
         private catalogChanged(newCatalog: bestiary.Bestiary) {
-            this.sourcesView.remove();
-            this.sizeView.remove();
-            this.kindView.remove();
-            this.attributesView.remove();
+            // this.sourcesView.remove();
+            // this.sizeView.remove();
+            // this.kindView.remove();
+            // this.attributesView.remove();
             
-            this.createSubViews(newCatalog);   
+            // this.createSubViews(newCatalog);   
         }
         
         public setVisibility(visible: boolean) {
@@ -109,23 +112,19 @@ module manticore.ui {
         }
 
         public getFilters():{[index: string]: string[]} {
-            return {
-                sources: this.sourcesView.getSelectedAttributes(),
-                size: this.sizeView.getSelectedAttributes(),
-                kind: this.kindView.getSelectedAttributes(),
-                attributes: this.attributesView.getSelectedAttributes(),
-            }
+            return this.filters.getFilters();
         }
 
         public updateFilterCounts(filters:any) {
-            this.sourcesView.updateFilterCounts(filters.sources);
-            this.sizeView.updateFilterCounts(filters.sizes);
-            this.kindView.updateFilterCounts(filters.kinds);
-            this.attributesView.updateFilterCounts(filters.attributes);
+            this.filters.updateFilterCounts(filters);
+            // this.sourcesView.updateFilterCounts(filters.sources);
+            // this.sizeView.updateFilterCounts(filters.sizes);
+            // this.kindView.updateFilterCounts(filters.kinds);
+            // this.attributesView.updateFilterCounts(filters.attributes);
         }
         
         public updateSelectedCount(count: number) {
-            this.selectionCountEl.textContent = _("Number selected ") + count;
+            // this.selectionCountEl.textContent = _("Number selected ") + count;
         }
 
         private _appendTo(element:HTMLElement) {
@@ -133,26 +132,10 @@ module manticore.ui {
         }
 
         private createElements() {
-            this.el = DOM.div(
-                {
-                    "class": "filters clearfix"
-                }, 
-                [
-                    DOM.header( 
-                        null, 
-                        [
-                            DOM.p(null, [DOM.text(_("[filter summary]"))])
-                        ]
-                    )
-                ]
-            );
-
-            this.filtersContainer = DOM.div({});
-            this.el.appendChild(this.filtersContainer);
-
-            this.selectionCountEl = DOM.div({"class": "selection-count"});
-
-            this.el.appendChild(this.selectionCountEl)
+            this.el = DOM.div({});
+            this.filters = filters.installSmartFilter(this.el, this.bestiary);
+            // TODO: remove set timeout
+            this.filters.onChanged.register(([name, attrs]) => setTimeout(() => this.onFilterChanged.trigger(name), 0));
         }
     }
 

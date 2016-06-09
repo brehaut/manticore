@@ -1,17 +1,9 @@
 /// <reference path="strings.ts" />
 /// <reference path="../vendor/react.d.ts" />
 
-module manticore.ui.selection {
+module manticore.ui.filters {
     import _ = manticore.ui.strings._; 
 
-    function checkbox(key: string, selected: boolean) {
-        return (
-            [
-                <input type="checkbox" name={key} checked={selected}/>,
-                <label for={key}>{key}</label>
-            ]
-        );                
-    }
 
     class CheckboxList extends React.Component<{attributes: string[], data: AttributeFilterState, onToggle?:(key: string) => void}, any> {
         constructor(props: {attributes: string[], data: AttributeFilterState}) {
@@ -27,8 +19,9 @@ module manticore.ui.selection {
                         const classname = count > 0 ? "viable" : "";
                         const selected = this.props.data.selected[key] || false;
 
-                        return <li className={classname} onClick={() => this.handleClick(key)}>
-                            {checkbox(k, selected)} 
+                        return <li className={classname} onClick={() => this.handleClick(key)}> 
+                            <input type="checkbox" name={k} checked={selected} onClick={() => this.handleClick(key)}/>
+                            <label for={k}>{key}</label>
                             <span className="count">{count}</span>
                         </li>;
                     })}
@@ -44,6 +37,9 @@ module manticore.ui.selection {
     export interface AttributeFilterProps {
         name: string;
         attributes: string[];
+        selected?: string[];
+        onChanged?: (attrs: string[]) => void;
+        counts?: any;
     }
 
     interface AttributeFilterState {
@@ -56,7 +52,9 @@ module manticore.ui.selection {
 
         constructor(props: AttributeFilterProps) {
             super(props);
-            this.state = { counts: {}, selected: {} };
+            const selected:{[index: string]: boolean} = {};
+            (this.props.selected || []).forEach(attr => selected[attr] = true);
+            this.state = { counts: this.props.counts || {}, selected: selected };
         }
 
         public render() { 
@@ -93,7 +91,7 @@ module manticore.ui.selection {
 
         private clearAll() {
             this.setState({counts: this.state.counts, selected: {}});
-            this.onChanged.trigger([]);
+            this.triggerChanged([]);
         }
 
         private anySelected(): boolean {
@@ -114,9 +112,14 @@ module manticore.ui.selection {
             selected[key] = selected.hasOwnProperty(key) ? !selected[key] : true;
 
             this.setState({counts: this.state.counts, selected: selected});
-            
-            this.onChanged.trigger(this.calculateSelected(selected));
+
+            this.triggerChanged(this.calculateSelected(selected));
         } 
+
+        private triggerChanged(attrs: string[]) {
+            if (this.props.onChanged) this.props.onChanged(attrs);
+            this.onChanged.trigger(attrs);
+        }
     }
 
     export function install(el, props):AttributeFilter {
