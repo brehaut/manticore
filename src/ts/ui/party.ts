@@ -1,4 +1,5 @@
 /// <reference path="../common/data.ts" />
+/// <reference path="party-ui.tsx" />
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
 /// <reference path="common.ts" />
@@ -117,6 +118,8 @@ module manticore.ui {
             
             this.size = this.labeledNumericField(this.el, _("Party size"), "size", 4, 10);
             this.level = this.labeledNumericField(this.el, _("Party level"), "level", 2, 10);
+
+            party.installParty(this.parent);
         }
     }
 }
