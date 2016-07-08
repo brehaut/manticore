@@ -18,8 +18,6 @@ module manticore.ui.party {
     class NumericInput extends React.Component<NumericInputProps, any> {
         constructor(props: NumericInputProps) {
             super(props);
-
-            this.state = {value: props.value};
         }
 
         public render() {
@@ -27,7 +25,7 @@ module manticore.ui.party {
                 <div className="field">
                     <label>{this.props.label}</label>
                     <input type="number" min="1" max={this.props.max} 
-                           value={this.state.value} 
+                           value={this.props.value} 
                            onChange={(e) => this.onChangeHandler(e)} 
                            />
                 </div>
@@ -36,7 +34,6 @@ module manticore.ui.party {
 
         public onChangeHandler(e) {
             const computedValue = +e.target.value;    
-            this.setState({value: computedValue });
 
             if (this.props.onChanged) {
                 this.props.onChanged(computedValue);
@@ -59,9 +56,9 @@ module manticore.ui.party {
         constructor(props: PartyProps) {
             super(props);
             
-            this.state = { size: 4, level: 2};
-            const oldonmessage = this.props.worker.onmessage;
-            this.props.worker.onmessage = (message) => { this.storeChanged(message.data); if (oldonmessage) oldonmessage(message) };
+            this.state = { size: 1, level: 1};
+            this.props.worker.onmessage = (message) => this.storeChanged(message.data);
+            this.props.worker.postMessage(messaging.dataAccess.partyGetMessage());
         }
 
         public render() {
@@ -74,9 +71,9 @@ module manticore.ui.party {
                         </p>
                     </header>
 
-                    <NumericInput label={_("Party size")} value={4} max={10} 
+                    <NumericInput label={_("Party size")} value={this.state.size} max={10} 
                                   onChanged={(v) => this.sizeChanged(v)} />
-                    <NumericInput label={_("Party level")} value={2} max={10}
+                    <NumericInput label={_("Party level")} value={this.state.level} max={10}
                                   onChanged={(v) => this.levelChanged(v)} />
                 </section>
             )
