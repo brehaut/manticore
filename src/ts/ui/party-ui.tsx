@@ -12,6 +12,7 @@ module manticore.ui.party {
         label: string;
         value: number;
         max: number;
+        onChanged?: (v:number) => void;
     }
 
     class NumericInput extends React.Component<NumericInputProps, any> {
@@ -36,30 +37,34 @@ module manticore.ui.party {
         public onChangeHandler(e) {
             const computedValue = +e.target.value;    
             this.setState({value: computedValue });
+
+            if (this.props.onChanged) {
+                this.props.onChanged(computedValue);
+            }
         }
     } 
 
 
 
     interface PartyProps {
-
+        worker: model.IPartyWorker
     }
 
     interface PartyState {
-        
+        size?: number;
+        level?: number;
     }
 
     export class Party extends React.Component<PartyProps, PartyState> {
         constructor(props: PartyProps) {
             super(props);
+            
+            this.state = { size: 4, level: 2};
+            const oldonmessage = this.props.worker.onmessage;
+            this.props.worker.onmessage = (message) => { this.storeChanged(message.data); if (oldonmessage) oldonmessage(message) };
         }
 
         public render() {
-            // this.el = ui.sectionMarkup("Party", "party", "[party summary]", []);
-            
-            //this.size = this.labeledNumericField(this.el, _("Party size"), "size", 4, 10);
-            //this.level = this.labeledNumericField(this.el, _("Party level"), "level", 2, 10);
-
             return (
                 <section className="clearfix party">
                     <header>
@@ -69,15 +74,35 @@ module manticore.ui.party {
                         </p>
                     </header>
 
-                    <NumericInput label={_("Party size")} value={4} max={10} />
-                    <NumericInput label={_("Party level")} value={2} max={10} />
+                    <NumericInput label={_("Party size")} value={4} max={10} 
+                                  onChanged={(v) => this.sizeChanged(v)} />
+                    <NumericInput label={_("Party level")} value={2} max={10}
+                                  onChanged={(v) => this.levelChanged(v)} />
                 </section>
             )
+        }
+
+        public getPartyInfo(): data.IParty {
+            return { size: this.state.size, level: this.state.level };
+        }
+
+        private storeChanged(data: data.IParty) {
+            this.setState(data);
+        }
+
+        private sizeChanged(newSize: number) {
+            const partyInfo = { size: newSize, level: this.state.level };
+            this.props.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
+        }
+
+        private levelChanged(newLevel: number) {
+            const partyInfo = { size: this.state.size, level: newLevel };
+            this.props.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
         }
     }
 
 
-    export function installParty(el):Party {
-        return ReactDOM.render(<Party />, el) as Party;
+    export function installParty(el, worker: model.IPartyWorker):Party {
+        return ReactDOM.render(<Party worker={worker} />, el) as Party;
     }
 }

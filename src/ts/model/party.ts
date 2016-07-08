@@ -40,8 +40,10 @@ module manticore.model {
         // go round the event loop to ensure that any listeners can be bound before the data arrives
         setTimeout(() => postData(), 0);
     }
+
+    export interface IPartyWorker extends workers.ITypedWorker<dal.PartyMessage, data.IParty> { }
     
-    export function partyWorker () {
+    export function partyWorker (): IPartyWorker {
         return new workers.LightWeightWorker<dal.PartyMessage, data.IParty>(partyWorkerInitialisation);
     }
 }

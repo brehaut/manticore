@@ -56,70 +56,24 @@ module manticore.ui {
 
     
     
-    export class PartyView {
-        private el:HTMLElement;
-        private size: NumericField;
-        private level: NumericField;
+    export class PartyView {        
         private worker = manticore.model.partyWorker(); 
         
+        private partyComp: party.Party;
 
         public onChanged: Event<data.IParty>;
 
         constructor (private parent: HTMLElement) {
             this.onChanged = new Event<data.IParty>();
             this.createElements();
-            this.worker.onmessage = (message:workers.ILightWeightMessageEvent<data.IParty>) => this.storageChanged(message.data);
-            
-            this._appendTo(parent);
         }
 
         public getPartyInfo():data.IParty {
-            return {
-                level: +(<HTMLInputElement> this.el.querySelector("div.level input")).value,
-                size: +(<HTMLInputElement> this.el.querySelector("div.size input")).value
-            };
-        }
-
-        private _appendTo(element:HTMLElement) {
-            element.appendChild(this.el);
-        }
-
-        private labeledNumericField(parent: HTMLElement,
-                                    label:string, 
-                                    className:string, 
-                                    val:number, 
-                                    max?:number): NumericField {
-            var div = DOM.div(
-                {"class": "field " + className},
-                [DOM.label(null, [DOM.text(label)])]
-            );
-                                                                               
-            var input = new NumericField(div, val, max); 
-            input.onChanged.register(_ => this.fieldChanged());
-
-            parent.appendChild(div);
-
-            return input;
+            return this.partyComp.getPartyInfo();
         }
         
-        private storageChanged(data: data.IParty) {
-            this.size.setValue(data.size);
-            this.level.setValue(data.level);
-        }
-        
-        private fieldChanged() {
-            const partyInfo = this.getPartyInfo();
-            this.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
-            this.onChanged.trigger(partyInfo);
-        }
-
         private createElements() {            
-            this.el = ui.sectionMarkup("Party", "party", "[party summary]", []);
-            
-            this.size = this.labeledNumericField(this.el, _("Party size"), "size", 4, 10);
-            this.level = this.labeledNumericField(this.el, _("Party level"), "level", 2, 10);
-
-            party.installParty(this.parent);
+            this.partyComp = party.installParty(this.parent, this.worker);
         }
     }
 }
