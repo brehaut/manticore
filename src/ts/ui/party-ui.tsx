@@ -48,8 +48,8 @@ module manticore.ui.party {
     }
 
     interface PartyState {
-        size?: number;
-        level?: number;
+        size: number;
+        level: number;
     }
 
     export class Party extends React.Component<PartyProps, PartyState> {

@@ -3,23 +3,25 @@
 // a utility for doing simple ajax requests.
 function awaitAjax(url:string, method?:string):Promise<string> {
     return new Promise<any>((resolve, reject) => {
-        var req = null;
+        var req:XMLHttpRequest | undefined;
 
         if ((<any>self).XMLHttpRequest) {
 	          req = new XMLHttpRequest();
         }
         else {
-            reject(new Error("No XMLHttpReqest support"));
+            return reject(new Error("No XMLHttpReqest support"));
         }
 
         function cleanup() {
-            req.onreadystatechange = null;
-            req.onerror = null;
-            req.ontimeout = null;
-            req = null;
+            if (req === undefined) return;
+            delete req.onreadystatechange;
+            delete req.onerror;
+            delete req.ontimeout;
+            req = undefined;
         }
         
         req.onreadystatechange = () => {
+            if (req === undefined) return;
             if (req.readyState < 4) return;
             
             if (req.status === 200) {
@@ -68,7 +70,7 @@ if (!Array.prototype.filter)
     if (typeof fun !== "function")
       throw new TypeError();
 
-    var res = [];
+    var res:any[] = [];
     var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
     for (var i = 0; i < len; i++)
     {

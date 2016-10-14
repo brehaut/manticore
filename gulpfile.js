@@ -11,7 +11,8 @@ var uiProject = ts({
     out: 'main.js',
     removeComments: true,
     jsx: "react",
-    lib: ["es5"]
+    lib: ["es5"],
+    strictNullChecks: true,
 });
 
 var generationWorkerProject = ts({

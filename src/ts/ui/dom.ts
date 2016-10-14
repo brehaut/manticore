@@ -1,6 +1,6 @@
 module manticore {
     function makeEl(elName:string) {
-        return (attributes, children = []) => {
+        return (attributes:{[index:string]:any}|null, children:any[] = []) => {
             var el = document.createElement(elName);
             attributes = attributes || {};
             

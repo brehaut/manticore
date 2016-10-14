@@ -85,7 +85,7 @@ module manticore.ui.filters {
         }
 
         private calculateSelected(selectedMapping: {[index: string]: boolean}): string[] {
-            const attrs = [];
+            const attrs:string[] = [];
 
             for (var k in selectedMapping) if (selectedMapping.hasOwnProperty(k)) {
                 if (selectedMapping[k]) attrs.push(k);

@@ -12,14 +12,12 @@ module manticore.ui {
         private resultsEl: HTMLElement;
         private moreButton: HTMLElement;
 
-        public onRequestGenerate: Event<void>;
+        public onRequestGenerate = new Event<null>();
 
         private currentIndex: number;
         private pendingAllocations:data.GroupedEncounters;
 
         constructor (private parent:HTMLElement) {
-            this.onRequestGenerate = new Event<void>();
-            
             this.createElements();
             
             this._appendTo(this.parent);

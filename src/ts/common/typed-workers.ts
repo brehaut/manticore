@@ -6,7 +6,7 @@ module manticore.workers {
     
     export interface ITypedWorker<TIncoming, TOutgoing> {
         postMessage(message: TIncoming);
-        onmessage(message: ITypedMessageEvent<TOutgoing>);
+        onmessage?(message: ITypedMessageEvent<TOutgoing>);
     }
     
     export function newWorker<TSend, TRecv>(script: string): ITypedWorker<TSend, TRecv> {
@@ -35,15 +35,15 @@ module manticore.workers {
     
     export interface ILightWeightWorkerContext<TSend, TRecv> {
         postMessage(message: TRecv);
-        onmessage(message: ILightWeightMessageEvent<TSend>);
+        onmessage?(message: ILightWeightMessageEvent<TSend>);
         close();
     }
     
   
     export class LightWeightWorker<TIncoming, TOutgoing> implements ITypedWorker<TIncoming, TOutgoing> {
-        public onmessage: (message:ILightWeightMessageEvent<TOutgoing>) => void = undefined;
+        public onmessage?: ((message:ILightWeightMessageEvent<TOutgoing>) => void) = undefined;
         
-        private internalWorker:ILightWeightWorkerContext<TIncoming, TOutgoing> = {
+        private internalWorker?:ILightWeightWorkerContext<TIncoming, TOutgoing> = {
             onmessage: undefined,
             postMessage: (message) => {
                 this.dispatchMessage(message);
@@ -51,7 +51,7 @@ module manticore.workers {
             close: () => this.terminate()
         }
         
-        constructor(initialise:(worker:ILightWeightWorkerContext<TIncoming, TOutgoing>) => void) {
+        constructor(initialise:(worker:(ILightWeightWorkerContext<TIncoming, TOutgoing>)|undefined) => void) {
             initialise(this.internalWorker);
         }
         
@@ -61,6 +61,7 @@ module manticore.workers {
         }
         
         public terminate() {
+            if (this.internalWorker === undefined) return;
             this.internalWorker.onmessage = undefined;
             this.internalWorker.postMessage = (_) => undefined;
             this.internalWorker = undefined;

@@ -12,7 +12,7 @@ module manticore.appcache {
             DOM.text(text),
             DOM.span({"class": "action"}, [DOM.text(actionText)]),
             DOM.span({"class": "close"}, [DOM.text("╳")])
-        ]);        
+        ] as any[]);        
 
         document.body.appendChild(confirm);
         

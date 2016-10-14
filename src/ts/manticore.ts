@@ -15,7 +15,7 @@ module manticore {
         return new Promise((resolve, reject) => {
             document.addEventListener("DOMContentLoaded", _ => {
                 manticore.appcache.handleReloads();
-                resolve(null);
+                resolve({});
             })
         });
     }
