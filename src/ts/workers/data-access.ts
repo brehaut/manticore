@@ -16,10 +16,9 @@ module manticore.workers.dataAccess {
     }
     
     
-    function mergeWith<T>(merge?:(a:T, b:T) => T) {
+    function mergeWith<T>(merge:(a:T, b:T) => T) {
         return (os:{[index:string]: T}[]):{[index:string]: T} => {
             var acc:{[index:string]: T} = {};
-            merge = merge
 
             for (var i = 0, j = os.length; i < j; i++) {
                 var o = os[i];
