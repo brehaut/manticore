@@ -155,7 +155,7 @@ module manticore.bestiary {
     }
 
 
-    function priceMonster(partyLevel:number, m:data.Monster): PricedMonster {
+    function priceMonster(partyLevel:number, m:data.Monster): PricedMonster|null {
         var cost = relativeCost(relativeLevel(partyLevel, m.level));
         var multiplier = scaleFactor(m.scale, partyLevel);
 
@@ -190,7 +190,7 @@ module manticore.bestiary {
             max = Math.min(max, 1);
         }  
 
-        var repeats = [];
+        var repeats:MonsterAllocation[] = [];
         for (var i = 1; i <= max; i++) {
             repeats[repeats.length] = new MonsterAllocation(monster, i);
         }
@@ -214,7 +214,7 @@ module manticore.bestiary {
             groups[key].push(alloc);
         }
 
-        const result = [];
+        const result:data.GroupedEncounters = [];
         for (let k in groups) if (groups.hasOwnProperty(k)) {
             result[result.length] = groups[k];
         }
@@ -223,7 +223,7 @@ module manticore.bestiary {
 
 
     function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {
-        const allAllocations = [];     
+        const allAllocations:MonsterAllocation[][] = [];     
         const allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
 
         function allocate(remainingPoints:number, 
@@ -296,8 +296,8 @@ module manticore.bestiary {
 
         return allocateMonsters(priceParty(party.size),
                                 selectedMonsters
-                                .map((m) => priceMonster(party.level, m))
-                                .filter((m) => m !== null)
+                                    .map((m) => priceMonster(party.level, m))
+                                    .filter((m) => m !== null) as PricedMonster[]
                                );
     }
 
@@ -324,7 +324,7 @@ module manticore.bestiary {
         }
 
         public allAttributes() {
-            var attributes = [];
+            var attributes:string[] = [];
             
             this.monsters.forEach((m:data.Monster) => {
                 m.attributes.forEach((a:string) => {

@@ -16,7 +16,7 @@ module manticore.data {
         kind:string;
         scale: MonsterScale
         attributes: string[];
-        book?:string;
+        book:string;
     }
         
     export function newMonster(name:string, 

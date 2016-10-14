@@ -18,6 +18,7 @@ var generationWorkerProject = ts({
     noImplicitAny: false,
     out: 'processing.js',
     removeComments: true,
+    strictNullChecks: true,
     lib: ["webworker", "es5"]
 })
 
@@ -25,6 +26,7 @@ var dataAccessWorkerProject = ts({
     noImplicitAny: false,
     out: 'data-access.js',
     removeComments: true,
+    strictNullChecks: true,
     lib: ["webworker", "es5"]
 })
 
