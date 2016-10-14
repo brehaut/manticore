@@ -1,14 +1,14 @@
-/// <reference path="../../node_modules/typescript/lib/lib.es6.d.ts" />
-/// <reference path="common/types.d.ts" />
-/// <reference path="common/shims.ts" />
-/// <reference path="common/data.ts" />
-/// <reference path="common/bestiary.ts" />
+/// <reference path="../common/types.d.ts" />
+/// <reference path="../common/shims.ts" />
+/// <reference path="../common/data.ts" />
+/// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/typed-workers.ts" />
+/// <reference path="../common/messaging.ts" />
+/// <reference path="../model/bestiary.ts" />
+/// <reference path="../model/party.ts" /> 
+
 /// <reference path="ui.ts" />
 /// <reference path="appcache.ts" />
-/// <reference path="common/typed-workers.ts" />
-/// <reference path="common/messaging.ts" />
-/// <reference path="model/bestiary.ts" />
-/// <reference path="model/party.ts" /> 
 
 module manticore {
     function awaitContentLoaded() {

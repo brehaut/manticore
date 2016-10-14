@@ -1,4 +1,4 @@
-/// <reference path="../common/data.ts" />
+/// <reference path="../../common/data.ts" />
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
 

@@ -1,4 +1,4 @@
-/// <reference path="../common/data.ts" />
+/// <reference path="../../common/data.ts" />
 /// <reference path="party-ui.tsx" />
 /// <reference path="common.ts" />
 

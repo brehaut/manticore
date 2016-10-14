@@ -1,5 +1,5 @@
 /// <reference path="strings.ts" />
-/// <reference path="../vendor/react.d.ts" />
+/// <reference path="../../vendor/react.d.ts" />
 
 module manticore.ui.filters {
     import _ = manticore.ui.strings._; 

@@ -1,4 +1,4 @@
-/// <reference path="../vendor/react.d.ts" />
+/// <reference path="../../vendor/react.d.ts" />
 
 /// <reference path="strings.ts" />
 /// <reference path="smart-filters.tsx" />

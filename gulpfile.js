@@ -11,7 +11,8 @@ var uiProject = ts({
     out: 'main.js',
     removeComments: true,
     jsx: "react",
-    lib: ["es5"],
+    target: "es5",
+    lib: ["es6", "dom"],
     strictNullChecks: true,
 });
 
@@ -50,7 +51,7 @@ gulp.task('build:contrib', function () {
 })
 
 gulp.task('build:main', function () {
-	return gulp.src('src/ts/manticore.ts')
+	return gulp.src('src/ts/app/manticore.ts')
         .pipe(uiProject)
         .pipe(gulp.dest('static/js'))
         ;

@@ -1,6 +1,6 @@
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
-/// <reference path="../common/data.ts" />
+/// <reference path="../../common/data.ts" />
 /// <reference path="common.ts" />
 /// <reference path="attribute-filter.tsx" />
 /// <reference path="smart-filters.tsx" />
