@@ -1,4 +1,3 @@
-/// <reference path="../../../node_modules/typescript/lib/lib.webworker.d.ts" />
 /// <reference path="../common/bestiary.ts" />
 /// <reference path="../common/data.ts" />
 /// <reference path="../common/messaging.ts" />

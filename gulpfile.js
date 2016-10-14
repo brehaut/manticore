@@ -10,21 +10,22 @@ var uiProject = ts({
     noImplicitAny: false,
     out: 'main.js',
     removeComments: true,
-    jsx: "react"
+    jsx: "react",
+    lib: ["es5"]
 });
 
 var generationWorkerProject = ts({
     noImplicitAny: false,
     out: 'processing.js',
     removeComments: true,
-    noLib: true,
+    lib: ["webworker", "es5"]
 })
 
 var dataAccessWorkerProject = ts({
     noImplicitAny: false,
     out: 'data-access.js',
     removeComments: true,
-    noLib: true,
+    lib: ["webworker", "es5"]
 })
 
 
