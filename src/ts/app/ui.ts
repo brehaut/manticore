@@ -35,8 +35,7 @@ module manticore.ui {
             
             this.selectionView.updateSelectedCount(this.catalog.get().monsters.length);
             
-            this.dataAccessWorker.onmessage = (message) => this.updateBestiary(message.data);
-            this.dataAccessWorker.postMessage(messaging.dataAccess.bestiaryGetMessage());
+            this.requestBestiary();
             
             this.bindEvents();
 
@@ -44,6 +43,12 @@ module manticore.ui {
 
             this.updateSelectionInfo();
             this.updateEnabledFilters();
+        }
+
+        private requestBestiary() {
+            const chan = new MessageChannel();
+            chan.port2.onmessage = (message) => this.updateBestiary(message.data);
+            this.dataAccessWorker.postMessage(messaging.dataAccess.bestiaryGetMessage(), [chan.port1]);
         }
 
         private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {

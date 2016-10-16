@@ -60,7 +60,7 @@ module manticore.workers.dataAccess {
         if (messaging.dataAccess.isBestiaryMessage(data)) {
             if (messaging.dataAccess.isBestiaryGet(data)) {
                 dataset.then(dataset => {
-                    postMessage(messaging.dataAccess.bestiaryDataMessage(dataset))
+                    message.ports[0].postMessage(messaging.dataAccess.bestiaryDataMessage(dataset))
                 });
             }
         }

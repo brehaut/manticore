@@ -14,7 +14,6 @@ module manticore.ui.filters {
     }
 
     interface SmartFilterState {
-        catalog: bestiary.Bestiary;
         filterSelections: FilterSelections;
         counts: any;
         totalSelected: number;
@@ -33,7 +32,6 @@ module manticore.ui.filters {
             super(props);
 
             this.state = {
-                catalog: props.catalog,
                 filterSelections: {
                     source: [],
                     size: [],
@@ -46,9 +44,11 @@ module manticore.ui.filters {
         }
 
         public render() {
-            const catalog = this.state.catalog;
+            const catalog = this.props.catalog;
             const filterSelections = this.state.filterSelections;
             const counts = this.state.counts;
+
+            console.log("smart filter render", catalog)
 
             return (
                 <div class="filters clearfix">
@@ -90,11 +90,11 @@ module manticore.ui.filters {
         }
 
         public updateFilterCounts(filters: any) {
-            this.setState({catalog: this.state.catalog, filterSelections: this.state.filterSelections, counts: filters, totalSelected: this.state.totalSelected})
+            this.setState({counts: filters} as SmartFilterState);
         }
 
         public updateSelectedCount(count: number) {
-            this.setState({catalog: this.state.catalog, filterSelections: this.state.filterSelections, counts: this.state.counts, totalSelected: count})
+            this.setState({totalSelected: count} as SmartFilterState);
         }
 
         private filterChanged(filterName: string, selectedAttrs: string[]) {
@@ -105,12 +105,7 @@ module manticore.ui.filters {
             }
             sels[filterName] = selectedAttrs;
 
-            this.setState({
-                catalog: this.state.catalog, 
-                filterSelections: sels as FilterSelections,
-                counts: this.state.counts,
-                totalSelected: this.state.totalSelected
-            });
+            this.setState({ filterSelections: sels } as SmartFilterState);
 
             this.onChanged.trigger([filterName, selectedAttrs]);
             if (this.props.onChanged) this.props.onChanged([filterName, sels as any]);

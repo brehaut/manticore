@@ -28,7 +28,7 @@ module manticore.messaging {
         type PartyDataKeyT = "party.data";
         const PartyDataKey: PartyDataKeyT = "party.data";
         
-        export type PartyGet = IMessage<PartyGetKeyT, void>;
+        export type PartyGet = IMessage<PartyGetKeyT, undefined>;
         export type PartyPut = IMessage<PartyPutKeyT, data.IParty>;
         export type PartyData = IMessage<PartyDataKeyT, data.IParty>;
         export type PartyMessage = PartyGet | PartyPut | PartyData;      
@@ -69,7 +69,7 @@ module manticore.messaging {
         type BestiaryDataKeyT = "bestiary.data";
         const BestiaryDataKey: BestiaryDataKeyT = "bestiary.data";
                 
-        export type BestiaryGet = IMessage<BestiaryGetKeyT, void>;
+        export type BestiaryGet = IMessage<BestiaryGetKeyT, undefined>;
         export type BestiaryData = IMessage<BestiaryDataKeyT, data.DataSet>;
         
         export type BestiaryMessage = BestiaryGet | BestiaryData;
@@ -88,7 +88,7 @@ module manticore.messaging {
         }         
         
         export function bestiaryGetMessage() : BestiaryMessage {
-            return { key: BestiaryGetKey, payload: undefined  };
+            return { key: BestiaryGetKey, payload: undefined };
         }
         
         export function bestiaryDataMessage(data:data.DataSet) {

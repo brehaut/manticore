@@ -5,7 +5,7 @@ module manticore.workers {
     }
     
     export interface ITypedWorker<TIncoming, TOutgoing> {
-        postMessage(message: TIncoming);
+        postMessage(message: TIncoming, ports?: (MessagePort|ArrayBuffer)[]);
         onmessage?(message: ITypedMessageEvent<TOutgoing>);
     }
     

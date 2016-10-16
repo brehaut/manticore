@@ -18,7 +18,7 @@ module manticore.ui.filters {
 
         constructor(catalog: Atom<bestiary.Bestiary>) {
             this.catalog = catalog;
-            this.catalog.onChange.register((_) => this.onChanged.trigger(undefined)); 
+            this.catalog.onChange.register((_) => { console.log("catalog changed", _); this.onChanged.trigger(undefined)} ); 
         }
 
         public getCatalog() {
@@ -66,6 +66,7 @@ module manticore.ui.filters {
     interface SelectionState {
         mode: SelectionMode;
         filters: any;
+        catalog: bestiary.Bestiary;
     }
 
     export class Selection extends React.Component<SelectionProps, SelectionState> {
@@ -74,14 +75,17 @@ module manticore.ui.filters {
         constructor(props: SelectionProps) {
             super(props);
 
-            this.props.store.onChanged.register(_ => this.setState({ mode: this.state.mode, filters: this.props.store.getFilters() }));
+            this.props.store.onChanged.register(_ => {
+                console.log("store changed", this.props.store);
+                this.setState({ filters: this.props.store.getFilters(), catalog: this.props.store.getCatalog()} as SelectionState);
+            });
 
-            this.state = { mode: SelectionMode.Smart, filters: this.props.store.getFilters() };
+            this.state = { mode: SelectionMode.Smart, filters: this.props.store.getFilters(), catalog: this.props.store.getCatalog() };
         }
 
         public render() {
             const mode = this.state.mode;
-
+            console.log("Selection render", this.state.catalog, this.props.store.getCatalog());
             return (
                 <section className="selection">
                     <header>
@@ -107,16 +111,16 @@ module manticore.ui.filters {
                     </div>
 
                     { this.state.mode === SelectionMode.Smart 
-                        ? <SmartFilter catalog={this.props.store.getCatalog()} 
+                        ? <SmartFilter catalog={this.state.catalog} 
                                        onChanged={([name, filters]) => this.filtersChanged(name, filters)} />
-                        : <ManualSelection catalog={this.props.store.getCatalog()}
+                        : <ManualSelection catalog={this.state.catalog} 
                                            onChanged={([name, filters]) => this.filtersChanged(name, filters)} /> }
                 </section>
             );
         } 
 
         private filtersChanged(name, filters) {
-            this.setState({ mode: this.state.mode, filters: filters });
+            this.setState({ mode: this.state.mode, filters: filters } as SelectionState);
             this.onFilterChanged.trigger(name);
         }
 
@@ -125,7 +129,7 @@ module manticore.ui.filters {
         }
 
         private switchMode(mode: SelectionMode) {
-            this.setState({mode: mode, filters: this.state.filters });
+            this.setState({mode: mode, filters: this.state.filters } as SelectionState);
             this.onFilterChanged.trigger("");
         }
     }
