@@ -7,7 +7,7 @@ module manticore.ui.filters {
     import _ = manticore.ui.strings._; 
 
     interface FilterSelections  {
-        source: string[];
+        sources: string[];
         size: string[];
         kind: string[];
         attributes: string[];
@@ -44,9 +44,9 @@ module manticore.ui.filters {
                     <div>
                         <AttributeFilter name="Sources" 
                                          attributes={catalog.allSources()} 
-                                         selected={filterSelections.source}
+                                         selected={filterSelections.sources}
                                          counts={counts.sources}
-                                         onChanged={(attrs) => this.filterChanged("source", attrs)} />
+                                         onChanged={(attrs) => this.filterChanged("sources", attrs)} />
  
                         <AttributeFilter name="Size" 
                                          attributes={catalog.allSizes()}
