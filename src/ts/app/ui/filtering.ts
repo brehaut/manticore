@@ -38,14 +38,10 @@ module manticore.ui {
 
         public updateSelectedCount(count: number) {
             this.store.updateSelectedCount(count);
-            // this.filtersView.updateSelectedCount(count);
-            // this.pickersView.updateSelectedCount(count);
         }
 
         public updateFilterCounts(filters: any) {
             this.store.updateFilterCounts(filters);
-            // this.filtersView.updateFilterCounts(filters);
-            // this.pickersView.updateFilterCounts(filters);
         }
 å
         

@@ -14,41 +14,26 @@ module manticore.ui.filters {
     }
 
     interface SmartFilterState {
-        filterSelections: FilterSelections;
-        counts: any;
-        totalSelected: number;
+     
     }
 
     interface SmartFilterProps {
+        filterSelections: FilterSelections;
         catalog: bestiary.Bestiary;
+        counts: any;
         onChanged?: (v:[string, {[index: string]: string[]}]) => void;
     }
 
 
     export class SmartFilter extends React.Component<SmartFilterProps, SmartFilterState> {
-        public onChanged = new Event<[string, string[]]>();
-
         constructor(props: SmartFilterProps) {
             super(props);
-
-            this.state = {
-                filterSelections: {
-                    source: [],
-                    size: [],
-                    kind: [],
-                    attributes: []
-                },
-                counts: {},
-                totalSelected: 0
-            };
         }
 
         public render() {
             const catalog = this.props.catalog;
-            const filterSelections = this.state.filterSelections;
-            const counts = this.state.counts;
-
-            console.log("smart filter render", catalog)
+            const filterSelections = this.props.filterSelections;
+            const counts = this.props.counts;
 
             return (
                 <div class="filters clearfix">
@@ -80,40 +65,21 @@ module manticore.ui.filters {
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
                     </div>
 
-                    <div class="selection-count">{_("Number selected ")} {this.state.totalSelected}</div>
+                    <div class="selection-count">{_("Number selected ")} 0</div>
                 </div>
             );
         }
 
-        public getFilters():{[index: string]: string[]} {
-            return this.state.filterSelections as any ;
-        }
-
-        public updateFilterCounts(filters: any) {
-            this.setState({counts: filters} as SmartFilterState);
-        }
-
-        public updateSelectedCount(count: number) {
-            this.setState({totalSelected: count} as SmartFilterState);
-        }
 
         private filterChanged(filterName: string, selectedAttrs: string[]) {
             const sels = {};
-            const old = this.state.filterSelections;
+            const old = this.props.filterSelections;
             for (var k in old) if (old.hasOwnProperty(k)) {
                 sels[k] = old[k];
             }
             sels[filterName] = selectedAttrs;
 
-            this.setState({ filterSelections: sels } as SmartFilterState);
-
-            this.onChanged.trigger([filterName, selectedAttrs]);
             if (this.props.onChanged) this.props.onChanged([filterName, sels as any]);
         }        
-    }
-
-
-    export function installSmartFilter(el, atom):SmartFilter {
-        return ReactDOM.render(<SmartFilter catalog={atom} />, el) as SmartFilter;
     }
 }

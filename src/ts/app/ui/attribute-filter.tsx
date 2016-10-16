@@ -47,13 +47,9 @@ module manticore.ui.filters {
         selected: {[index: string]: boolean}
     }
 
-    export class AttributeFilter extends React.Component<AttributeFilterProps, AttributeFilterState> {
-        public onChanged = new Event<string[]>();
-
+    export class AttributeFilter extends React.Component<AttributeFilterProps, undefined> {
         constructor(props: AttributeFilterProps) {
             super(props);
-
-            this.state = this.calculateStateFromProps(props);
         }
 
         private calculateStateFromProps(props: AttributeFilterProps): AttributeFilterState {
@@ -62,12 +58,10 @@ module manticore.ui.filters {
             return { counts: this.props.counts || {}, selected: selected };
         }
 
-        public componentWillReceiveProps(props: AttributeFilterProps) {
-            this.setState(this.calculateStateFromProps(props));
-        } 
 
         public render() { 
-            const classname = `C attribute-filter -${this.props.name.toLowerCase().replace(" ", "-")} ${this.anySelected() ? "active" : ""}`;
+            const state = this.calculateStateFromProps(this.props);
+            const classname = `C attribute-filter -${this.props.name.toLowerCase().replace(" ", "-")} ${this.anySelected(state.selected) ? "active" : ""}`;
             
             return <div className={classname}>
                 <header>
@@ -75,13 +69,9 @@ module manticore.ui.filters {
                 </header>
 
                 <CheckboxList attributes={this.props.attributes} 
-                              data={this.state} 
+                              data={state} 
                               onToggle={ (key: string) => this.toggleAttribute(key) } />
             </div>;
-        }
-
-        public updateCounts(counts: {[index: string]: number}) {
-            this.setState({counts: counts, selected: this.state.selected});
         }
 
         private calculateSelected(selectedMapping: {[index: string]: boolean}): string[] {
@@ -94,25 +84,20 @@ module manticore.ui.filters {
             return attrs;
         }
 
-        public getSelectedAttributes(): string[] {
-            return this.calculateSelected(this.state.selected);
-        }
 
         private clearAll() {
-            this.setState({counts: this.state.counts, selected: {}});
             this.triggerChanged([]);
         }
 
-        private anySelected(): boolean {
-            const s = this.state.selected;
-            for (var k in s) if (s.hasOwnProperty(k)) {
-                if (s[k]) return true;
+        private anySelected(selected: {[index:string]:boolean}): boolean {
+            for (var k in selected) if (selected.hasOwnProperty(k)) {
+                if (selected[k]) return true;
             }
             return false;
         }
 
         private toggleAttribute(key: string) {
-            const oldSelected = this.state.selected;
+            const oldSelected = this.calculateStateFromProps(this.props).selected;
             const selected:{[index: string]: boolean} = {};
             for (var k in oldSelected) if (oldSelected.hasOwnProperty(k)) {
                 selected[k] = oldSelected[k];
@@ -120,14 +105,11 @@ module manticore.ui.filters {
             
             selected[key] = selected.hasOwnProperty(key) ? !selected[key] : true;
 
-            this.setState({counts: this.state.counts, selected: selected});
-
             this.triggerChanged(this.calculateSelected(selected));
         } 
 
         private triggerChanged(attrs: string[]) {
             if (this.props.onChanged) this.props.onChanged(attrs);
-            this.onChanged.trigger(attrs);
         }
     }
 }
