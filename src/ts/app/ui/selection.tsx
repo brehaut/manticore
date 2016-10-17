@@ -107,12 +107,12 @@ module manticore.ui.filters {
                     <div>
                         <p>
                             {_("[selection mode]") + " "}
-                            <a className={`mode-switch -filters ${mode === SelectionMode.Smart ? "active" : ""}`}
+                            <a className={`mode-switch -filters ${mode === SelectionMode.Smart ? "-active" : ""}`}
                                onClick={() => this.switchMode(SelectionMode.Smart)}>
                                 {_("[use filters]")}
                             </a>
                             {" "}
-                            <a className={`mode-switch -filters ${mode === SelectionMode.Manual ? "active" : ""}`}
+                            <a className={`mode-switch -filters ${mode === SelectionMode.Manual ? "-active" : ""}`}
                                onClick={() => this.switchMode(SelectionMode.Manual)}>
                                 {_("[use pickers]")}
                             </a>
