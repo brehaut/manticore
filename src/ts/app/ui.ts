@@ -43,6 +43,11 @@ module manticore.ui {
 
             this.updateSelectionInfo();
             this.updateEnabledFilters();
+
+            this.catalog.onChange.register(_ => {
+                this.updateSelectionInfo();
+                this.updateEnabledFilters();
+            });
         }
 
         private requestBestiary() {
@@ -67,6 +72,7 @@ module manticore.ui {
         private updateEnabledFilters() {
             var features = this.catalog.get().featureCounts(this.partyView.getPartyInfo(),
                                                             this.selectionView.getFilters());
+
             this.selectionView.updateFilterCounts(features);
         }
 

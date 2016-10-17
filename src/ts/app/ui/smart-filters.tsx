@@ -21,6 +21,7 @@ module manticore.ui.filters {
         filterSelections: FilterSelections;
         catalog: bestiary.Bestiary;
         counts: any;
+        totalSelectedCount: number;
         onChanged?: (v:[string, {[index: string]: string[]}]) => void;
     }
 
@@ -65,7 +66,7 @@ module manticore.ui.filters {
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
                     </div>
 
-                    <div class="selection-count">{_("Number selected ")} 0</div>
+                    <div class="selection-count">{_("Number selected ")} { this.props.totalSelectedCount }</div>
                 </div>
             );
         }

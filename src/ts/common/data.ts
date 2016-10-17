@@ -10,13 +10,13 @@ module manticore.data {
     export type DataSet = {[index:string]: MonsterRecord[]};
     
     export interface Monster {
-        name:string; 
-        level:number; 
-        size: MonsterSize;
-        kind:string;
-        scale: MonsterScale
-        attributes: string[];
-        book:string;
+        readonly name:string; 
+        readonly level:number; 
+        readonly size: MonsterSize;
+        readonly kind:string;
+        readonly scale: MonsterScale
+        readonly attributes: string[];
+        readonly book:string;
     }
         
     export function newMonster(name:string, 
@@ -41,14 +41,14 @@ module manticore.data {
 
 
     export interface IParty {
-        size: number;
-        level: number;
+        readonly size: number;
+        readonly level: number;
     }
 
 
     export interface Allocation {
-        monster: Monster;
-        num:number;
+        readonly monster: Monster;
+        readonly num:number;
     }
 
     export type Encounters = Allocation[][];

@@ -66,6 +66,8 @@ module manticore.ui.filters {
     interface SelectionState {
         mode: SelectionMode;
         filters: any;
+        totalSelectedCount: number;
+        counts: any;
         catalog: bestiary.Bestiary;
     }
 
@@ -74,10 +76,20 @@ module manticore.ui.filters {
             super(props);
 
             this.props.store.onChanged.register(_ => {
-                this.setState({ filters: this.props.store.getFilters(), catalog: this.props.store.getCatalog()} as SelectionState);
+                this.setState(this.computeStateFromStore());
             });
 
-            this.state = { mode: SelectionMode.Smart, filters: this.props.store.getFilters(), catalog: this.props.store.getCatalog() };
+            this.state = this.computeStateFromStore();
+        }
+
+        private computeStateFromStore(): SelectionState {
+            return { 
+                mode: SelectionMode.Smart, 
+                filters: this.props.store.getFilters(), 
+                catalog: this.props.store.getCatalog(), 
+                totalSelectedCount: this.props.store.getSelectedCount() ,
+                counts: this.props.store.getFilterCounts()
+            };
         }
 
         public render() {
@@ -110,8 +122,9 @@ module manticore.ui.filters {
                     { this.state.mode === SelectionMode.Smart 
                         ? <SmartFilter catalog={this.state.catalog} 
                                        filterSelections={this.state.filters}
-                                       counts={ this.state.catalog.featureCounts }
-                                       onChanged={([name, filters]) => this.filtersChanged(name, filters)} />
+                                       counts={ this.state.counts }
+                                       onChanged={([name, filters]) => this.filtersChanged(name, filters)} 
+                                       totalSelectedCount= { this.state.totalSelectedCount } />
                         : <ManualSelection catalog={this.state.catalog}
                                            filterSelections={this.state.filters} 
                                            onChanged={([name, filters]) => this.filtersChanged(name, filters)} /> }

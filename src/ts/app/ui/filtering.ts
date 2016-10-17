@@ -43,7 +43,6 @@ module manticore.ui {
         public updateFilterCounts(filters: any) {
             this.store.updateFilterCounts(filters);
         }
-å
         
         private createElements(catalog: Atom<bestiary.Bestiary>) {
             this.el = DOM.div({});
