@@ -2,6 +2,7 @@
 /// <reference path="strings.ts" />
 /// <reference path="dom.ts" />
 /// <reference path="common.ts" />
+/// <reference path="results.tsx" />
 
 
 module manticore.ui {
@@ -17,6 +18,8 @@ module manticore.ui {
 
         private currentIndex: number;
         private pendingAllocations:data.GroupedEncounters;
+        
+        private reactResults: results.Results;
 
         constructor (private parent:HTMLElement) {
             this.createElements();
@@ -150,6 +153,11 @@ module manticore.ui {
 
             this.el.appendChild(this.resultsEl);
             this.el.appendChild(this.moreButton);
+
+            const container = DOM.div(null);
+            this.parent.appendChild(container);
+
+            this.reactResults = results.installResults(container);
         }
     }
 }
