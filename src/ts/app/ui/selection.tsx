@@ -5,6 +5,7 @@
 /// <reference path="manual-selection.tsx" />
 
 module manticore.ui.filters {
+    "use strict";
     import _ = manticore.ui.strings._; 
 
 

@@ -1,4 +1,5 @@
 module manticore.ui.strings {
+    "use strict";    
     export enum Locale {
         EN
     }

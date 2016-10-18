@@ -5,6 +5,7 @@
 
 
 module manticore.ui {
+    "use strict";    
     var _ = strings._;
 
     export class ResultsView {

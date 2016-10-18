@@ -8,6 +8,7 @@
 /// <reference path="selection.tsx" />
 
 module manticore.ui {
+    "use strict";    
     import _ = strings._;
   
 

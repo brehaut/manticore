@@ -3,6 +3,7 @@
 /// <reference path="common.ts" />
 
 module manticore.ui {
+    "use strict";
     import Event = manticore.ui.Event;
     
     

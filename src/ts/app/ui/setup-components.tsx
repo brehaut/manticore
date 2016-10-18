@@ -6,6 +6,7 @@
 
 
 module manticore.ui.setup {
+    "use strict";    
     import _ = manticore.ui.strings._; 
 
     import Party = party.Party;
