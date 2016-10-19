@@ -9,9 +9,10 @@ module manticore.ui.results {
     class Allocation extends React.Component<{ alloc: data.Allocation, showCount?: boolean }, undefined> {
         public render() {
             const alloc = this.props.alloc;
+            const className = `allocation ${alloc.monster.size}`;
 
             return (
-                <div className="allocation { alloc.monster.size }">
+                <div className={className}>
                     <div className="kind">
                         { _(alloc.monster.kind) }
                         <span className="level">{ alloc.monster.level }</span>
@@ -24,19 +25,20 @@ module manticore.ui.results {
         }
     }
 
-    class AllocationGroup extends React.Component<{ allocations: data.Encounters }, undefined> {
+
+    class AllocationGroup extends React.Component<{ encounters: data.Encounters }, undefined> {
         public render() {
-            if (this.props.allocations.length === 1) {
-                return <li className="single-allocation">{ this.props.allocations[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
+            if (this.props.encounters.length === 1) {
+                return <li className="single-encounter">{ this.props.encounters[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
             }
             return (
-                <li>
+                <li style={{clear: "left"}}>
                     <div className="allocation-group">
                         <div>
-                            {this.props.allocations[0].map(alloc => <Allocation alloc={alloc} showCount={false}/>) }
+                            {this.props.encounters[0].map(alloc => <Allocation alloc={alloc} showCount={false}/>) }
 
                             <ul style={{clear: "left"}}>
-                                { this.props.allocations.map(enc => 
+                                { this.props.encounters.map(enc => 
                                     <li className="clearfix">
                                         { enc.map(alloc => <Allocation alloc={alloc} />) }
                                     </li>
@@ -111,8 +113,8 @@ module manticore.ui.results {
                             </p>
                         </header>
 
-                        <ul className="encounters {this.state.stale ? 'outofdate' : ''}">
-                        { allocs.map(alloc => <AllocationGroup allocations={alloc} />) }
+                        <ul className={`encounters ${this.state && this.state.stale ? 'outofdate' : ''}` }>
+                        { allocs.map(alloc => <AllocationGroup encounters={alloc} />) }
                         </ul>
                     </section>
                 </section>
