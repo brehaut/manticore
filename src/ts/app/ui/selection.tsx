@@ -122,7 +122,7 @@ module manticore.ui.filters {
                     { this.state.mode === SelectionMode.Smart 
                         ? <SmartFilter catalog={this.props.catalog} 
                                        filterSelections={this.state.filters}
-                                       counts={ this.state.counts }
+                                       counts={ this.props.counts }
                                        onChanged={([name, filters]) => this.filtersChanged(name, filters)} 
                                        totalSelectedCount= { this.state.totalSelectedCount } />
                         : <ManualSelection catalog={this.props.catalog}

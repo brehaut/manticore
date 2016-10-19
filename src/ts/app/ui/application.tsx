@@ -35,8 +35,6 @@ module manticore.ui {
                 filterStore: new filters.FilterStore()
             };
 
-            this.state.filterStore.onChanged.register(_ => this.updateEnabledFilters());
-
             // temporary kludge
             this.partyWorker.onmessage = (message) => {
                 this.setState({partyInfoCache: message.data} as ApplicationState);
@@ -61,11 +59,9 @@ module manticore.ui {
             }
         }
 
-        private updateEnabledFilters() {            
-            var features = this.state.catalog.featureCounts(this.state.partyInfoCache,
-                                                            this.state.filterStore.getFilters());
-
-            this.state.filterStore.updateFilterCounts(features);
+        private featureCounts():any {            
+            return this.state.catalog.featureCounts(this.state.partyInfoCache,
+                                                    this.state.filterStore.getFilters());
         }
 
         public render() {
@@ -78,7 +74,7 @@ module manticore.ui {
                     <filters.Selection 
                         store={ this.state.filterStore } 
                         catalog={ this.state.catalog } 
-                        counts={ this.state.filterStore.getFilterCounts() } />
+                        counts={ this.featureCounts() } />
                     <results.Results />
                 </div>
             );
