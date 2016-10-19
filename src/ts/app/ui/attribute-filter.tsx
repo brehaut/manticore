@@ -2,6 +2,7 @@
 /// <reference path="../../vendor/react.d.ts" />
 
 module manticore.ui.filters {
+    "use strict";    
     import _ = manticore.ui.strings._; 
 
 

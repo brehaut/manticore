@@ -2,11 +2,8 @@
 /// <reference path="../common/data.ts" />
 /// <reference path="../common/bestiary.ts" />
 /// <reference path="ui/strings.ts" />
-/// <reference path="ui/dom.ts" />
 /// <reference path="ui/common.ts" />
-/// <reference path="ui/party.ts" />
-/// <reference path="ui/filtering.ts" />
-/// <reference path="ui/results.ts" />
+/// <reference path="ui/application.tsx" />
 
 module manticore.ui {
     import _ = strings._;
@@ -14,104 +11,16 @@ module manticore.ui {
     // UI represents the whole UI, and is constructed of a series
     // of sub views.
     // UI also acts as the primary view controller for the application    
-    class UI {
-        private viewContainer: HTMLElement;
-
-        private catalog: Atom<bestiary.Bestiary>;
-
-        private partyView: PartyView;
-        private selectionView: SelectionView;
-        private resultsView: ResultsView;
-                        
+    class UI {                                
         constructor(private root: HTMLElement,
                     private allocator: data.Allocator, 
                     private dataAccessWorker: model.DataAccessWorker) {
-            this.catalog = new Atom(bestiary.createBestiary({}));                        
-                        
-            this.viewContainer = DOM.div(null);
-            this.partyView = new PartyView(this.viewContainer);
-            this.selectionView = new SelectionView(this.viewContainer, this.catalog);
-            this.resultsView = new ResultsView(this.viewContainer);
-            
-            this.selectionView.updateSelectedCount(this.catalog.get().monsters.length);
-            
-            this.requestBestiary();
-            
-            this.bindEvents();
-
-            this._appendTo(root);
-
-            this.updateSelectionInfo();
-            this.updateEnabledFilters();
-
-            this.catalog.onChange.register(_ => {
-                this.updateSelectionInfo();
-                this.updateEnabledFilters();
-            });
-        }
-
-        private requestBestiary() {
-            const chan = new MessageChannel();
-            chan.port2.onmessage = (message) => this.updateBestiary(message.data);
-            this.dataAccessWorker.postMessage(messaging.dataAccess.bestiaryGetMessage(), [chan.port1]);
-        }
-
-        private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
-            if (messaging.dataAccess.isBestiaryData(message)) {
-                this.changeCatalog(bestiary.createBestiary(message.payload));
-            }
-            else {
-                console.warn("Unexpected message", message);
-            }
-        }
-
-        private changeCatalog(newCatalog: bestiary.Bestiary) {
-            this.catalog.swap((_) => newCatalog);   
-        }
-
-        private updateEnabledFilters() {
-            var features = this.catalog.get().featureCounts(this.partyView.getPartyInfo(),
-                                                            this.selectionView.getFilters());
-
-            this.selectionView.updateFilterCounts(features);
-        }
-
-        private updateSelectionInfo() {
-            this.selectionView.updateSelectedCount(this.getSelection().length);
-            this.resultsView.markResultsAsOutOfDate();
-            this.updateEnabledFilters();
-        }
-        
-        private getSelection() {
-            var pred = data.predicateForFilters(this.selectionView.getFilters());
-            return this.catalog.get().filteredBestiary(this.partyView.getPartyInfo(), pred);
-        }
-
-        private bindEvents() {
-            this.partyView.onChanged.register(_ => {
-                this.updateEnabledFilters();
-                this.updateSelectionInfo();
-            });
-
-            this.catalog.onChange.register(catalog => {
-                this.updateEnabledFilters();
-                this.updateSelectionInfo();
-            })
-
-            this.selectionView.onFilterChanged.register(_ => this.updateSelectionInfo());
-
-            this.resultsView.onRequestGenerate.register(_ => {
-                var selection = this.getSelection();
-
-                this.allocator(this.partyView.getPartyInfo(),
-                               selection)
-                    .then(alloc => this.resultsView.displayResults(this.partyView.getPartyInfo(), alloc));
-            });
-        }
-        
-        public _appendTo(element:HTMLElement) {
-            element.appendChild(this.viewContainer);
-        }
+            // punch in react replacement
+            const reactContainer = document.createElement("div");
+            installApplication(reactContainer, allocator, dataAccessWorker);
+            root.appendChild(reactContainer);
+            // end of react replacement
+        }        
     }
 
 
@@ -123,11 +32,12 @@ module manticore.ui {
 
     // show a loading bezel while the json data is loading.
     function loadingUI(root, promise) { 
-        var loading = DOM.div({"class": "loading"}, [DOM.text(_("Loading..."))])
+        const loading = document.createElement("div");
+        loading.appendChild(document.createTextNode(_("Loading...")));
         root.appendChild(loading);
 
         promise.then((_) => {
-            DOM.remove(loading);
+            root.removeChild(loading);
         });
     }
  

@@ -4,6 +4,7 @@
 /// <reference path="attribute-filter.tsx" />
 
 module manticore.ui.filters {
+    "use strict";    
     import _ = manticore.ui.strings._; 
 
 

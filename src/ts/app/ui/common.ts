@@ -1,8 +1,8 @@
 /// <reference path="../../common/data.ts" />
 /// <reference path="strings.ts" />
-/// <reference path="dom.ts" />
 
 module manticore.ui {
+    "use strict";    
     import _ = strings._;
     
     export function cssClassName(text:string):string {
@@ -13,27 +13,6 @@ module manticore.ui {
         return text.replace(/\{([a-zA-Z0-9]+?)\}/g, (_, key:string) => fill[key]);
     }
 
-
-    export function sectionMarkup(nameKey:string, className:string, blurbKey: string, children:Node[]=[])
-        :HTMLElement {
-        var commonChildren = [
-            DOM.header(
-                null, 
-                [
-                    DOM.h1(null, [DOM.text(_(nameKey))]),
-                    DOM.p(null, [DOM.text(_(blurbKey))])
-                ]
-            )
-        ];
-        
-        return DOM.section(
-            {
-                "class": "clearfix " + className
-            }, 
-            Array.prototype.concat.apply(commonChildren, children)
-        );
-    }
-    
 
     export class Event<T> {
         private handlers: Array<(v:T) => void>;

@@ -5,41 +5,25 @@
 /// <reference path="manual-selection.tsx" />
 
 module manticore.ui.filters {
+    "use strict";
     import _ = manticore.ui.strings._; 
 
 
     export class FilterStore {
         public onChanged = new Event<void>();
 
-        private catalog: Atom<bestiary.Bestiary>;
-        private selectedCount = 0;
-        private filterCounts:any = {};
         private filters:any = {};
 
-        constructor(catalog: Atom<bestiary.Bestiary>) {
-            this.catalog = catalog;
-            this.catalog.onChange.register((_) => { this.onChanged.trigger(undefined)} ); 
+        constructor() {
+
         }
 
-        public getCatalog() {
-            return this.catalog.get();
-        }
-
-        public getSelectedCount() {
-            return this.selectedCount;
-        }
 
         public updateSelectedCount(count: number) {
-            this.selectedCount = count;
             this.onChanged.trigger(undefined);
         }
 
-        public getFilterCounts() {
-            return this.filterCounts;
-        }
-
         public updateFilterCounts(filters: any) {
-            this.filterCounts = filters;
             this.onChanged.trigger(undefined);
         }
 
@@ -61,14 +45,14 @@ module manticore.ui.filters {
 
     interface SelectionProps {
         store: FilterStore;
+        catalog: bestiary.Bestiary;
+        counts: any;
+        totalSelectedCount: number;
     }
 
     interface SelectionState {
         mode: SelectionMode;
         filters: any;
-        totalSelectedCount: number;
-        counts: any;
-        catalog: bestiary.Bestiary;
     }
 
     export class Selection extends React.Component<SelectionProps, SelectionState> {
@@ -86,9 +70,6 @@ module manticore.ui.filters {
             return { 
                 mode: SelectionMode.Smart, 
                 filters: this.props.store.getFilters(), 
-                catalog: this.props.store.getCatalog(), 
-                totalSelectedCount: this.props.store.getSelectedCount() ,
-                counts: this.props.store.getFilterCounts()
             };
         }
 
@@ -120,12 +101,12 @@ module manticore.ui.filters {
                     </div>
 
                     { this.state.mode === SelectionMode.Smart 
-                        ? <SmartFilter catalog={this.state.catalog} 
+                        ? <SmartFilter catalog={this.props.catalog} 
                                        filterSelections={this.state.filters}
-                                       counts={ this.state.counts }
+                                       counts={ this.props.counts }
                                        onChanged={([name, filters]) => this.filtersChanged(name, filters)} 
-                                       totalSelectedCount= { this.state.totalSelectedCount } />
-                        : <ManualSelection catalog={this.state.catalog}
+                                       totalSelectedCount= { this.props.totalSelectedCount } />
+                        : <ManualSelection catalog={this.props.catalog}
                                            filterSelections={this.state.filters} 
                                            onChanged={([name, filters]) => this.filtersChanged(name, filters)} /> }
                 </section>
@@ -142,7 +123,7 @@ module manticore.ui.filters {
     }
 
 
-    export function installSelection(el, store):Selection {
-        return ReactDOM.render(<Selection store={store} />, el) as Selection;
+    export function installSelection(el, store, catalog):Selection {
+        return ReactDOM.render(<Selection store={store} catalog={catalog} counts={ {} } totalSelectedCount={0}/>, el) as Selection;
     }
 }
