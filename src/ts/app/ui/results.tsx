@@ -53,7 +53,8 @@ module manticore.ui.results {
 
 
     interface ResultsProps {
-        
+        onRequestGenerate?:()=>void;
+        generatedEncounters?: data.GroupedEncounters;
     }
 
     interface ResultsState {
@@ -92,7 +93,7 @@ module manticore.ui.results {
         }
 
         public render() {           
-            const allocs = this.state.allocs.slice(0, this.state.show);
+            const allocs = (this.props.generatedEncounters || []).slice(0, this.state.show);
             const party = this.state.party || { level: 0, size: 0 };
 
             return (
@@ -123,6 +124,7 @@ module manticore.ui.results {
 
         private generateClicked() {
             this.onRequestGenerate.trigger(null);
+            if (this.props.onRequestGenerate) this.props.onRequestGenerate();
         }
     }
 

@@ -1,6 +1,5 @@
 /// <reference path="../../common/data.ts" />
 /// <reference path="strings.ts" />
-/// <reference path="dom.ts" />
 /// <reference path="common.ts" />
 /// <reference path="party-ui.tsx" />
 /// <reference path="selection.tsx" />
@@ -20,6 +19,7 @@ module manticore.ui {
         partyInfoCache: data.IParty;
         catalog: bestiary.Bestiary;
         filterStore: filters.FilterStore;
+        generatedEncounters?: data.GroupedEncounters; 
     }
 
 
@@ -67,6 +67,11 @@ module manticore.ui {
                                                     this.state.filterStore.getFilters());
         }
 
+        private getSelection() {
+            var pred = data.predicateForFilters(this.state.filterStore.getFilters());
+            return this.state.catalog.filteredBestiary(this.state.partyInfoCache, pred);
+        }
+
         public render() {
             if (!this.state) {
                 return <div className="loading">{ _("Loading...") }</div>;
@@ -77,10 +82,21 @@ module manticore.ui {
                     <filters.Selection 
                         store={ this.state.filterStore } 
                         catalog={ this.state.catalog } 
-                        counts={ this.featureCounts() } />
-                    <results.Results />
+                        counts={ this.featureCounts() }
+                        totalSelectedCount={ this.getSelection().length } />
+                    <results.Results 
+                        generatedEncounters={this.state.generatedEncounters}
+                        onRequestGenerate={() => this.generate() }/>
                 </div>
             );
+        }
+
+        private generate() {
+            var selection = this.getSelection();
+
+            this.props.allocator(this.state.partyInfoCache,
+                                 selection)
+                .then(alloc => this.setState({generatedEncounters: alloc} as any));
         }
     }
 
