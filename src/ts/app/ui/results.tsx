@@ -70,12 +70,12 @@ module manticore.ui.results {
         constructor(props: ResultsProps) {
             super(props);
 
-            this.setState({
+            this.state = {
                 stale: true,
                 party: undefined,
                 allocs: [],
                 show: 100,
-            });
+            };
         }
 
         public displayResults(party: data.IParty, allocs: data.GroupedEncounters) {            
@@ -92,8 +92,8 @@ module manticore.ui.results {
         }
 
         public render() {           
-            const allocs = this.state && this.state.allocs ? this.state.allocs.slice(0, this.state.show) : [];
-            const party = this.state && this.state.party ? this.state.party : {size: 0, level: 0 };
+            const allocs = this.state.allocs.slice(0, this.state.show);
+            const party = this.state.party || { level: 0, size: 0 };
 
             return (
                 <section className="results">

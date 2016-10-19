@@ -7,6 +7,7 @@
 /// <reference path="ui/party.ts" />
 /// <reference path="ui/filtering.ts" />
 /// <reference path="ui/results.ts" />
+/// <reference path="ui/application.tsx" />
 
 module manticore.ui {
     import _ = strings._;
@@ -33,6 +34,12 @@ module manticore.ui {
             this.selectionView = new SelectionView(this.viewContainer, this.catalog);
             this.resultsView = new ResultsView(this.viewContainer);
             
+            // punch in react replacement
+            const reactContainer = document.createElement("div");
+            installApplication(reactContainer, allocator, dataAccessWorker);
+            this.viewContainer.appendChild(reactContainer);
+            // end of react replacement
+
             this.selectionView.updateSelectedCount(this.catalog.get().monsters.length);
             
             this.requestBestiary();

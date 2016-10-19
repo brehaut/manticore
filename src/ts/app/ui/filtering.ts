@@ -23,7 +23,7 @@ module manticore.ui {
         private store:filters.FilterStore;
         
         constructor (private parent: HTMLElement, catalog: Atom<bestiary.Bestiary>) {
-            this.store = new filters.FilterStore(catalog);                      
+            this.store = new filters.FilterStore();                      
             this.createElements(catalog);
             
             this._appendTo(parent);
@@ -47,7 +47,7 @@ module manticore.ui {
         
         private createElements(catalog: Atom<bestiary.Bestiary>) {
             this.el = DOM.div({});
-            this.selection = filters.installSelection(this.el, this.store);
+            this.selection = filters.installSelection(this.el, this.store, this.store.getCatalog());
         }
     }
 }
