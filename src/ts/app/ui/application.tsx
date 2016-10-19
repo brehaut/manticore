@@ -35,6 +35,9 @@ module manticore.ui {
                 filterStore: new filters.FilterStore()
             };
 
+            // kludge
+            this.state.filterStore.onChanged.register(_ => this.forceUpdate());
+
             // temporary kludge
             this.partyWorker.onmessage = (message) => {
                 this.setState({partyInfoCache: message.data} as ApplicationState);
