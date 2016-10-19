@@ -24,10 +24,11 @@ module manticore.ui.party {
             return (
                 <div className="field">
                     <label>{this.props.label}</label>
-                    <input type="number" min="1" max={this.props.max} 
+                    <input type="range" step="1" min="1" max={this.props.max} 
                            value={this.props.value.toString()} 
                            onChange={(e) => this.onChangeHandler(e)} 
                            />
+                    <span>{this.props.value}</span>
                 </div>
             )
         }
