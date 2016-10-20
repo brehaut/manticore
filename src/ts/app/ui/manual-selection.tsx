@@ -43,7 +43,7 @@ module manticore.ui.filters {
             const counts = this.state.counts;
 
             return (
-                <div class="filters">
+                <div className="filters">
                     <header>
                         <p>{_("[pick monsters]")}</p>
                     </header>
