@@ -2,9 +2,12 @@ var gulp = require('gulp');
 var concat = require("gulp-concat");
 var uglify = require("gulp-uglify");
 var ts = require('gulp-typescript');
+var less = require('gulp-less');
 var merge = require('merge2'); 
 var manifest = require("gulp-manifest");
 var rm = require('gulp-rimraf');
+var path = require('path');
+
 
 var uiProject = ts({
     noImplicitAny: false,
@@ -36,8 +39,18 @@ var dataAccessWorkerProject = ts({
 gulp.task("clean",
     function(cb) {
         gulp.src(["static/js/*", "dist/*"]).pipe(rm());
+        gulp.src(["static/css/style.css"]).pipe(rm());
         cb();
     });
+
+
+gulp.task('styles', function () {
+  return gulp.src('./src/less/**/*.less')
+    .pipe(less({
+      paths: [ path.join(__dirname, 'src', 'less', 'includes') ]
+    }))
+    .pipe(gulp.dest('./static/css'));
+});
 
 
 gulp.task('build:contrib', function () {
@@ -73,7 +86,7 @@ gulp.task('build:processing', function () {
 
 
 
-gulp.task('build', ['build:contrib', 'build:main', 'build:data-access', 'build:processing']);
+gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:data-access', 'build:processing']);
 
 
 gulp.task('dist', ['build'], function () {

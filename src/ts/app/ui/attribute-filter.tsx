@@ -13,7 +13,7 @@ module manticore.ui.filters {
 
         public render () {
             // TODO: toggle click on 
-                return <ul className="clearfix">
+                return <ul>
                     {this.props.attributes.map((key) => {
                         const k = key.toString();
                         const count = this.props.data.counts[key] || 0;

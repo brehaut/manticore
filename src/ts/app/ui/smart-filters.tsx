@@ -38,7 +38,7 @@ module manticore.ui.filters {
             const counts = this.props.counts;
 
             return (
-                <div class="filters clearfix">
+                <div class="filters">
                     <header>
                         <p>{_("[filter summary]")}</p>
                     </header>

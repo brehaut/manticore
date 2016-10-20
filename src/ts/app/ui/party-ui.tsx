@@ -21,13 +21,20 @@ module manticore.ui.party {
         }
 
         public render() {
+            const dataId = `${this.props.label}_options`; 
+
             return (
                 <div className="field">
                     <label>{this.props.label}</label>
-                    <input type="number" min="1" max={this.props.max} 
+                    <input type="range" step="1" min="1" max={this.props.max} 
                            value={this.props.value.toString()} 
                            onChange={(e) => this.onChangeHandler(e)} 
+                           list={dataId}
                            />
+                    <datalist id={dataId}>
+                            {[1,2,3,4,5,6,7,8,9,10].map(v => <option value={v.toString()} />)}
+                        </datalist>
+                    <span>{this.props.value}</span>
                 </div>
             )
         }
@@ -63,7 +70,7 @@ module manticore.ui.party {
 
         public render() {
             return (
-                <section className="clearfix party">
+                <section className="party">
                     <header>
                         <h1>{_("Party")}</h1>
                         <p>

@@ -86,7 +86,8 @@ module manticore.ui {
                         totalSelectedCount={ this.getSelection().length } />
                     <results.Results 
                         generatedEncounters={this.state.generatedEncounters}
-                        onRequestGenerate={() => this.generate() }/>
+                        onRequestGenerate={() => this.generate() }
+                        party={this.state.partyInfoCache} />
                 </div>
             );
         }

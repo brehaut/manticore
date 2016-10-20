@@ -1,0 +1,206 @@
+@import "common.less";
+
+body > header {
+    margin-top: 3em;
+    padding: 0 10px;
+
+    @media screen and (min-width:640px) {
+        padding: 0 20px;    
+    }
+
+
+    h1 {
+        font-size: 1.55em;
+        line-height: 1;
+        margin: 0;
+    }
+
+    h2 {
+        font-size: 1.5em;
+        line-height: 1em;
+        margin: 0;
+        font-weight: normal;
+    }
+
+    > .blurb {
+        position: relative;
+
+        > .logo {
+            display: none;
+        }
+
+        > .unfair {
+           display: none;
+        }
+    } 
+}
+
+
+
+#application {
+    padding-top: 0.1em;
+
+    .loading {
+        display: block;
+        width: 100%;
+        line-height: 6em;
+        font-size: 2em;
+        text-align: center;
+        opacity: 0.5;
+        background: rgba(0,0,0,0.1);
+        margin-bottom: 1em;
+        margin-top: 1em;
+    }
+
+    > div {
+        > section {
+            padding-left: 10px;
+            padding-right: 10px;
+
+            > header {
+                margin-left: -10px;
+                margin-right: 10px;
+            }
+        }
+    }
+
+    > div > div {
+        > section {
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-top: 2em;
+        }
+
+        > section + section {
+            margin-top: 5em;
+        }
+
+        > section > header {
+            border-top: 2px solid #097E6C; /*#461B0E;*/
+            border-bottom: 1px solid rgba(70, 27, 14, 0.1);
+            margin: 1em 0;
+            padding: 1em 0 0 0;
+
+            @media screen and (min-width:640px) {
+                padding: 1em 10px 0 10px;
+            }
+        }
+
+        > section > header > h1 {
+            font-size: 1.25em;
+        }
+
+        > section > header > p {
+            font-size: 0.9em;
+            margin-top: 0.25em;
+            margin-bottom: 1.5em;
+        }
+    }
+}
+
+
+body > footer {
+    background: rgba(40, 15, 7, 1);
+    color: #F2F2EB;
+    font-size: 0.9em;
+    margin-top: 3em;
+
+    > div {
+        .clearfix();
+        margin-top: 2em;
+        margin-bottom: 0;
+        padding: 3em 10px;
+        line-height: 1.5;
+
+        @media screen and (min-width:640px) {
+            padding: 3em 20px;
+        }
+    }
+
+    p {
+
+    }
+
+    a {
+        color: #6DD6C6;
+        border-bottom-color: rgba(255,255,255,0.25);
+    }
+
+    a:hover {
+        color: white;
+        border-bottom-color: rgba(255,255,255,0.5);
+    }
+}
+
+
+
+@media screen and (min-width:320px) {
+    body { 
+        > header,
+        > section,
+        > footer > div,
+        > #application {
+            width: 96.88%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+
+
+@media screen and (min-width:640px) {
+    body {
+        font-size: 12pt;
+  
+        > footer > div > section {
+            float: left;
+            width: 50%;
+            padding-left: 10px;
+        }
+
+        > footer section > p:last-child {
+            margin-top: 0;
+        }
+        
+        > footer section > p:last-child {
+            margin-bottom: 0;
+        }
+        
+        > footer section.fire-opal {
+            padding-left: 0;
+            padding-right: 10px;
+            margin-bottom: 3em;
+        }
+        
+        > footer section.code {
+            margin-top: 0;
+        }
+
+        > footer section.illustration,
+        > footer section.alegreya {
+            margin-top: 1em;            
+        }            
+    }
+}
+
+
+@media screen and (min-width:740px) {
+    body > header > .blurb > p 
+    {
+        width: 66.666%;
+    }
+
+    body > header > .blurb > .logo {
+        display: block;
+        height: 150%;
+        max-height: 180px;
+        position: absolute;
+        bottom: 0; right: 0;
+        -webkit-transform: scale(-1, 1);
+    } 
+
+    body > header > .blurb > .unfair {
+        display: block;
+    }
+}
