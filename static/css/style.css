@@ -49,24 +49,16 @@ a {
   color: #0e00c2;
 }
 /* clearfix */
+.clearfix {
+  zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
 .clearfix:after {
   clear: both;
-  content: ' ';
-  display: block;
-  font-size: 0;
-  line-height: 0;
-  visibility: hidden;
-  width: 0;
-  height: 0;
-}
-.clearfix {
-  display: inline-block;
-}
-* html .clearfix {
-  height: 1%;
-}
-.clearfix {
-  display: block;
 }
 /* specifc styling */
 body > header {
@@ -105,10 +97,19 @@ body > footer {
   margin-top: 3em;
 }
 body > footer > div {
+  zoom: 1;
   margin-top: 2em;
   margin-bottom: 0;
   padding: 3em 10px;
   line-height: 1.5;
+}
+body > footer > div:before,
+body > footer > div:after {
+  content: "";
+  display: table;
+}
+body > footer > div:after {
+  clear: both;
 }
 body > footer a {
   color: #6DD6C6;
@@ -128,6 +129,9 @@ section > header {
   margin: 1em 0;
   padding: 1em 10px 0 10px;
 }
+#application {
+  padding-top: 0.1em;
+}
 #application > div > section {
   padding-left: 10px;
   padding-right: 10px;
@@ -135,6 +139,17 @@ section > header {
 #application > div > section > header {
   margin-left: -10px;
   margin-right: 10px;
+}
+#application .loading {
+  display: block;
+  width: 100%;
+  line-height: 6em;
+  font-size: 2em;
+  text-align: center;
+  opacity: 0.5;
+  background: rgba(0, 0, 0, 0.1);
+  margin-bottom: 1em;
+  margin-top: 1em;
 }
 section > header > h1 {
   font-size: 1.25em;
@@ -171,21 +186,18 @@ section > header > p {
 .C.global-confirm > .close:hover {
   color: #026;
 }
-#application {
-  padding-top: 0.1em;
-}
-#application .loading {
-  display: block;
-  width: 100%;
-  line-height: 6em;
-  font-size: 2em;
-  text-align: center;
-  opacity: 0.5;
-  background: rgba(0, 0, 0, 0.1);
-  margin-bottom: 1em;
-  margin-top: 1em;
-}
 /* party */
+section.party {
+  zoom: 1;
+}
+section.party:before,
+section.party:after {
+  content: "";
+  display: table;
+}
+section.party:after {
+  clear: both;
+}
 section.party > .field {
   width: 100%;
   display: flex;
@@ -229,6 +241,17 @@ section.selection a.mode-switch:hover {
 section.selection a.mode-switch.-active {
   background: #F9F9F0;
 }
+div.filters {
+  zoom: 1;
+}
+div.filters:before,
+div.filters:after {
+  content: "";
+  display: table;
+}
+div.filters:after {
+  clear: both;
+}
 div.filters .selection-count {
   clear: both;
   width: 50%;
@@ -237,6 +260,23 @@ div.filters .selection-count {
   border-top: 1px solid rgba(70, 27, 14, 0.1);
   font-size: 0.9em;
   color: #666;
+}
+.C.attribute-filter {
+  width: 25%;
+  float: left;
+}
+.C.attribute-filter ul {
+  zoom: 1;
+  list-style: none;
+  padding-left: 0;
+}
+.C.attribute-filter ul:before,
+.C.attribute-filter ul:after {
+  content: "";
+  display: table;
+}
+.C.attribute-filter ul:after {
+  clear: both;
 }
 .C.attribute-filter li {
   position: relative;
@@ -297,10 +337,6 @@ div.filters .selection-count {
   opacity: 1;
   content: '✔';
 }
-.C.attribute-filter {
-  width: 25%;
-  float: left;
-}
 .C.attribute-filter h2 {
   font-size: 1.1em;
   font-weight: normal;
@@ -328,10 +364,6 @@ div.filters .selection-count {
 .C.attribute-filter.active h2 > .reset {
   display: inline-block;
 }
-.C.attribute-filter ul {
-  list-style: none;
-  padding-left: 0;
-}
 .C.attribute-filter.-sources,
 .C.attribute-filter.-by-name {
   width: 100%;
@@ -350,12 +382,12 @@ div.filters .selection-count {
   width: 50%;
   margin: 0;
 }
-.C.attribute-filter.-by-name li > .count {
-  display: none;
-}
 .C.attribute-filter.-by-name li {
   height: 3.5em;
   line-height: 1em;
+}
+.C.attribute-filter.-by-name li > .count {
+  display: none;
 }
 /* results */
 section.results .button,
@@ -377,8 +409,17 @@ section.results .button.generate {
   margin-top: 1em;
 }
 section.results .encounters {
+  zoom: 1;
   list-style: none;
   padding-left: 0;
+}
+section.results .encounters:before,
+section.results .encounters:after {
+  content: "";
+  display: table;
+}
+section.results .encounters:after {
+  clear: both;
 }
 section.results .encounters.outofdate {
   opacity: 0.5;
@@ -396,6 +437,7 @@ section.results .encounters .results-summary p {
   margin: 0;
 }
 section.results .encounters li + li {
+  clear: left;
   margin-top: 2em;
 }
 section.results .encounters li .allocation {
@@ -468,9 +510,6 @@ section.results .encounters li .allocation .kind .level:before {
   body {
     font-size: 12pt;
   }
-  section > header > .blurb > p {
-    opacity: 0.8;
-  }
   body > footer > div > section {
     float: left;
     width: 50%;
@@ -493,6 +532,9 @@ section.results .encounters li .allocation .kind .level:before {
   body > footer section.illustration,
   body > footer section.alegreya {
     margin-top: 1em;
+  }
+  section > header > .blurb > p {
+    opacity: 0.8;
   }
   section.results .encounters li .allocation {
     display: inline-block;

@@ -64,7 +64,7 @@ module manticore.ui.party {
 
         public render() {
             return (
-                <section className="clearfix party">
+                <section className="party">
                     <header>
                         <h1>{_("Party")}</h1>
                         <p>
