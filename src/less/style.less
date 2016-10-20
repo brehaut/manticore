@@ -63,6 +63,67 @@ a {
 }
 
 
+// Styling based on advice in http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html
+input[type=range] {
+    -webkit-appearance: none;
+    background: none;
+    border: 1px solid rgba(0,0,0,0); 
+
+    &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        background: #ccc;
+        transition: background 100ms ease-in;
+        border: none;
+        border-radius: 3px;
+    }
+
+    &::-moz-range-track  {
+        width: 100%;
+        height: 4px;
+        background: #ccc;
+        transition: background 100ms ease-in;
+        border: none;
+        border-radius: 3px;
+    }
+
+    &::-moz-range-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #461B0E;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #461B0E;
+        margin-top: -6px;
+    }
+
+    &:focus {
+        outline: none;
+
+        &::-webkit-slider-runnable-track,
+        &::-moz-range-track {
+            background: #097E6C;
+        }
+    }
+
+    :-moz-focusring {
+        outline: 1px solid white;
+        outline-offset: -1;
+    }
+    
+}
+
+
+
 /* clearfix */
 .clearfix {
   zoom:1;
@@ -247,7 +308,12 @@ section.party  {
     > .field > input
     {
         width: 40%;
-        padding: 0.5em 0.5em 0.5em 1em;
+        padding: 0.5em 0.5em 0.5em 1em;     
+    }
+
+    > .field > input[type=number],
+    > .field > input[type=text]
+    {
         border-radius: 3px;
         border: 1px solid rgba(70, 27, 14, 0.4);
     }
