@@ -388,106 +388,147 @@ section.results {
         } 
     }
 
-    .encounters {
-        .clearfix();
-        list-style: none;
-        padding-left: 0;
-
-        &.outofdate {
-            opacity: 0.5;
-        }
+    > section.encounters {
+        
 
         .results-summary {
             margin-bottom: 2em;
             padding-left: 10px;
+
+            h1 {
+                font-size: 1.2em;
+                font-weight: normal;
+            }
+
+            p {
+                font-size: 1em;
+                margin: 0;
+            }
         }
 
-        .results-summary h1 {
-            font-size: 1.2em;
-            font-weight: normal;
+        > ul {
+            .clearfix();
+            list-style: none;
+            padding-left: 0;
+
+            &.outofdate {
+                opacity: 0.5;
+            }
         }
 
-        .results-summary p {
-            font-size: 1em;
-            margin: 0;
+        .encounter-common() {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
 
-        li + li {
-            clear: left;
-            margin-top: 2em;
-        }
+        > ul > li.encounter {
+            &.-single { 
+                .clearfix();
+                .encounter-common();
+            }  
 
-        li .allocation {
-            display: block;
-            background: #fafafa;
-            border: 1px solid rgba(70, 27, 14, 0.2);
-            height: 3em;
-            position: relative;
-            margin-top: -1px;
-            padding: 0.25em 0.5em;    
-        }
+            &.-multiple {
+                .stereotype {
+                    .clearfix();
+                    .encounter-common();
+                }
 
-        li .allocation.large {
-            height: 4em;
-            padding: 0.75em 0.5em;
-        }
+                > .variants {
+                    padding-left: 0;
+                    list-style: none;
 
-        li .allocation.huge {
-            height: 5em;
-            padding: 1em 0.5em;
-        }
+                    > li {
+                        .clearfix();
+                    }
+                }
+            }
 
-        li .allocation:first-child {
-            border-radius: 5px 5px 0 0;
-        }
-
-        li .allocation:last-child {
-            border-radius: 0 0 5px 5px;
-        }
-
-        li .allocation:first-child:last-child {
-            border-radius: 5px;
-        }
-
-
-        li .allocation em {
-            font-style: normal;
-        }
-
-        li .allocation .number {
-            float: right;
-            font-weight: bold;
-            margin-left: 1em;
-            font-size: 1.2em;
-            margin-top:-0.15em;
-        }
-
-        li .allocation .kind {
-            display: block;
-            font-size: 0.8em;
-            margin-bottom: 0.25em;
-            font-style: italic;
-            color: #333;
-        }
-
-        li .allocation .kind .level {
-            opacity: 0.9;
-            padding-left: 0.5em;
-        }
-
-        li .allocation .kind .book {
-            float: right;
-            margin-left: 2em;
-            font-style: normal;
-            opacity: 0.5;
-        }
-
-        li .allocation .kind .level:before {
-            content: 'lvl ';
+            & + .encounter {
+                margin-top: 2em;    
+            }
         }
     }
 }
 
+
+
+.C.allocation {
+    display: block;
+    background: #fafafa;
+    border: 1px solid rgba(70, 27, 14, 0.2);
+    height: 3em;
+    position: relative;
+    margin-top: -1px;
+    padding: 0.25em 0.5em;    
+
+
+    &.large {
+        height: 4em;
+        padding: 0.75em 0.5em;
+    }
+
+    &.huge {
+        height: 5em;
+        padding: 1em 0.5em;
+    }
+
+    &:first-child {
+        border-radius: 5px 5px 0 0;
+    }
+
+    &:last-child {
+        border-radius: 0 0 5px 5px;
+    }
+
+    &:first-child:last-child {
+        border-radius: 5px;
+    }
+
+    &.-abbreviated {
+        height: 2em;
+    }
+
+    em {
+        font-style: normal;
+    }
+
+    .number {
+        float: right;
+        font-weight: bold;
+        margin-left: 1em;
+        font-size: 1.2em;
+        margin-top:-0.15em;
+
+        &:before {
+            content: '×';
+        }
+    }
+
+    .kind {
+        display: block;
+        font-size: 0.8em;
+        margin-bottom: 0.25em;
+        font-style: italic;
+        color: #333;
+    }
+
+    .kind .level {
+        opacity: 0.9;
+        padding-left: 0.5em;
+    }
+
+    .kind .book {
+        float: right;
+        margin-left: 2em;
+        font-style: normal;
+        opacity: 0.5;
+    }
+
+    .kind .level:before {
+        content: 'lvl ';
+    }
+}
 
 
 @media screen and (min-width:640px) {
@@ -501,31 +542,28 @@ section.results {
 
 
 
-    section.results .encounters li {
-        .allocation {
-            display: inline-block;
-            float: left;
-            margin-bottom: 2px;
-            margin-right: -1px;
-        }
+    .C.allocation {
+        display: inline-block;
+        margin-bottom: 2px;
+        margin-right: -1px;
 
-        .allocation.large {
+        &.large {
             margin-top: -0.5em;
         }
 
-        .allocation.huge {
+        &.huge {
             margin-top: -1em;
         }
 
-        .allocation:first-child {
+        &:first-child {
             border-radius: 5px 0 0 5px;
         }
 
-        .allocation:last-child {
+        &:last-child {
             border-radius: 0 5px 5px 0;
         }
         
-        .allocation:first-child:last-child {
+        &:first-child:last-child {
             border-radius: 5px;
         }
     } 

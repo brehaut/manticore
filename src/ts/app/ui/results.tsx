@@ -9,7 +9,8 @@ module manticore.ui.results {
     class Allocation extends React.Component<{ alloc: data.Allocation, showCount?: boolean }, undefined> {
         public render() {
             const alloc = this.props.alloc;
-            const className = `allocation ${alloc.monster.size}`;
+            const className = `C allocation ${alloc.monster.size}`;
+
 
             return (
                 <div className={className}>
@@ -19,7 +20,22 @@ module manticore.ui.results {
                         <span className="book">{ alloc.monster.book }</span>
                     </div>
                     <em>{ _(alloc.monster.name) }</em>
-                    <span className="number">{ this.props.showCount !== false ? alloc.num : "" }</span>
+                    {this.props.showCount !== false ? <span className="number">{ alloc.num }</span> : null}
+                </div>
+            );
+        }
+    }
+
+
+    class AbbreviatedAllocation extends React.Component<{ alloc: data.Allocation }, undefined> {
+        public render() {
+            const alloc = this.props.alloc;
+            const className = `C allocation -abbreviated`;
+
+            return (
+                <div className={className}>                    
+                    <em>{ _(alloc.monster.name) }</em>
+                    <span className="number">{ alloc.num }</span>
                 </div>
             );
         }
@@ -29,23 +45,21 @@ module manticore.ui.results {
     class AllocationGroup extends React.Component<{ encounters: data.Encounters }, undefined> {
         public render() {
             if (this.props.encounters.length === 1) {
-                return <li className="single-encounter">{ this.props.encounters[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
+                return <li className="encounter -single">{ this.props.encounters[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
             }
             return (
-                <li style={{clear: "left"}}>
-                    <div className="allocation-group">
-                        <div>
-                            {this.props.encounters[0].map(alloc => <Allocation alloc={alloc} showCount={false}/>) }
-
-                            <ul style={{clear: "left"}}>
-                                { this.props.encounters.map(enc => 
-                                    <li className="clearfix">
-                                        { enc.map(alloc => <Allocation alloc={alloc} />) }
-                                    </li>
-                                )}
-                            </ul>
-                        </div>
+                <li className="encounter -multiple">
+                    <div className="stereotype">
+                        {this.props.encounters[0].map(alloc => <Allocation alloc={alloc} showCount={false}/>) }
                     </div>
+
+                    <ul className="variants">
+                        { this.props.encounters.map(enc => 
+                            <li>
+                                { enc.map(alloc => <AbbreviatedAllocation alloc={alloc} />) }
+                            </li>
+                        )}
+                    </ul>
                 </li>
             );
         } 
@@ -88,9 +102,10 @@ module manticore.ui.results {
                         <h1>{ _("Encounters") }</h1>
                         <p>{ _("[results summary]") }</p>
                     </header>
+
                     <div className="button generate" onClick={ (_) => this.generateClicked() }>{_("generate encounters") }</div>
 
-                    <section class="encounters">
+                    <section className="encounters">
                         <header>
                             <h1>{ _("Possible encounters") }</h1>
                             <p>{ template(_("{count} encounters for {num} level {level} characters."),
@@ -100,7 +115,7 @@ module manticore.ui.results {
                             </p>
                         </header>
 
-                        <ul className={`encounters ${this.state && this.state.stale ? 'outofdate' : ''}` }>
+                        <ul className={ this.state && this.state.stale ? 'outofdate' : '' }>
                         { allocs.map(alloc => <AllocationGroup encounters={alloc} />) }
                         </ul>
                     </section>

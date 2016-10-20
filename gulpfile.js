@@ -45,7 +45,7 @@ gulp.task("clean",
 
 
 gulp.task('styles', function () {
-  return gulp.src('./src/less/**/*.less')
+  return gulp.src('./src/less/style.less')
     .pipe(less({
       paths: [ path.join(__dirname, 'src', 'less', 'includes') ]
     }))
