@@ -1,0 +1,61 @@
+@import "common.less"; 
+
+// Styling based on advice in http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html
+input[type=range] {
+    -webkit-appearance: none;
+    background: none;
+    border: 1px solid transparent; 
+
+    @track-color: #ccc;
+
+    &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        background: @track-color;
+        transition: background 100ms ease-in;
+        border: none;
+        border-radius: 3px;
+    }
+
+    &::-moz-range-track  {
+        width: 100%;
+        height: 4px;
+        background: @track-color;
+        transition: background 100ms ease-in;
+        border: none;
+        border-radius: 3px;
+    }
+
+    &::-moz-range-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: @body-copy-color;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: @body-copy-color;
+        margin-top: -6px;
+    }
+
+    &:focus {
+        outline: none;
+
+        &::-webkit-slider-runnable-track,
+        &::-moz-range-track {
+            background: @brand-color;
+        }
+    }
+
+    :-moz-focusring {
+        outline: 1px solid white;
+        outline-offset: -1;
+    }    
+}
