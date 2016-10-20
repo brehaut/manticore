@@ -55,11 +55,11 @@ module manticore.ui.results {
     interface ResultsProps {
         onRequestGenerate?:()=>void;
         generatedEncounters?: data.GroupedEncounters;
+        party?: data.IParty; 
     }
 
     interface ResultsState {
         stale: boolean;
-        party?: data.IParty; 
         allocs: data.GroupedEncounters;
         show: number;
     }
@@ -73,28 +73,14 @@ module manticore.ui.results {
 
             this.state = {
                 stale: true,
-                party: undefined,
                 allocs: [],
                 show: 100,
             };
         }
 
-        public displayResults(party: data.IParty, allocs: data.GroupedEncounters) {            
-            this.setState({ 
-                stale: false,
-                party: party,
-                allocs: allocs,
-                show: 100
-            });
-        }
-
-        public markResultsAsOutOfDate() {
-            this.setState({ stale: true } as ResultsState);
-        }
-
         public render() {           
             const allocs = (this.props.generatedEncounters || []).slice(0, this.state.show);
-            const party = this.state.party || { level: 0, size: 0 };
+            const party = this.props.party || { level: 0, size: 0 };
 
             return (
                 <section className="results">
