@@ -28,8 +28,8 @@ module manticore.model {
                 postData();
             }
             else if (dal.isPartyPut(data)) {
-                (<any>window).localStorage.setItem(PARTY_STATE_KEY, JSON.stringify(data.payload));
-                worker.postMessage(data.payload); // relay changes back to any listeners
+                (<any>window).localStorage.setItem(PARTY_STATE_KEY, JSON.stringify(data.party));
+                worker.postMessage(data.party); // relay changes back to any listeners
             }      
             else {
                 // TODO: Post error

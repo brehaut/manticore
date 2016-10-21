@@ -55,7 +55,7 @@ module manticore.ui {
 
         private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
             if (messaging.dataAccess.isBestiaryData(message)) {
-                this.setState({ catalog: bestiary.createBestiary(message.payload) } as ApplicationState);
+                this.setState({ catalog: bestiary.createBestiary(message.dataset) } as ApplicationState);
             }
             else {
                 console.warn("Unexpected message", message);

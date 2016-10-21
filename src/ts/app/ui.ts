@@ -1,6 +1,7 @@
 /// <reference path="../common/types.d.ts" />
 /// <reference path="../common/data.ts" />
 /// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/localstorage.ts" />
 /// <reference path="ui/strings.ts" />
 /// <reference path="ui/common.ts" />
 /// <reference path="ui/application.tsx" />
@@ -49,6 +50,7 @@ module manticore.ui {
                                ready:Promise<void>,
                                allocator) {
         //bestiary = bestiary.then(awaitDelay(2000));
+        dataAccessWorker.postMessage(messaging.dataAccess.linkLocalStorageMessage(), [localstorage.localStoragePort()]);
 
         ready
             .then<void>((_) => {

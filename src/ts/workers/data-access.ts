@@ -11,11 +11,7 @@
  */
 
 module manticore.workers.dataAccess {
-    interface DataAccessMessageEvent extends MessageEvent {
-        data: messaging.dataAccess.BestiaryMessage;
-    }
-    
-    
+   
     function mergeWith<T>(merge:(a:T, b:T) => T) {
         return (os:{[index:string]: T}[]):{[index:string]: T} => {
             var acc:{[index:string]: T} = {};
@@ -52,12 +48,15 @@ module manticore.workers.dataAccess {
     ;
     
     
-    
+    let localStoragePort: MessagePort | undefined;
     
     onmessage = (message) => {
-        var data:messaging.GenericMessage = message.data;
-             
-        if (messaging.dataAccess.isBestiaryMessage(data)) {
+        var data:messaging.IMessage<any> = message.data;
+
+        if (messaging.dataAccess.isLinkLocalStorageMessage(data)) {
+            localStoragePort = message.ports[0];
+        }
+        else if (messaging.dataAccess.isBestiaryMessage(data)) {
             if (messaging.dataAccess.isBestiaryGet(data)) {
                 dataset.then(dataset => {
                     message.ports[0].postMessage(messaging.dataAccess.bestiaryDataMessage(dataset))
