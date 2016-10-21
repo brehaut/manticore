@@ -113,8 +113,4 @@ module manticore.ui.results {
             if (this.props.onRequestGenerate) this.props.onRequestGenerate();
         }
     }
-
-    export function installResults(el):Results {
-        return ReactDOM.render(<Results />, el) as Results;
-    }
 }

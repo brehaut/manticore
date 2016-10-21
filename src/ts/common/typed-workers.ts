@@ -5,9 +5,9 @@ module manticore.workers {
     }
     
     export interface ITypedWorker<TIncoming, TOutgoing> extends EventTarget {
-        postMessage(message: TIncoming, ports?: (MessagePort|ArrayBuffer)[]);
-        onmessage?(message: ITypedMessageEvent<TOutgoing>);
-        addEventListener(type:"message", handler:(ev: ITypedMessageEvent<TOutgoing>)=>void);
+        postMessage(message: TIncoming, ports?: (MessagePort|ArrayBuffer)[]): void;
+        onmessage?: (message: ITypedMessageEvent<TOutgoing>) => void;
+        addEventListener(type:"message", handler:(ev: ITypedMessageEvent<TOutgoing>)=>void): void;
     }
     
     export function newWorker<TSend, TRecv>(script: string): ITypedWorker<TSend, TRecv> {

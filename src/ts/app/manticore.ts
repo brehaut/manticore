@@ -34,7 +34,7 @@ module manticore {
 
 
     ui.initialize(
-        document.getElementById("application"),
+        document.getElementById("application")!,
         model.dataAccessWorker(),
         awaitContentLoaded()
             .then(_ => undefined)

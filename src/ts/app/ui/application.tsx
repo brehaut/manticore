@@ -7,7 +7,7 @@
 
 module manticore.ui {
     "use strict";    
-    var _ = strings._;
+    import _ = strings._;
 
 
     interface ApplicationProps {
@@ -68,7 +68,7 @@ module manticore.ui {
         }
 
         private getSelection() {
-            var pred = data.predicateForFilters(this.state.filterStore.getFilters());
+            const pred = data.predicateForFilters(this.state.filterStore.getFilters());
             return this.state.catalog.filteredBestiary(this.state.partyInfoCache, pred);
         }
 
@@ -93,7 +93,7 @@ module manticore.ui {
         }
 
         private generate() {
-            var selection = this.getSelection();
+            const selection = this.getSelection();
 
             this.props.allocator(this.state.partyInfoCache,
                                  selection)
@@ -101,7 +101,7 @@ module manticore.ui {
         }
     }
 
-    export function installApplication(el, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
+    export function installApplication(el: HTMLElement, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
         return ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as Application;
     }
 }

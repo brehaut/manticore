@@ -6,7 +6,7 @@
 // http://www.html5rocks.com/en/tutorials/appcache/beginner/
 
 module manticore.appcache {   
-    function inPageConfirm(text, actionText) {
+    function inPageConfirm(text: string, actionText: string) {
         const confirm = document.createElement("div");
         confirm.className = "C global-confirm";
         confirm.appendChild(document.createTextNode(text));
@@ -34,7 +34,7 @@ module manticore.appcache {
         }); 
     }
     
-    function updateReady (e?) {
+    function updateReady (e?:Event) {
         if(applicationCache.status !== applicationCache.UPDATEREADY) return;
         applicationCache.swapCache();
 

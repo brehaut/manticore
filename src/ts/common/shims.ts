@@ -105,23 +105,23 @@ if (!Array.of) {
 if (!Array.from) {
   Array.from = (function () {
     var toStr = Object.prototype.toString;
-    var isCallable = function (fn) {
+    var isCallable = function (fn: any) {
       return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
     };
-    var toInteger = function (value) {
+    var toInteger = function (value: any) {
       var number = Number(value);
       if (isNaN(number)) { return 0; }
       if (number === 0 || !isFinite(number)) { return number; }
       return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
     };
     var maxSafeInteger = Math.pow(2, 53) - 1;
-    var toLength = function (value) {
+    var toLength = function (value:any) {
       var len = toInteger(value);
       return Math.min(Math.max(len, 0), maxSafeInteger);
     };
 
     // The length property of the from method is 1.
-    return function from(arrayLike/*, mapFn, thisArg */) {
+    return function from(arrayLike:any/*, mapFn, thisArg */) {
       // 1. Let C be the this value.
       var C = this;
 
@@ -135,7 +135,7 @@ if (!Array.from) {
 
       // 4. If mapfn is undefined, then let mapping be false.
       var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-      var T;
+      var T:any;
       if (typeof mapFn !== 'undefined') {
         // 5. else      
         // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
@@ -161,7 +161,7 @@ if (!Array.from) {
       // 16. Let k be 0.
       var k = 0;
       // 17. Repeat, while k < len… (also steps a - h)
-      var kValue;
+      var kValue: any;
       while (k < len) {
         kValue = items[k];
         if (mapFn) {

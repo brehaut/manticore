@@ -39,8 +39,8 @@ module manticore.ui.party {
             )
         }
 
-        public onChangeHandler(e) {
-            const computedValue = +e.target.value;    
+        public onChangeHandler(e:React.FormEvent) {
+            const computedValue = +(e.target as any).value;    
 
             if (this.props.onChanged) {
                 this.props.onChanged(computedValue);
@@ -107,10 +107,5 @@ module manticore.ui.party {
             const partyInfo = { size: this.state.size, level: newLevel };
             this.props.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
         }
-    }
-
-
-    export function installParty(el, worker: model.DataAccessWorker):Party {
-        return ReactDOM.render(<Party worker={worker} />, el) as Party;
     }
 }
