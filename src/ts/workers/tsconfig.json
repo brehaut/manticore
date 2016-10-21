@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "sourceMap": true,
+        "strictNullChecks": true,
         "lib": ["webworker", "es5"]
     }
 }

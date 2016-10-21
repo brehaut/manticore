@@ -26,8 +26,6 @@ module manticore.ui.filters {
 
 
     export class ManualSelection extends React.Component<ManualSelectionProps, ManualSelectionState> {
-        public onChanged = new Event<[string, string[]]>();
-
         constructor(props: ManualSelectionProps) {
             super(props);
 
@@ -43,7 +41,7 @@ module manticore.ui.filters {
             const counts = this.state.counts;
 
             return (
-                <div class="filters">
+                <div className="filters">
                     <header>
                         <p>{_("[pick monsters]")}</p>
                     </header>
@@ -60,14 +58,13 @@ module manticore.ui.filters {
         }
 
         private filterChanged(filterName: string, selectedAttrs: string[]) {
-            const sels = {};
+            const sels:{[index:string]:string[]} = {};
             const old = this.props.filterSelections;
             for (var k in old) if (old.hasOwnProperty(k)) {
-                sels[k] = old[k];
+                sels[k] = (old as any)[k];
             }
             sels[filterName] = selectedAttrs;
 
-            this.onChanged.trigger([filterName, selectedAttrs]);
             if (this.props.onChanged) this.props.onChanged([filterName, sels as any]);
         } 
     }

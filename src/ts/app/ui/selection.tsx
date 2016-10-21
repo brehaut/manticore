@@ -14,19 +14,6 @@ module manticore.ui.filters {
 
         private filters:any = {};
 
-        constructor() {
-
-        }
-
-
-        public updateSelectedCount(count: number) {
-            this.onChanged.trigger(undefined);
-        }
-
-        public updateFilterCounts(filters: any) {
-            this.onChanged.trigger(undefined);
-        }
-
         public getFilters() { 
             return this.filters;
         }
@@ -113,7 +100,7 @@ module manticore.ui.filters {
             );
         } 
 
-        private filtersChanged(name, filters) {
+        private filtersChanged(name: string, filters: any) {
             this.props.store.updateFilters(filters); // the store will trigger an update event that will be propagated to setState
         }
 
@@ -122,8 +109,4 @@ module manticore.ui.filters {
         }
     }
 
-
-    export function installSelection(el, store, catalog):Selection {
-        return ReactDOM.render(<Selection store={store} catalog={catalog} counts={ {} } totalSelectedCount={0}/>, el) as Selection;
-    }
 }

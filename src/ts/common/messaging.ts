@@ -8,18 +8,81 @@
  */
 
 module manticore.messaging {   
-    export interface IMessage<TKey extends string, TPayload> {
-        key: TKey;
-        payload: TPayload;
+    export interface IMessage<TKey extends string> {
+        messageKey: TKey;
     }
-   
-    export type GenericMessage = IMessage<string, any>;
     
-    function message(key: string, payload: any): GenericMessage {
-        return { key: key, payload: payload };
-    } 
-    
+    export module localstorage {
+        type LocalStorageGetKeyT = "localstorage.get";
+        const LocalStorageGetKey:LocalStorageGetKeyT = "localstorage.get";
+        type LocalStoragePutKeyT = "localstorage.put";
+        const LocalStoragePutKey:LocalStoragePutKeyT = "localstorage.put";
+        type LocalStorageDeleteKeyT = "localstorage.delete";
+        const LocalStorageDeleteKey:LocalStorageDeleteKeyT = "localstorage.delete"; 
+        type LocalStorageDataKeyT = "localstorage.data";
+        const LocalStorageDataKey:LocalStorageDataKeyT = "localstorage.data";
+
+        export interface LocalStorageGet extends IMessage<LocalStorageGetKeyT> {
+            key: string;
+        }
+        export interface LocalStoragePut extends IMessage<LocalStoragePutKeyT> {
+            key: string;
+            value: any;
+        }
+        export interface LocalStorageDelete extends IMessage<LocalStorageDeleteKeyT> {
+            key: string;
+        }
+        export interface LocalStorageData extends IMessage<LocalStorageDataKeyT> {
+            key: string;
+            value: any | undefined;
+        }
+        export type LocalStorageMessage = LocalStorageGet | LocalStoragePut | LocalStorageDelete | LocalStorageData;
+
+        export function isLocalStorageMessage(msg:IMessage<any>): msg is LocalStorageMessage {
+            switch (msg.messageKey) {
+                case LocalStorageGetKey: return true;
+                case LocalStoragePutKey: return true;
+                case LocalStorageDeleteKey: return true;
+                case LocalStorageDataKey: return true;
+                default: return false;
+            }
+        }
+        export function isLocalStorageGetMessage(msg:IMessage<any>): msg is LocalStorageGet {
+            return isLocalStorageMessage(msg) && msg.messageKey === LocalStorageGetKey;
+        }
+        export function isLocalStoragePutMessage(msg:IMessage<any>): msg is LocalStoragePut {
+            return isLocalStorageMessage(msg) && msg.messageKey === LocalStoragePutKey;
+        }
+        export function isLocalStorageDeleteMessage(msg:IMessage<any>): msg is LocalStorageDelete {
+            return isLocalStorageMessage(msg) && msg.messageKey === LocalStorageDeleteKey;
+        }
+        export function isLocalStorageDataMessage(msg:IMessage<any>): msg is LocalStorageData {
+            return isLocalStorageMessage(msg) && msg.messageKey === LocalStorageDataKey;
+        }
+
+        export function getMessage(key: string): LocalStorageMessage {
+            return { messageKey: LocalStorageGetKey, key: key };
+        }
+        export function putMessage(key: string, value: any) : LocalStorageMessage {
+            return { messageKey: LocalStoragePutKey, key: key, value: value };
+        }
+        export function deleteMessage(key: string): LocalStorageMessage {
+            return { messageKey: LocalStorageDeleteKey, key: key };
+        }
+        export function dataMessage(key: string, value: any | undefined) : LocalStorageMessage {
+            return { messageKey: LocalStorageDataKey, key: key, value: value };
+        }
+    }
+
     export module dataAccess {
+        export interface LinkLocalStorage extends IMessage<"link.localstorage"> { }
+        export function linkLocalStorageMessage() : LinkLocalStorage {
+            return { messageKey: "link.localstorage" };
+        }
+        export function isLinkLocalStorageMessage(msg: IMessage<any>) : msg is LinkLocalStorage {
+            return msg.messageKey === "link.localstorage";
+        }
+
         // messages for accessing party information       
         type PartyGetKeyT = "party.get";   
         const PartyGetKey: PartyGetKeyT = "party.get";    
@@ -28,37 +91,41 @@ module manticore.messaging {
         type PartyDataKeyT = "party.data";
         const PartyDataKey: PartyDataKeyT = "party.data";
         
-        export type PartyGet = IMessage<PartyGetKeyT, undefined>;
-        export type PartyPut = IMessage<PartyPutKeyT, data.IParty>;
-        export type PartyData = IMessage<PartyDataKeyT, data.IParty>;
+        export interface PartyGet extends IMessage<PartyGetKeyT> { }
+        export interface PartyPut extends IMessage<PartyPutKeyT> {
+            party: data.IParty;
+        }
+        export interface PartyData extends IMessage<PartyDataKeyT> {
+            party:  data.IParty;
+        }
         export type PartyMessage = PartyGet | PartyPut | PartyData;      
         
-        export function isPartyMessage(msg:IMessage<any, any>): msg is PartyMessage {
-            return (msg.key === PartyGetKey || msg.key === PartyPutKey);
+        export function isPartyMessage(msg:IMessage<any>): msg is PartyMessage {
+            return (msg.messageKey === PartyGetKey || msg.messageKey === PartyPutKey || msg.messageKey === PartyDataKey);
         }
         
         export function isPartyGet(msg:PartyMessage): msg is PartyGet {
-            return (msg.key === PartyGetKey);
+            return (msg.messageKey === PartyGetKey);
         }
         
         export function isPartyPut(msg:PartyMessage): msg is PartyPut {
-            return (msg.key === PartyPutKey);
+            return (msg.messageKey === PartyPutKey);
         }
         
         export function isPartyData(msg:PartyMessage): msg is PartyData {
-            return (msg.key === PartyDataKey);
+            return (msg.messageKey === PartyDataKey);
         }
         
         export function partyPutMessage(data: data.IParty): PartyMessage {
-            return {key: PartyPutKey, payload: data};
+            return {messageKey: PartyPutKey, party: data};
         }
         
         export function partyGetMessage(): PartyMessage {
-            return {key:PartyGetKey, payload: undefined};
+            return {messageKey:PartyGetKey};
         }
         
         export function partyDataMessage(data: data.IParty): PartyMessage {
-            return {key: PartyDataKey, payload: data};
+            return {messageKey: PartyDataKey, party: data};
         }
         
         
@@ -69,30 +136,34 @@ module manticore.messaging {
         type BestiaryDataKeyT = "bestiary.data";
         const BestiaryDataKey: BestiaryDataKeyT = "bestiary.data";
                 
-        export type BestiaryGet = IMessage<BestiaryGetKeyT, undefined>;
-        export type BestiaryData = IMessage<BestiaryDataKeyT, data.DataSet>;
-        
+        export interface BestiaryGet extends IMessage<BestiaryGetKeyT> { };
+        export interface BestiaryData extends IMessage<BestiaryDataKeyT> {
+            dataset: data.DataSet;
+        }        
         export type BestiaryMessage = BestiaryGet | BestiaryData;
         
-        export function isBestiaryMessage(msg:IMessage<any, any>): msg is BestiaryMessage {
-            return (msg.key === BestiaryGetKey
-                 || msg.key === BestiaryDataKey);
+        export function isBestiaryMessage(msg:IMessage<any>): msg is BestiaryMessage {
+            return (msg.messageKey === BestiaryGetKey
+                 || msg.messageKey === BestiaryDataKey);
         }
         
         export function isBestiaryGet(msg:BestiaryMessage): msg is BestiaryGet {
-            return (msg.key === BestiaryGetKey);
+            return (msg.messageKey === BestiaryGetKey);
         } 
         
         export function isBestiaryData(msg:BestiaryMessage): msg is BestiaryData {
-            return (msg.key === BestiaryDataKey);
+            return (msg.messageKey === BestiaryDataKey);
         }         
         
         export function bestiaryGetMessage() : BestiaryMessage {
-            return { key: BestiaryGetKey, payload: undefined };
+            return { messageKey: BestiaryGetKey };
         }
         
-        export function bestiaryDataMessage(data:data.DataSet) {
-            return { key: BestiaryDataKey, payload: data };
+        export function bestiaryDataMessage(data:data.DataSet) : BestiaryMessage {
+            return { messageKey: BestiaryDataKey, dataset: data };
         }
+
+
+        export type DataAccessMessage = LinkLocalStorage | BestiaryMessage | PartyMessage;  
     }
 }

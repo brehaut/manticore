@@ -1,6 +1,7 @@
 /// <reference path="../common/types.d.ts" />
 /// <reference path="../common/data.ts" />
 /// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/localstorage.ts" />
 /// <reference path="ui/strings.ts" />
 /// <reference path="ui/common.ts" />
 /// <reference path="ui/application.tsx" />
@@ -25,13 +26,13 @@ module manticore.ui {
 
 
     // testing utility
-    function awaitDelay(t) {
-        return (v) => new Promise<any>((resolve, _) => setTimeout(() => resolve(v), t));
+    function awaitDelay<T>(t: number) {
+        return (v:T) => new Promise<T>((resolve, _) => setTimeout(() => resolve(v), t));
     }
 
 
     // show a loading bezel while the json data is loading.
-    function loadingUI(root, promise) { 
+    function loadingUI(root: HTMLElement, promise: Promise<any>) { 
         const loading = document.createElement("div");
         loading.appendChild(document.createTextNode(_("Loading...")));
         root.appendChild(loading);
@@ -44,11 +45,12 @@ module manticore.ui {
     // initialize is the public interface tothe UI; it will 
     // instantiate everythign and do the basic procedures requred
     // to get a UI going for the given data.
-    export function initialize(root, 
+    export function initialize(root: HTMLElement, 
                                dataAccessWorker: model.DataAccessWorker,
                                ready:Promise<void>,
-                               allocator) {
+                               allocator: data.Allocator) {
         //bestiary = bestiary.then(awaitDelay(2000));
+        dataAccessWorker.postMessage(messaging.dataAccess.linkLocalStorageMessage(), [localstorage.localStoragePort()]);
 
         ready
             .then<void>((_) => {

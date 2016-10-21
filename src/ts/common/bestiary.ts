@@ -74,12 +74,14 @@ module manticore.bestiary {
     }
 
 
-    function tierAdjustment(tier:Tier) {
-        return ({
-            adventurer: 0,
-            champion: 1,
-            epic: 2
-        })[tier];
+    function tierAdjustment(tier:Tier): number {
+        switch (tier) {
+            case "adventurer": return 0;
+            case "champion": return 1;
+            case "epic": return 2;
+            default:
+                throw new Error(`Unknown tier '${tier}'`);
+        }        
     }
 
 
@@ -100,7 +102,7 @@ module manticore.bestiary {
     }
 
 
-    function relativeCost(relativeLevel) {
+    function relativeCost(relativeLevel: number) {
         switch (relativeLevel) {
         case -2: return 2;
         case -1: return 3;
@@ -184,7 +186,7 @@ module manticore.bestiary {
 
     // allocateMonster is the core algorithm of this application.
     // TODO: this should respect caps on monster numbers 
-    function repeatMonster(points, monster):MonsterAllocation[] {
+    function repeatMonster(points: number, monster:PricedMonster):MonsterAllocation[] {
         var max = Math.floor(points / monster.price);
         if (monsterIsTerritorial(monster)) {
             max = Math.min(max, 1);
@@ -345,13 +347,13 @@ module manticore.bestiary {
                 {countKey: "attributes", monsterKey: "attributes", filterKey: "attributes"},
             ];
             
-            function filtersExcluding(key):{[index:string]: string[]} {
-                var fs:{[index:string]: string[]} = {};
+            function filtersExcluding(key: string):{[index:string]: string[]} {
+                const fs:{[index:string]: string[]} = {};
                 Object.keys(filters).filter(k => k != key).forEach(k => fs[k] = filters[k]); 
                 return fs;
             }
             
-            function applicableFilters(descriptor) {
+            function applicableFilters(descriptor: {countKey: string, monsterKey: string, filterKey: string}) {
                 return {
                     countKey: descriptor.countKey,
                     monsterKey: descriptor.monsterKey,
@@ -359,18 +361,18 @@ module manticore.bestiary {
                 };
             }
                         
-            var viableForFilters = (descriptor) => {
-                var viable = this.filteredBestiary(party, descriptor.predicate);
-                var countMap = {};
+            const viableForFilters = (descriptor: {countKey: string, monsterKey: string, predicate: (v: data.Monster)=>boolean}) => {
+                const viable = this.filteredBestiary(party, descriptor.predicate);
+                const countMap:{[index: string]: number} = {};
                 
                 function inc (key:string) {
-                    var v = countMap.hasOwnProperty(key) ? countMap[key] : 0;
+                    const v:number = countMap.hasOwnProperty(key) ? countMap[key] : 0;
                     countMap[key] = v + 1;
                 }
                 
                 for (var i = 0, j = viable.length; i < j; i++) {
-                    var m = viable[i];
-                    var attr = m[descriptor.monsterKey]
+                    const m = viable[i];
+                    const attr:(string[] | string) = (m as any)[descriptor.monsterKey];
                     if (attr instanceof Array) {
                         attr.forEach(inc);
                     }
@@ -382,7 +384,7 @@ module manticore.bestiary {
                 return countMap;
             };
             
-            var counts = {
+            const counts:{[index:string]:{[index:string]: number}} = {
                 sources: {},
                 sizes: {},
                 kinds: {},

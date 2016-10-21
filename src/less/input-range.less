@@ -7,11 +7,17 @@ input[type=range] {
     border: 1px solid transparent; 
 
     @track-color: #ccc;
+    .background() {
+        background: #ccc; /* Old browsers */
+        background: -webkit-linear-gradient(left, #ccc 0%, #ccc 5%, #ddd 5%, #ddd 6%, #ccc 6%, #ccc 15%, #ddd 16%, #ccc 16%, #ccc 25%, #ddd 25%, #ddd 26%, #ccc 26%, #ccc 35%, #ddd 35%, #ddd 36%, #ccc 36%, #ccc 45%, #ddd 45%, #ddd 46%, #ccc 46%, #ccc 55%, #ddd 55%, #ddd 56%, #ccc 56%, #ccc 65%, #ddd 65%, #ddd 66%, #ccc 66%, #ccc 75%, #ddd 75%, #ddd 76%, #ccc 76%, #ccc 85%, #ddd 85%, #ddd 86%, #ccc 86%, #ccc 95%, #ddd 95%, #ddd 96%, #ccc 96%, #ccc 100%);
+        background: -o-linear-gradient(left, #ccc 0%, #ccc 5%, #ddd 5%, #ddd 6%, #ccc 6%, #ccc 15%, #ddd 16%, #ccc 16%, #ccc 25%, #ddd 25%, #ddd 26%, #ccc 26%, #ccc 35%, #ddd 35%, #ddd 36%, #ccc 36%, #ccc 45%, #ddd 45%, #ddd 46%, #ccc 46%, #ccc 55%, #ddd 55%, #ddd 56%, #ccc 56%, #ccc 65%, #ddd 65%, #ddd 66%, #ccc 66%, #ccc 75%, #ddd 75%, #ddd 76%, #ccc 76%, #ccc 85%, #ddd 85%, #ddd 86%, #ccc 86%, #ccc 95%, #ddd 95%, #ddd 96%, #ccc 96%, #ccc 100%);
+        background: linear-gradient(to right, #ccc 0%, #ccc 5%, #ddd 5%, #ddd 6%, #ccc 6%, #ccc 15%, #ddd 16%, #ccc 16%, #ccc 25%, #ddd 25%, #ddd 26%, #ccc 26%, #ccc 35%, #ddd 35%, #ddd 36%, #ccc 36%, #ccc 45%, #ddd 45%, #ddd 46%, #ccc 46%, #ccc 55%, #ddd 55%, #ddd 56%, #ccc 56%, #ccc 65%, #ddd 65%, #ddd 66%, #ccc 66%, #ccc 75%, #ddd 75%, #ddd 76%, #ccc 76%, #ccc 85%, #ddd 85%, #ddd 86%, #ccc 86%, #ccc 95%, #ddd 95%, #ddd 96%, #ccc 96%, #ccc 100%);;
+    }
 
     &::-webkit-slider-runnable-track {
         width: 100%;
         height: 4px;
-        background: @track-color;
+        .background();
         transition: background 100ms ease-in;
         border: none;
         border-radius: 3px;
@@ -20,7 +26,7 @@ input[type=range] {
     &::-moz-range-track  {
         width: 100%;
         height: 4px;
-        background: @track-color;
+        .background();
         transition: background 100ms ease-in;
         border: none;
         border-radius: 3px;

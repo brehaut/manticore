@@ -7,7 +7,7 @@
 
 module manticore.ui {
     "use strict";    
-    var _ = strings._;
+    import _ = strings._;
 
 
     interface ApplicationProps {
@@ -24,8 +24,6 @@ module manticore.ui {
 
 
     export class Application extends React.Component<ApplicationProps, ApplicationState> {
-        private partyWorker = manticore.model.partyWorker()
-
         constructor(props: ApplicationProps) {
             super(props);
 
@@ -39,10 +37,12 @@ module manticore.ui {
             this.state.filterStore.onChanged.register(_ => this.forceUpdate());
 
             // temporary kludge
-            this.partyWorker.onmessage = (message) => {
-                this.setState({partyInfoCache: message.data} as ApplicationState);
-            }
-            this.partyWorker.postMessage(messaging.dataAccess.partyGetMessage());
+            this.props.dataAccess.addEventListener("message", (message) => {
+                if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
+                    this.setState({partyInfoCache: message.data.party} as ApplicationState);
+                }
+            });
+            this.props.dataAccess.postMessage(messaging.dataAccess.partyGetMessage());
 
             this.requestBestiary();
         }
@@ -55,7 +55,7 @@ module manticore.ui {
 
         private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
             if (messaging.dataAccess.isBestiaryData(message)) {
-                this.setState({ catalog: bestiary.createBestiary(message.payload) } as ApplicationState);
+                this.setState({ catalog: bestiary.createBestiary(message.dataset) } as ApplicationState);
             }
             else {
                 console.warn("Unexpected message", message);
@@ -68,7 +68,7 @@ module manticore.ui {
         }
 
         private getSelection() {
-            var pred = data.predicateForFilters(this.state.filterStore.getFilters());
+            const pred = data.predicateForFilters(this.state.filterStore.getFilters());
             return this.state.catalog.filteredBestiary(this.state.partyInfoCache, pred);
         }
 
@@ -78,7 +78,7 @@ module manticore.ui {
             }
             return (
                 <div>
-                    <party.Party worker={ this.partyWorker } />
+                    <party.Party worker={ this.props.dataAccess } />
                     <filters.Selection 
                         store={ this.state.filterStore } 
                         catalog={ this.state.catalog } 
@@ -93,7 +93,7 @@ module manticore.ui {
         }
 
         private generate() {
-            var selection = this.getSelection();
+            const selection = this.getSelection();
 
             this.props.allocator(this.state.partyInfoCache,
                                  selection)
@@ -101,7 +101,7 @@ module manticore.ui {
         }
     }
 
-    export function installApplication(el, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
+    export function installApplication(el: HTMLElement, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
         return ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as Application;
     }
 }

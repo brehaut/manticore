@@ -10,7 +10,7 @@ module manticore.ui {
     }
 
     export function template(text:string, fill:{[index:string]:any}) { 
-        return text.replace(/\{([a-zA-Z0-9]+?)\}/g, (_, key:string) => fill[key]);
+        return text.replace(/\{([a-zA-Z0-9]+?)\}/g, (_:any, key:string) => fill[key]);
     }
 
 
@@ -37,7 +37,7 @@ module manticore.ui {
         
         constructor(private value:T) { }        
         
-        public swap(f:(T) => T) {
+        public swap(f:(v:T) => T) {
             this.value = f(this.value);
             this.onChange.trigger(this.value);
         }

@@ -74,10 +74,10 @@ module manticore.ui.filters {
 
 
         private filterChanged(filterName: string, selectedAttrs: string[]) {
-            const sels = {};
+            const sels:{[index:string]:string[]} = {};
             const old = this.props.filterSelections;
             for (var k in old) if (old.hasOwnProperty(k)) {
-                sels[k] = old[k];
+                sels[k] = (old as any)[k];
             }
             sels[filterName] = selectedAttrs;
 
