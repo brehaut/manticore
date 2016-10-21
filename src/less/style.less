@@ -432,15 +432,27 @@ section.results {
                 .stereotype {
                     .clearfix();
                     .encounter-common();
+
+                    cursor: pointer;
+
+                    > em {
+                        display: block;
+                        padding: 0.5em;
+                    }
                 }
 
                 > .variants {
                     padding-left: 0;
                     list-style: none;
+                    display: none;
 
                     > li {
                         .clearfix();
-                    }
+                    }                 
+                }
+
+                &.-open > .variants {
+                    display: block;
                 }
             }
 
@@ -463,14 +475,20 @@ section.results {
     padding: 0.25em 0.5em;    
 
 
-    &.large {
-        height: 4em;
-        padding: 0.75em 0.5em;
+    &:after {
+        position: absolute;
+        top: 0em;
+        line-height: 1em;
+        content: ' ';
+        text-align: center;
     }
 
-    &.huge {
-        height: 5em;
-        padding: 1em 0.5em;
+    &.large:after {
+    
+    }
+
+    &.huge:after {
+    
     }
 
     &:first-child {
@@ -496,9 +514,11 @@ section.results {
     .number {
         float: right;
         font-weight: bold;
-        margin-left: 1em;
+        margin-left: 0.5em;
         font-size: 1.2em;
         margin-top:-0.15em;
+        text-align: right;
+        min-width: 2.5em;
 
         &:before {
             content: '×';
@@ -546,14 +566,6 @@ section.results {
         display: inline-block;
         margin-bottom: 2px;
         margin-right: -1px;
-
-        &.large {
-            margin-top: -0.5em;
-        }
-
-        &.huge {
-            margin-top: -1em;
-        }
 
         &:first-child {
             border-radius: 5px 0 0 5px;

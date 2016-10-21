@@ -6,7 +6,7 @@ module manticore.ui.results {
     "use strict";
     import _ = manticore.ui.strings._; 
 
-    class Allocation extends React.Component<{ alloc: data.Allocation, showCount?: boolean }, undefined> {
+    class Allocation extends React.Component<{ alloc: data.Allocation }, undefined> {
         public render() {
             const alloc = this.props.alloc;
             const className = `C allocation ${alloc.monster.size}`;
@@ -20,7 +20,7 @@ module manticore.ui.results {
                         <span className="book">{ alloc.monster.book }</span>
                     </div>
                     <em>{ _(alloc.monster.name) }</em>
-                    {this.props.showCount !== false ? <span className="number">{ alloc.num }</span> : null}
+                    <span className="number">{ alloc.num }</span>
                 </div>
             );
         }
@@ -42,19 +42,28 @@ module manticore.ui.results {
     }
 
 
-    class AllocationGroup extends React.Component<{ encounters: data.Encounters }, undefined> {
+    class AllocationGroup extends React.Component<{ encounters: data.Encounters }, {open: boolean}> {
+        constructor (props: { encounters: data.Encounters }) {
+            super(props);
+
+            this.state = {open:false};
+        }
+
         public render() {
             if (this.props.encounters.length === 1) {
                 return <li className="encounter -single">{ this.props.encounters[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
             }
             return (
-                <li className="encounter -multiple">
-                    <div className="stereotype">
-                        {this.props.encounters[0].map(alloc => <Allocation alloc={alloc} showCount={false}/>) }
+                <li className={`encounter -multiple ${this.state.open ? "-open" : ""}`}>
+                    <div className="stereotype"
+                         onClick={_ => this.setState({open: !this.state.open}) }>
+                        {this.props.encounters[0].map(alloc => <Allocation alloc={alloc} />) }
+
+                        <em>{template(_("{n} variations."), {n: this.props.encounters.length - 1})}</em>
                     </div>
 
                     <ul className="variants">
-                        { this.props.encounters.map(enc => 
+                        { this.props.encounters.slice(1).map(enc => 
                             <li>
                                 { enc.map(alloc => <AbbreviatedAllocation alloc={alloc} />) }
                             </li>
@@ -109,14 +118,14 @@ module manticore.ui.results {
                         <header>
                             <h1>{ _("Possible encounters") }</h1>
                             <p>{ template(_("{count} encounters for {num} level {level} characters."),
-                                                   {count: allocs.length,
-                                                    num: party.size,
-                                                    level: party.level}) }
+                                          {count: this.props.generatedEncounters ? this.props.generatedEncounters.length : 0,
+                                           num: party.size,
+                                           level: party.level}) }
                             </p>
                         </header>
 
                         <ul className={ this.state && this.state.stale ? 'outofdate' : '' }>
-                        { allocs.map(alloc => <AllocationGroup encounters={alloc} />) }
+                        { allocs.map(alloc => <AllocationGroup encounters={alloc} key={ alloc[0].map(a => a.monster.name).join(",") } />) }
                         </ul>
                     </section>
                 </section>
