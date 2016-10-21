@@ -101,7 +101,7 @@ module manticore.messaging {
         export type PartyMessage = PartyGet | PartyPut | PartyData;      
         
         export function isPartyMessage(msg:IMessage<any>): msg is PartyMessage {
-            return (msg.messageKey === PartyGetKey || msg.messageKey === PartyPutKey);
+            return (msg.messageKey === PartyGetKey || msg.messageKey === PartyPutKey || msg.messageKey === PartyDataKey);
         }
         
         export function isPartyGet(msg:PartyMessage): msg is PartyGet {

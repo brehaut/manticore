@@ -11,7 +11,9 @@
  */
 
 module manticore.workers.dataAccess {
-   
+    const PARTY_STATE_KEY = "state.party";
+
+
     function mergeWith<T>(merge:(a:T, b:T) => T) {
         return (os:{[index:string]: T}[]):{[index:string]: T} => {
             var acc:{[index:string]: T} = {};
@@ -50,11 +52,24 @@ module manticore.workers.dataAccess {
     
     let localStoragePort: MessagePort | undefined;
     
+    function linkLocalStoragePort(port: MessagePort) {
+        if (localStoragePort) {
+            localStoragePort.close();
+        }
+
+        localStoragePort = port;
+        localStoragePort.onmessage = function (message) {
+            const data = message.data;
+            postMessage(messaging.dataAccess.partyDataMessage(JSON.parse(data.value)));
+        }
+    }
+
+
     onmessage = (message) => {
         var data:messaging.IMessage<any> = message.data;
 
         if (messaging.dataAccess.isLinkLocalStorageMessage(data)) {
-            localStoragePort = message.ports[0];
+            linkLocalStoragePort(message.ports[0]);
         }
         else if (messaging.dataAccess.isBestiaryMessage(data)) {
             if (messaging.dataAccess.isBestiaryGet(data)) {
@@ -62,6 +77,22 @@ module manticore.workers.dataAccess {
                     message.ports[0].postMessage(messaging.dataAccess.bestiaryDataMessage(dataset))
                 });
             }
+        }
+        else if (messaging.dataAccess.isPartyMessage(data)) { 
+            if (!localStoragePort) {
+                console.log("local storage port not linked");
+                return;
+            }                       
+            if (messaging.dataAccess.isPartyGet(data)) {
+                localStoragePort.postMessage(messaging.localstorage.getMessage(PARTY_STATE_KEY));
+            }
+            else if (messaging.dataAccess.isPartyPut(data)) {
+                localStoragePort.postMessage(messaging.localstorage.putMessage(PARTY_STATE_KEY, JSON.stringify(data.party)));
+                postMessage(data.party); // relay changes back to any listeners
+            }      
+            else {
+                // TODO: Post error
+            }  
         }
     }
 }

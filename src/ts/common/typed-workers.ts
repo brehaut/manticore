@@ -4,9 +4,10 @@ module manticore.workers {
         data: T;
     }
     
-    export interface ITypedWorker<TIncoming, TOutgoing> {
+    export interface ITypedWorker<TIncoming, TOutgoing> extends EventTarget {
         postMessage(message: TIncoming, ports?: (MessagePort|ArrayBuffer)[]);
         onmessage?(message: ITypedMessageEvent<TOutgoing>);
+        addEventListener(type:"message", handler:(ev: ITypedMessageEvent<TOutgoing>)=>void);
     }
     
     export function newWorker<TSend, TRecv>(script: string): ITypedWorker<TSend, TRecv> {
@@ -27,50 +28,4 @@ module manticore.workers {
         })
     }
     
-    // internal workers are worker like objects that do not own the process space 
-    // that the execute in. 
-    export interface ILightWeightMessageEvent<TRecv>  {
-        data: TRecv;
-    }    
-    
-    export interface ILightWeightWorkerContext<TSend, TRecv> {
-        postMessage(message: TRecv);
-        onmessage?(message: ILightWeightMessageEvent<TSend>);
-        close();
-    }
-    
-  
-    export class LightWeightWorker<TIncoming, TOutgoing> implements ITypedWorker<TIncoming, TOutgoing> {
-        public onmessage?: ((message:ILightWeightMessageEvent<TOutgoing>) => void) = undefined;
-        
-        private internalWorker?:ILightWeightWorkerContext<TIncoming, TOutgoing> = {
-            onmessage: undefined,
-            postMessage: (message) => {
-                this.dispatchMessage(message);
-            },
-            close: () => this.terminate()
-        }
-        
-        constructor(initialise:(worker:(ILightWeightWorkerContext<TIncoming, TOutgoing>)|undefined) => void) {
-            initialise(this.internalWorker);
-        }
-        
-        public postMessage(message: TIncoming) {
-            if (!this.internalWorker || !this.internalWorker.onmessage) return;
-            this.internalWorker.onmessage({ data: message });  
-        }
-        
-        public terminate() {
-            if (this.internalWorker === undefined) return;
-            this.internalWorker.onmessage = undefined;
-            this.internalWorker.postMessage = (_) => undefined;
-            this.internalWorker = undefined;
-        }
-        
-        private dispatchMessage(message:TOutgoing) {
-            if (!this.onmessage) return;
-            
-            this.onmessage({ data: message });            
-        }
-    }
 }

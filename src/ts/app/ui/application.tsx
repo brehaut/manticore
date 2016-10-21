@@ -24,8 +24,6 @@ module manticore.ui {
 
 
     export class Application extends React.Component<ApplicationProps, ApplicationState> {
-        private partyWorker = manticore.model.partyWorker()
-
         constructor(props: ApplicationProps) {
             super(props);
 
@@ -39,10 +37,12 @@ module manticore.ui {
             this.state.filterStore.onChanged.register(_ => this.forceUpdate());
 
             // temporary kludge
-            this.partyWorker.onmessage = (message) => {
-                this.setState({partyInfoCache: message.data} as ApplicationState);
-            }
-            this.partyWorker.postMessage(messaging.dataAccess.partyGetMessage());
+            this.props.dataAccess.addEventListener("message", (message) => {
+                if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
+                    this.setState({partyInfoCache: message.data.party} as ApplicationState);
+                }
+            });
+            this.props.dataAccess.postMessage(messaging.dataAccess.partyGetMessage());
 
             this.requestBestiary();
         }
@@ -78,7 +78,7 @@ module manticore.ui {
             }
             return (
                 <div>
-                    <party.Party worker={ this.partyWorker } />
+                    <party.Party worker={ this.props.dataAccess } />
                     <filters.Selection 
                         store={ this.state.filterStore } 
                         catalog={ this.state.catalog } 

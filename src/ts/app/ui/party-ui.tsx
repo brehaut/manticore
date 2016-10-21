@@ -51,7 +51,7 @@ module manticore.ui.party {
 
 
     interface PartyProps {
-        worker: model.IPartyWorker
+        worker: model.DataAccessWorker
     }
 
     interface PartyState {
@@ -63,8 +63,12 @@ module manticore.ui.party {
         constructor(props: PartyProps) {
             super(props);
             
-            this.state = { size: 1, level: 1};
-            this.props.worker.onmessage = (message) => this.storeChanged(message.data);
+            this.state = { size: 4, level: 2};
+            this.props.worker.addEventListener("message", (ev) => {
+                if (messaging.dataAccess.isPartyMessage(ev.data) && messaging.dataAccess.isPartyData(ev.data)) {
+                    this.storeChanged(ev.data.party) ;
+                }
+            });
             this.props.worker.postMessage(messaging.dataAccess.partyGetMessage());
         }
 
@@ -106,7 +110,7 @@ module manticore.ui.party {
     }
 
 
-    export function installParty(el, worker: model.IPartyWorker):Party {
+    export function installParty(el, worker: model.DataAccessWorker):Party {
         return ReactDOM.render(<Party worker={worker} />, el) as Party;
     }
 }

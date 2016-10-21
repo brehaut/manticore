@@ -5,7 +5,6 @@
 /// <reference path="../common/typed-workers.ts" />
 /// <reference path="../common/messaging.ts" />
 /// <reference path="../model/bestiary.ts" />
-/// <reference path="../model/party.ts" /> 
 
 /// <reference path="ui.ts" />
 /// <reference path="appcache.ts" />
