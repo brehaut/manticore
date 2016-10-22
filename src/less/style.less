@@ -1,5 +1,6 @@
 @import "common.less";
 @import "input-range.less";
+@import "paginator.less";
 @import "global.less";
 
 @font-face {
@@ -390,37 +391,6 @@ section.results {
 }
 
 
-.C.paginator {
-    > header,
-    > footer {
-        > ol {
-            list-style: none;
-            padding-left: 0;
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-
-            
-            > li {
-                flex-grow: 1;
-                text-align: center;
-            }
-
-            > .prev {
-                text-align: left;
-            }
-
-            > .next {
-                text-align: right;
-            }
-        } 
-    }
-
-    > ul {
-        list-style: none;
-        padding-left: 0;
-    }
-}
 
 
 .C.encounters {

@@ -1,10 +1,12 @@
 /// <reference path="../../vendor/react.d.ts" />
 
 /// <reference path="strings.ts" />
+/// <reference path="paginator.tsx" />
 
 module manticore.ui.results {
     "use strict";
     import _ = manticore.ui.strings._; 
+    import Paginator = manticore.ui.paginator.Paginator;
 
     function Allocation(props: { alloc: data.Allocation }) {
         const alloc = props.alloc;
@@ -73,77 +75,6 @@ module manticore.ui.results {
     }
 
 
-    function Pager(props: {pages: number[], onPageClick: (n: number)=>void}) {
-        return (
-            <ol>
-                <li className="prev"><a href="#">&lt;</a></li>
-
-                { props.pages.map(p => (
-                    <li>
-                        <a href="#" onClick={ev => { props.onPageClick(p); ev.preventDefault(); }}>{p}</a>
-                    </li>
-                )) }
-
-                <li className="next"><a href="#">&gt;</a></li>
-            </ol>
-        );
-    }
-
-    interface PaginatorProps { 
-        data: any[];
-        pageSize: number;
-        render: (v: any) => React.ReactNode
-    }
-
-    interface PaginatorState {
-        page: number;
-    }
-
-    class Paginator extends React.Component<PaginatorProps, PaginatorState> {
-        constructor (props: PaginatorProps) {
-            super(props);
-
-            this.state = { page: 0 };            
-        }
-
-        public render () {
-            
-            const start = this.props.pageSize * this.state.page;
-            const end = start + this.props.pageSize;
-
-            const dataWindow = this.props.data.slice(start, end);
-
-            return (
-                <div className="C paginator">
-                    <header>
-                        <Pager pages={ this.pageList() } 
-                               onPageClick={ n => this.changePage(n) } />
-                    </header>
-
-                    <ul>
-                    { dataWindow.map(this.props.render) }
-                    </ul>
-
-                    <footer>
-                        <Pager pages={ this.pageList() } 
-                               onPageClick={ n => this.changePage(n) } />
-                    </footer>
-                </div>
-            );
-        }
-
-        private pageList():number[] {
-            const pages:number[] = [];
-            for (var i = 0, j = Math.ceil(this.props.data.length / this.props.pageSize); i < j; i++) {
-                pages[i] = i;
-            }
-            return pages;
-        }
-
-        private changePage(n: number) {
-            this.setState({ page: n });
-        }
-    }
 
 
     interface ResultsProps {
