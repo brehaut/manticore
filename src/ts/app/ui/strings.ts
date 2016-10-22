@@ -29,7 +29,8 @@ module manticore.ui.strings {
 
         "generate encounters": "Generate encounters",
         "more": "More…",
-        "Number selected ": "Number of viable monsters selected: "
+        "Number selected ": "Number of viable monsters selected: ",
+        "[{n} variations.]": "{n} variations."
     }
     
 
