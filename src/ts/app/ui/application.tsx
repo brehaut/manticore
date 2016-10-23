@@ -1,4 +1,6 @@
 /// <reference path="../../common/data.ts" />
+/// <reference path="../../common/bestiary.ts" />
+/// <reference path="../../model/bestiary.ts" />
 /// <reference path="strings.ts" />
 /// <reference path="common.ts" />
 /// <reference path="party-ui.tsx" />
@@ -28,7 +30,7 @@ module manticore.ui {
             super(props);
 
             this.state = {
-                partyInfoCache: {size: 4, level: 2},
+                partyInfoCache: {size: 1, level: 1},
                 catalog: bestiary.createBestiary({}),
                 filterStore: new filters.FilterStore()
             };
@@ -78,7 +80,8 @@ module manticore.ui {
             }
             return (
                 <div>
-                    <party.Party worker={ this.props.dataAccess } />
+                    <party.Party worker={ this.props.dataAccess } 
+                                 party={ this.state.partyInfoCache } />
                     <filters.Selection 
                         store={ this.state.filterStore } 
                         catalog={ this.state.catalog } 

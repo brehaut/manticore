@@ -18,7 +18,12 @@ module manticore.localstorage {
             if (!ls.isLocalStorageMessage(message)) return;
 
             if (ls.isLocalStorageGetMessage(message)) {
-                localPort.postMessage(ls.dataMessage(message.key, localStorage.getItem(message.key)));
+                let val = localStorage.getItem(message.key)
+                if (message.defaultValue !== undefined && val === null) {
+                    val = message.defaultValue;
+                }
+                
+                localPort.postMessage(ls.dataMessage(message.key, val));
             }
             else if (ls.isLocalStoragePutMessage(message)) {
                 localStorage.setItem(message.key, message.value);

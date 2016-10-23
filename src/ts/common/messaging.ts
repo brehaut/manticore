@@ -24,6 +24,7 @@ module manticore.messaging {
 
         export interface LocalStorageGet extends IMessage<LocalStorageGetKeyT> {
             key: string;
+            defaultValue?: any;
         }
         export interface LocalStoragePut extends IMessage<LocalStoragePutKeyT> {
             key: string;
@@ -34,7 +35,7 @@ module manticore.messaging {
         }
         export interface LocalStorageData extends IMessage<LocalStorageDataKeyT> {
             key: string;
-            value: any | undefined;
+            value: any | null;
         }
         export type LocalStorageMessage = LocalStorageGet | LocalStoragePut | LocalStorageDelete | LocalStorageData;
 
@@ -60,8 +61,8 @@ module manticore.messaging {
             return isLocalStorageMessage(msg) && msg.messageKey === LocalStorageDataKey;
         }
 
-        export function getMessage(key: string): LocalStorageMessage {
-            return { messageKey: LocalStorageGetKey, key: key };
+        export function getMessage(key: string, defaultValue?: any): LocalStorageMessage {
+            return { messageKey: LocalStorageGetKey, key: key, defaultValue: defaultValue};
         }
         export function putMessage(key: string, value: any) : LocalStorageMessage {
             return { messageKey: LocalStoragePutKey, key: key, value: value };

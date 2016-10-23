@@ -84,7 +84,7 @@ module manticore.workers.dataAccess {
                 return;
             }                       
             if (messaging.dataAccess.isPartyGet(data)) {
-                localStoragePort.postMessage(messaging.localstorage.getMessage(PARTY_STATE_KEY));
+                localStoragePort.postMessage(messaging.localstorage.getMessage(PARTY_STATE_KEY, '{"size": 4, "level": 2}'));
             }
             else if (messaging.dataAccess.isPartyPut(data)) {
                 localStoragePort.postMessage(messaging.localstorage.putMessage(PARTY_STATE_KEY, JSON.stringify(data.party)));

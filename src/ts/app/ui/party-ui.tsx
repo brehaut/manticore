@@ -51,25 +51,17 @@ module manticore.ui.party {
 
 
     interface PartyProps {
-        worker: model.DataAccessWorker
+        worker: model.DataAccessWorker,
+        party: data.IParty
     }
 
     interface PartyState {
-        size: number;
-        level: number;
+
     }
 
     export class Party extends React.Component<PartyProps, PartyState> {
         constructor(props: PartyProps) {
-            super(props);
-            
-            this.state = { size: 4, level: 2};
-            this.props.worker.addEventListener("message", (ev) => {
-                if (messaging.dataAccess.isPartyMessage(ev.data) && messaging.dataAccess.isPartyData(ev.data)) {
-                    this.storeChanged(ev.data.party) ;
-                }
-            });
-            this.props.worker.postMessage(messaging.dataAccess.partyGetMessage());
+            super(props);        
         }
 
         public render() {
@@ -82,29 +74,21 @@ module manticore.ui.party {
                         </p>
                     </header>
 
-                    <NumericInput label={_("Party size")} value={this.state.size} max={10} 
+                    <NumericInput label={_("Party size")} value={this.props.party.size} max={10} 
                                   onChanged={(v) => this.sizeChanged(v)} />
-                    <NumericInput label={_("Party level")} value={this.state.level} max={10}
+                    <NumericInput label={_("Party level")} value={this.props.party.level} max={10}
                                   onChanged={(v) => this.levelChanged(v)} />
                 </section>
             )
         }
 
-        public getPartyInfo(): data.IParty {
-            return { size: this.state.size, level: this.state.level };
-        }
-
-        private storeChanged(data: data.IParty) {
-            this.setState(data);
-        }
-
         private sizeChanged(newSize: number) {
-            const partyInfo = { size: newSize, level: this.state.level };
+            const partyInfo = { size: newSize, level: this.props.party.level };
             this.props.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
         }
 
         private levelChanged(newLevel: number) {
-            const partyInfo = { size: this.state.size, level: newLevel };
+            const partyInfo = { size: this.props.party.size, level: newLevel };
             this.props.worker.postMessage(messaging.dataAccess.partyPutMessage(partyInfo));
         }
     }
