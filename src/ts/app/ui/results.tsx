@@ -55,12 +55,15 @@ module manticore.ui.results {
 
             return (
                 <li className={`C encounter -multiple ${this.state.open ? "-open" : ""}`}>
-                    <div className="stereotype"
-                         onClick={_ => this.setState({open: !this.state.open}) }>
+                    <div className="stereotype">
                         { encounters[0].map(alloc => <Allocation alloc={alloc} />) }
                     </div>
 
-                    <em>{template(_("[{n} variations.]"), {n: encounters.length - 1})}</em>
+                    <em>
+                        <a href="#" onClick={e => {this.setState({open: !this.state.open}); e.preventDefault(); } }>
+                            {template(_("[{n} variations.]"), {n: encounters.length - 1})}
+                        </a>
+                    </em>
 
                     <ul className="variants">
                         { encounters.slice(1).map(enc => 
@@ -108,7 +111,7 @@ module manticore.ui.results {
             const party = this.props.party || { level: 0, size: 0 };
 
             return (
-                <section className="results">
+                <section className="C results">
                     <header>
                         <h1>{ _("Encounters") }</h1>
                         <p>{ _("[results summary]") }</p>
