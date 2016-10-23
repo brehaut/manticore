@@ -2,7 +2,7 @@ module manticore.ui.paginator {
     
     function Pager(props: {currentPage: number, pages: number[], onPageClick: (n: number)=>void}) {
         const prev = <a href="#" onClick={ev => { props.onPageClick(props.currentPage - 1); ev.preventDefault(); }}>◀︎</a>;
-        const next = <a href="#" onClick={ev => { props.onPageClick(props.currentPage + 1); ev.preventDefault(); }}>▶</a>;
+        const next = <a href="#" onClick={ev => { props.onPageClick(props.currentPage + 1); ev.preventDefault(); }}>◀</a>;
 
         return (
             <ol>
@@ -14,7 +14,7 @@ module manticore.ui.paginator {
                     </li>
                 )) }
 
-                <li className="next">{ props.currentPage === props.pages[props.pages.length - 1] ? <span>▶︎</span> : next }</li>
+                <li className="next">{ props.currentPage === props.pages[props.pages.length - 1] ? <span>◀︎</span> : next }</li>
             </ol>
         );
     }

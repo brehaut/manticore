@@ -15,13 +15,13 @@ module manticore.ui.filters {
 
     interface ManualSelectionState {
         catalog: bestiary.Bestiary;
-        counts: any;
     }
 
     interface ManualSelectionProps {
         catalog: bestiary.Bestiary;
         filterSelections: FilterSelections
         onChanged?: (v:[string, {[index: string]: string[]}]) => void;
+        counts: any;
     }
 
 
@@ -31,14 +31,13 @@ module manticore.ui.filters {
 
             this.state = {
                 catalog: props.catalog,
-                counts: {}
             };
         }
 
         public render() {
             const catalog = this.state.catalog;
             const filterSelections = this.props.filterSelections;
-            const counts = this.state.counts;
+            const counts = this.props.counts;
 
             return (
                 <div className="filters">

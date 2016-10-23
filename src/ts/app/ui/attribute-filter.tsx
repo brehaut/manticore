@@ -20,8 +20,8 @@ module manticore.ui.filters {
                         const classname = count > 0 ? "viable" : "";
                         const selected = this.props.data.selected[key] || false;
 
-                        return <li className={classname} onClick={() => this.handleClick(key)}> 
-                            <input type="checkbox" name={k} checked={selected} onClick={() => this.handleClick(key)}/>
+                        return <li className={classname} onClick={e => this.handleClick(e, key)}> 
+                            <input type="checkbox" name={k} checked={selected} onClick={(e) => this.handleClick(e, key)}/>
                             <label for={k}>{key}</label>
                             <span className="count">{count}</span>
                         </li>;
@@ -29,7 +29,8 @@ module manticore.ui.filters {
             </ul>;
         }
 
-        private handleClick(key: string) {
+        private handleClick(e: React.MouseEvent, key: string) {
+            e.preventDefault();
             if (!this.props.onToggle) return;
             this.props.onToggle(key);
         }

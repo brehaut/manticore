@@ -47,18 +47,15 @@ module manticore.ui.filters {
             super(props);
 
             this.props.store.onChanged.register(_ => {
-                this.setState(this.computeStateFromStore());
+                this.setState({ filters: this.props.store.getFilters()} as SelectionState);
             });
 
-            this.state = this.computeStateFromStore();
-        }
-
-        private computeStateFromStore(): SelectionState {
-            return { 
+            this.state = { 
                 mode: SelectionMode.Smart, 
                 filters: this.props.store.getFilters(), 
             };
         }
+
 
         public render() {
             const mode = this.state.mode;
@@ -95,6 +92,7 @@ module manticore.ui.filters {
                                        totalSelectedCount= { this.props.totalSelectedCount } />
                         : <ManualSelection catalog={this.props.catalog}
                                            filterSelections={this.state.filters} 
+                                           counts={ this.props.counts }
                                            onChanged={([name, filters]) => this.filtersChanged(name, filters)} /> }
                 </section>
             );
