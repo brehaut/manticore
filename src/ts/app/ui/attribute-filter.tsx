@@ -22,7 +22,7 @@ module manticore.ui.filters {
 
                         return <li className={classname} onClick={e => this.handleClick(e, key)}> 
                             <input type="checkbox" name={k} checked={selected} onClick={(e) => this.handleClick(e, key)}/>
-                            <label for={k}>{key}</label>
+                            <label htmlFor={k}>{key}</label>
                             <span className="count">{count}</span>
                         </li>;
                     })}
