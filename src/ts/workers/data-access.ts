@@ -4,6 +4,7 @@
 /// <reference path="../common/shims.ts" />
 /// <reference path="../common/reply.ts" />
 /// <reference path="libs/storage.ts" />
+/// <reference path="data-access/party.ts" />
 
 /* the dataAccess worker wraps up network (and in future, indexdb) requests
  * to the raw bestiary data. 
@@ -13,10 +14,7 @@
  */
 
 module manticore.workers.dataAccess {
-    const PARTY_STATE_KEY = "state.party";
-
-    import reply = manticore.reply.reply;
-
+    import reply = manticore.reply.reply; 
 
     function mergeWith<T>(merge:(a:T, b:T) => T) {
         return (os:{[index:string]: T}[]):{[index:string]: T} => {
@@ -54,11 +52,13 @@ module manticore.workers.dataAccess {
     ;
     
     
+   
     const storage = new manticore.storage.Storage();
-    storage.onStorageChanged.register(data => {
-        postMessage(messaging.dataAccess.partyDataMessage(JSON.parse(data.value)));
-    });
+
     
+
+    const party = new manticore.workers.dataAccess.party.Party(storage, (message) => postMessage(message));
+
 
     onmessage = (message) => {
         var data:messaging.IMessage<any> = message.data;
@@ -74,27 +74,7 @@ module manticore.workers.dataAccess {
             }
         }
         else if (messaging.dataAccess.isPartyMessage(data)) { 
-            if (!storage.isLinked()) {
-                console.log("local storage port not linked");
-                return;
-            }                       
-            if (messaging.dataAccess.isPartyGet(data)) {
-                storage.get(PARTY_STATE_KEY, '{"size": 4, "level": 2}')
-                    .then(value => { 
-                        postMessage(messaging.dataAccess.partyDataMessage(JSON.parse(value)));
-                    })
-                    ;
-            }
-            else if (messaging.dataAccess.isPartyPut(data)) {
-                storage.put(PARTY_STATE_KEY, JSON.stringify(data.party))
-                    .then(value => {
-                        postMessage(messaging.dataAccess.partyDataMessage(JSON.parse(value))); // relay changes back to any listeners
-                    })
-                    ;
-            }      
-            else {
-                // TODO: Post error
-            }  
+            party.handleMessage(data);
         }
     }
 }
