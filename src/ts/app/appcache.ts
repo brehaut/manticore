@@ -54,7 +54,7 @@ module manticore.appcache {
     const CHECK_SPAN = 60 * 60 * 1000;// check hourly
     function performCheck() {
         lastCheckTime = Date.now();
-        console.log("checking");
+
         try {
             applicationCache.update();
         }

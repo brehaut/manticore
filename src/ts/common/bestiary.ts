@@ -16,10 +16,11 @@ module manticore.bestiary {
                               kind:string,
                               attributes: string[],
                               book: string,
+                              pageNumber: number | undefined,
                               price:number) 
                               : PricedMonster { 
         // type hint to convince the compiler that we are going to mix in the new values                                  
-        var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book);
+        var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book, pageNumber);
         mon.price = price;
         return mon;    
     }
@@ -133,7 +134,8 @@ module manticore.bestiary {
                                                               record[2],
                                                               record[3],
                                                               record[4],
-                                                              book);
+                                                              book,
+                                                              record[5]);
     }
 
 
@@ -171,6 +173,7 @@ module manticore.bestiary {
                                 m.kind,
                                 m.attributes,
                                 m.book,
+                                m.pageNumber,
                                 cost * multiplier);
     }
 

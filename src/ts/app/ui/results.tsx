@@ -17,7 +17,7 @@ module manticore.ui.results {
                 <div className="kind">
                     { _(alloc.monster.kind) }
                     <span className="level">{ alloc.monster.level }</span>
-                    <span className="book">{ alloc.monster.book }</span>
+                    <span className="book">{ alloc.monster.book } {_("pg.")} { alloc.monster.pageNumber }</span>
                 </div>
                 <em>{ _(alloc.monster.name) }</em>
                 <span className="number">{ alloc.num }</span>
