@@ -6,6 +6,12 @@
 // http://www.html5rocks.com/en/tutorials/appcache/beginner/
 
 module manticore.appcache {   
+    function probablyOnline() {
+        if (!("onLine" in navigator)) return true;
+        return navigator.onLine;
+    }
+
+
     function inPageConfirm(text: string, actionText: string) {
         const confirm = document.createElement("div");
         confirm.className = "C global-confirm";
@@ -43,14 +49,55 @@ module manticore.appcache {
             .then<any>(_ => location.reload());
     }
     
-    export function handleReloads () {        
-        applicationCache.addEventListener("updateready", updateReady);
-        
+    let checkForUpdates:number | undefined;
+    let lastCheckTime: number;
+    const CHECK_SPAN = 60 * 60 * 1000;// check hourly
+    function performCheck() {
+        lastCheckTime = Date.now();
+        console.log("checking");
         try {
             applicationCache.update();
         }
         catch (e) {}
+    }
+
+    function startCheckCycle() {
+        if(checkForUpdates) {
+            clearInterval(checkForUpdates);
+        }
+        checkForUpdates = setInterval(performCheck, CHECK_SPAN); 
+    }
+
+    function handleOnline() {    
+        const span = Date.now() - lastCheckTime; 
+        if (span > CHECK_SPAN) {
+            performCheck();
+            startCheckCycle();
+        }
+        else {
+            clearTimeout(checkForUpdates!);
+            setTimeout(() => {
+                performCheck();
+                startCheckCycle();
+            }, CHECK_SPAN - span);
+        }
         
+    }
+
+    function handleOffline() {
+        if(checkForUpdates) {
+            clearInterval(checkForUpdates);
+        }
+    }
+
+    export function handleReloads () {        
+        applicationCache.addEventListener("updateready", updateReady);
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        performCheck();
+        startCheckCycle();
+
         updateReady();
     }
 } 
