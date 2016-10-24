@@ -1,7 +1,10 @@
 /// <reference path="messaging.ts" />
+/// <reference path="reply.ts" />
 
 module manticore.localstorage {
     import ls = messaging.localstorage;
+    import reply = manticore.reply.reply;
+
 
     export function localStoragePort() {
         const chan = new MessageChannel();
@@ -23,15 +26,15 @@ module manticore.localstorage {
                     val = message.defaultValue;
                 }
                 
-                localPort.postMessage(ls.dataMessage(message.key, val));
+                reply(localPort, ev, ls.dataMessage(message.key, val));
             }
             else if (ls.isLocalStoragePutMessage(message)) {
                 localStorage.setItem(message.key, message.value);
-                localPort.postMessage(ls.dataMessage(message.key, localStorage.getItem(message.key))); 
+                reply(localPort, ev, ls.dataMessage(message.key, localStorage.getItem(message.key))); 
             }      
             else if (ls.isLocalStorageDeleteMessage(message)) {
                 localStorage.removeItem(message.key);
-                localPort.postMessage(ls.dataMessage(message.key, undefined));
+                reply(localPort, ev, ls.dataMessage(message.key, undefined));
             }  
         }
         

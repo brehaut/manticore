@@ -3,10 +3,12 @@
 /// <reference path="strings.ts" />
 /// <reference path="smart-filters.tsx" />
 /// <reference path="manual-selection.tsx" />
+/// <reference path="../../common/event.ts" />
 
 module manticore.ui.filters {
     "use strict";
     import _ = manticore.ui.strings._; 
+    import Event = event.Event;
 
 
     export class FilterStore {

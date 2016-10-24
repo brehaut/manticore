@@ -93,9 +93,6 @@ module manticore.ui.results {
     }
 
     export class Results extends React.Component<ResultsProps, ResultsState> {
-        public onRequestGenerate = new Event<null>();
-
-
         constructor(props: ResultsProps) {
             super(props);
 
@@ -138,7 +135,6 @@ module manticore.ui.results {
         }
 
         private generateClicked() {
-            this.onRequestGenerate.trigger(null);
             if (this.props.onRequestGenerate) this.props.onRequestGenerate();
         }
     }
