@@ -5,7 +5,7 @@ module manticore.data {
     export type MonsterScale = "mook" | MonsterSize;
     
                               // name, level, size,           , type ,  tags
-    export type MonsterRecord = [string, number, data.MonsterSize, string, string[], number|undefined];
+    export type MonsterRecord = [string, number, data.MonsterSize, string, string[], number];
     
     export type DataSet = {[index:string]: MonsterRecord[]};
     
@@ -17,7 +17,7 @@ module manticore.data {
         readonly scale: MonsterScale
         readonly attributes: string[];
         readonly book:string;
-        readonly pageNumber?: number;
+        readonly pageNumber: number;
     }
         
     export function newMonster(name:string, 
@@ -26,7 +26,7 @@ module manticore.data {
                                kind: string,
                                attributes: string[],
                                book:string,
-                               pageNumber?: number) 
+                               pageNumber: number) 
                               : Monster {
         var scale:MonsterScale = (kind === "mook") ? "mook" : size;
         

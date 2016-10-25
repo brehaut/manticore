@@ -16,7 +16,7 @@ module manticore.bestiary {
                               kind:string,
                               attributes: string[],
                               book: string,
-                              pageNumber: number | undefined,
+                              pageNumber: number,
                               price:number) 
                               : PricedMonster { 
         // type hint to convince the compiler that we are going to mix in the new values                                  
