@@ -37,7 +37,7 @@ function flattenEncounterGroups(groups) {
 
 
 describe("bestiary", () => {
-  property("allocations are all under party price", party, monsters, (party, monsters) => {
+  property("encounters are under party price", party, monsters, (party, monsters) => {
     const encounterGroups = flattenEncounterGroups(manticore.allocator.allocationsForParty(party, monsters));
     return _.every(encounterGroups, encounter =>  _.sum(_.map(encounter, alloc => alloc.cost)) <= manticore.costs.priceParty(party.size));
   });
