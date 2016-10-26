@@ -31,10 +31,15 @@ const monster = jsc.record({
 const monsters = jsc.array(monster);
 
 
+function flattenEncounterGroups(groups) {
+  return _.flatten(groups);
+}
+
+
 describe("bestiary", () => {
   property("allocations are all under party price", party, monsters, (party, monsters) => {
-    console.log(party, monsters, manticore.bestiary.allocationsForParty(party, monsters));
-    return false
+    const encounterGroups = flattenEncounterGroups(manticore.allocator.allocationsForParty(party, monsters));
+    return _.every(encounterGroups, encounter =>  _.sum(_.map(encounter, alloc => alloc.cost)) <= manticore.costs.priceParty(party.size));
   });
 
   property("allocations don't repeat", () =>
