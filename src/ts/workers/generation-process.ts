@@ -1,4 +1,4 @@
-/// <reference path="../common/bestiary.ts" />
+/// <reference path="../common/allocator.ts" />
 /// <reference path="../common/data.ts" />
 
 module manticore.workers.processing {
@@ -9,7 +9,7 @@ module manticore.workers.processing {
     onmessage = (message:ProcessingMessageEvent) => {
         const [party, monsters] = message.data;
         
-        postMessage(bestiary.allocationsForParty(party, monsters));
+        postMessage(allocator.allocationsForParty(party, monsters));
         close();
     };
 } 
