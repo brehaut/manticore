@@ -1,4 +1,5 @@
 /// <reference path="../../common/messaging.ts" />
+/// <reference path="../../common/data.ts" />
 
 module manticore.workers.dataAccess.dataset {
     import reply = manticore.reply.reply; 
@@ -26,17 +27,15 @@ module manticore.workers.dataAccess.dataset {
    
     
        
-    const dataset = Promise.all<string>([
+    const dataset:Promise<data.DataSet> = Promise.all<string>([
         awaitAjax("../../static/data/bestiary.json"),
         awaitAjax("../../static/data/custom.json")
             .then<string>(resp => Promise.resolve<string>(resp), 
                           _ => Promise.resolve<string>("{}")
                          )
     ])
-    // this looks wacky, but is due to the additional arguments of then conflicting
-    // with the optional arguments parse
-        .then<any[]>((texts:string[]) => texts.map((s) => JSON.parse(s))) 
-        .then<any>(mergeWith<any[]>((a, b) => a.concat(b)))
+        .then(texts => texts.map((s) => JSON.parse(s) as data.DataSet)) 
+        .then(mergeWith<data.MonsterRecord[]>((a, b) => a.concat(b)))
     ;
     
 
