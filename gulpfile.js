@@ -26,7 +26,8 @@ var generationWorkerProject = ts({
     removeComments: true,
     strictNullChecks: true,
     noImplicitAny: true,
-    lib: ["webworker", "es5"]
+    targey: "es5",
+    lib: ["webworker", "es6"]
 })
 
 var dataAccessWorkerProject = ts({
@@ -35,7 +36,8 @@ var dataAccessWorkerProject = ts({
     removeComments: true,
     strictNullChecks: true,
     noImplicitAny: true,
-    lib: ["webworker", "es5"]
+    targey: "es5",
+    lib: ["webworker", "es6"]
 })
 
 
