@@ -32,11 +32,11 @@ module manticore.appcache {
         }
 
         return new Promise<boolean>((resolve, reject) => {
-            confirm.querySelector(".action").addEventListener("click", (e) => {
+            confirm.querySelector(".action")!.addEventListener("click", (e) => {
                 remove();
                 resolve(true);
             });
-            confirm.querySelector(".close").addEventListener("click", remove);
+            confirm.querySelector(".close")!.addEventListener("click", remove);
         }); 
     }
     

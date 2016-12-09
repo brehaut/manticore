@@ -41,7 +41,7 @@ module manticore.ui {
             // temporary kludge
             this.props.dataAccess.addEventListener("message", (message) => {
                 if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
-                    this.setState({partyInfoCache: message.data.party} as ApplicationState);
+                    this.setState({partyInfoCache: message.data.party});
                 }
             });
             this.props.dataAccess.postMessage(messaging.dataAccess.partyGetMessage());
@@ -57,7 +57,7 @@ module manticore.ui {
 
         private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
             if (messaging.dataAccess.isBestiaryData(message)) {
-                this.setState({ catalog: bestiary.createBestiary(message.dataset) } as ApplicationState);
+                this.setState({ catalog: bestiary.createBestiary(message.dataset) });
             }
             else {
                 console.warn("Unexpected message", message);
@@ -100,7 +100,7 @@ module manticore.ui {
 
             this.props.allocator(this.state.partyInfoCache,
                                  selection)
-                .then(alloc => this.setState({generatedEncounters: alloc} as any));
+                .then(alloc => this.setState({generatedEncounters: alloc}));
         }
     }
 

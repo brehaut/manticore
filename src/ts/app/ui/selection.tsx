@@ -49,7 +49,7 @@ module manticore.ui.filters {
             super(props);
 
             this.props.store.onChanged.register(_ => {
-                this.setState({ filters: this.props.store.getFilters()} as SelectionState);
+                this.setState({ filters: this.props.store.getFilters()});
             });
 
             this.state = { 
@@ -105,7 +105,7 @@ module manticore.ui.filters {
         }
 
         private switchMode(mode: SelectionMode) {
-            this.setState({mode: mode} as SelectionState);
+            this.setState({mode: mode});
         }
     }
 
