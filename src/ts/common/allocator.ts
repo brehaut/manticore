@@ -71,25 +71,32 @@ module manticore.allocator {
     }
 
 
-    function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {
-        const allAllocations:MonsterAllocation[][] = [];     
+    function* take<T>(iter: IterableIterator<T>, max: number): IterableIterator<T> {
+        let count = 0;
+        for (const v of iter) {        
+            yield v;
+            count += 1;
+            if (count >= max) return;
+        }
+    }
+
+
+    function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {        
         const allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
 
-        function allocate(remainingPoints:number, 
+        function* allocate(remainingPoints:number, 
                           monstersIdx:number, 
                           acc:MonsterAllocation[],
                           typeCount = 0,
-                          territorialSeen=false) {
-
-            // cap total generations at 10000; thats already getting silly
-            if (allAllocations.length == 10000) throw { message: "Ran too long; Results truncated" };
-
+                          territorialSeen=false): IterableIterator<MonsterAllocation[]> {
             // if we are out of monsters, or have run out 
             // of points to spend, then stop recursing.
             // we check points first, so that we can add the allocation to 
             // the list even if we have run out of monsters
             if (remainingPoints < allowedUnspent) {
-                if (acc.length > 0) allAllocations[allAllocations.length] = acc;
+                if (acc.length > 0) {
+                    yield acc;
+                }
                 return;
             }
 
@@ -114,7 +121,7 @@ module manticore.allocator {
             let cur = acc;
 
             // skip this monster
-            allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
+            yield* allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
 
             // produce allocations for all the available numbers of this monster
             for (var i = 0, j = repeats.length; i < j; i++) {
@@ -123,19 +130,14 @@ module manticore.allocator {
 
                 cur[cur.length] = alloc;
 
-                allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
-                         typeCount + 1, territorialSeen);
+                yield* allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
+                                typeCount + 1, territorialSeen);
             }
         }
 
-        try {
-            allocate(points, 0, []);
-        }
-        catch (ex) { // produced more than the maximum number of results.
-            // pass;  
-        }
 
-        return groupMonsters(allAllocations);
+
+        return groupMonsters(Array.from<MonsterAllocation[]>(take(allocate(points, 0, []), 10000)));
     }
 
 

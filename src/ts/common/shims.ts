@@ -58,7 +58,7 @@ function awaitAjax(url:string, method?:string):Promise<string> {
 
 if (!Array.prototype.filter)
 {
-  Array.prototype.filter = function(fun /*, thisArg */)
+  Array.prototype.filter = function(fun:any /*, thisArg */)
   {
     "use strict";
 

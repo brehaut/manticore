@@ -18,6 +18,7 @@ var uiProject = ts({
     lib: ["es6", "dom"],
     strictNullChecks: true,
     noImplicitAny: true,
+    downlevelIteration: true
 });
 
 var generationWorkerProject = ts({
@@ -26,7 +27,8 @@ var generationWorkerProject = ts({
     removeComments: true,
     strictNullChecks: true,
     noImplicitAny: true,
-    targey: "es5",
+    target: "es5",
+    downlevelIteration: true,
     lib: ["webworker", "es6"]
 })
 
@@ -36,7 +38,8 @@ var dataAccessWorkerProject = ts({
     removeComments: true,
     strictNullChecks: true,
     noImplicitAny: true,
-    targey: "es5",
+    target: "es5",
+    downlevelIteration: true,
     lib: ["webworker", "es6"]
 })
 

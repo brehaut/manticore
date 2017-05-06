@@ -88,7 +88,7 @@ module manticore.costs {
     }
 
 
-    function relativeCost(relativeLevel: number) {
+    function relativeCost(relativeLevel: number): number | null{
         switch (relativeLevel) {
         case -2: return 2;
         case -1: return 3;
@@ -97,7 +97,7 @@ module manticore.costs {
         case 2: return 8;
         case 3: return 12;
         case 4: return 16;
-        default: return null;
+        default: return null
         }
     }
 
@@ -155,6 +155,6 @@ module manticore.costs {
 
 
     export function priceParty(characters:number): number {
-        return characters * scaleFactor("normal", 1) * relativeCost(0);
+        return characters * scaleFactor("normal", 1) * (relativeCost(0)!);
     }
 }
