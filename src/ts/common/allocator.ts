@@ -1,6 +1,7 @@
 /// <reference path="costs.ts" />
 /// <reference path="data.ts" />
 /// <reference path="bestiary.ts" />
+/// <reference path="iter.ts" />
 
 
 module manticore.allocator {    
@@ -33,52 +34,25 @@ module manticore.allocator {
 
     // allocateMonster is the core algorithm of this application.
     // TODO: this should respect caps on monster numbers 
-    function repeatMonster(points: number, monster:PricedMonster):MonsterAllocation[] {
+    function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<MonsterAllocation> {
         var max = Math.floor(points / monster.price);
         if (monsterIsTerritorial(monster)) {
             max = Math.min(max, 1);
         }  
 
-        var repeats:MonsterAllocation[] = [];
         for (var i = 1; i <= max; i++) {
-            repeats[repeats.length] = new MonsterAllocation(monster, i);
-        }
-        return repeats;
-    }
-
-
-
-
-    function groupMonsters(allocations:data.Encounters): data.GroupedEncounters {
-        function genKey(encounter:data.Allocation[]): string {
-            return encounter.map(a => a.monster.name).join(";");
-        }
-
-        const groups:{[index:string]: data.Encounters} = {};
-
-        for (let i = 0, j = allocations.length; i < j; i++) {
-            const alloc = allocations[i];
-            const key = genKey(alloc);
-            if (!groups.hasOwnProperty(key)) groups[key] = [];
-            groups[key].push(alloc);
-        }
-
-        const result:data.GroupedEncounters = [];
-        for (let k in groups) if (groups.hasOwnProperty(k)) {
-            result[result.length] = groups[k];
-        }
-        return result;
-    }
-
-
-    function* take<T>(iter: IterableIterator<T>, max: number): IterableIterator<T> {
-        let count = 0;
-        for (const v of iter) {        
-            yield v;
-            count += 1;
-            if (count >= max) return;
+            yield new MonsterAllocation(monster, i);
         }
     }
+
+
+
+
+    function groupMonsters(allocations:Iterable<data.Allocation[]>): data.GroupedEncounters {        
+        const groups = iter.groupBy(allocations, encounter => encounter.map(a => a.monster.name).join(";"));
+        return Array.from(groups.values());
+    }
+
 
 
     function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {        
@@ -124,10 +98,8 @@ module manticore.allocator {
             yield* allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
 
             // produce allocations for all the available numbers of this monster
-            for (var i = 0, j = repeats.length; i < j; i++) {
+            for (const alloc of repeats) {
                 cur = acc.slice(); // copy array
-                var alloc:MonsterAllocation = repeats[i];
-
                 cur[cur.length] = alloc;
 
                 yield* allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
@@ -135,9 +107,7 @@ module manticore.allocator {
             }
         }
 
-
-
-        return groupMonsters(Array.from<MonsterAllocation[]>(take(allocate(points, 0, []), 10000)));
+        return groupMonsters(iter.take(allocate(points, 0, []), 10000));
     }
 
 
