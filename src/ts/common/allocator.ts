@@ -54,12 +54,41 @@ module manticore.allocator {
     }
 
 
+    // This class wraps up the behaviour of walking along a buffer, and allowing an
+    // algorithm to fork off the index so that multiple branches can be traversed at 
+    // same time
+    class ForkingBufferCursor<T> {
+        private index: number = 0;
 
-    function allocateMonsters(points:number, monsters:PricedMonster[]): data.GroupedEncounters {        
-        const allowedUnspent = Math.min.apply(null, monsters.map((m) => m.price));
+        constructor (private readonly buffer: T[]) {
+
+        }
+
+        public done(): boolean {
+            return this.index >= this.buffer.length;
+        }
+
+        public value(): T {
+            return this.buffer[this.index];
+        }
+
+        public next(): void {
+            this.index += 1;
+        } 
+
+        public forkAndNext(): ForkingBufferCursor<T> {
+            const ptr = new ForkingBufferCursor<T>(this.buffer);
+            ptr.index = this.index + 1;
+            return ptr;
+        }
+    }
+
+
+    function allocateMonsters(points:number, monstersArray:PricedMonster[]): data.GroupedEncounters {        
+        const allowedUnspent = Math.min.apply(null, monstersArray.map((m) => m.price));    
 
         function* allocate(remainingPoints:number, 
-                          monstersIdx:number, 
+                          monsters: ForkingBufferCursor<PricedMonster>,
                           acc:MonsterAllocation[],
                           typeCount = 0,
                           territorialSeen=false): IterableIterator<MonsterAllocation[]> {
@@ -78,36 +107,34 @@ module manticore.allocator {
             // exhausted the budget, move on.
             if (typeCount > MAXIMUM_TYPES) return;
             
-            if (monstersIdx >= monsters.length) return;
+            if (monsters.done()) return;
 
             // recursive behaviour follows
             // skip any solitary monsters if we have already encountered a solitary monster
             // TODO: clean up this logic to work for any kind on tracked constraint
-            let monster = monsters[monstersIdx]
-            while (territorialSeen && monsterIsTerritorial(monster)) {
-                monstersIdx += 1;
-                if (monstersIdx >= monsters.length) return;
-                monster = monsters[monstersIdx];
+            while (territorialSeen && monsterIsTerritorial(monsters.value())) {
+                monsters.next();
+                if (monsters.done()) return;
             }
-            territorialSeen = territorialSeen || monsterIsTerritorial(monster);
+            territorialSeen = territorialSeen || monsterIsTerritorial(monsters.value());
 
-            const repeats = repeatMonster(remainingPoints, monster);
+            const repeats = repeatMonster(remainingPoints, monsters.value());
             let cur = acc;
 
             // skip this monster
-            yield* allocate(remainingPoints, monstersIdx + 1, cur, typeCount, territorialSeen); 
+            yield* allocate(remainingPoints, monsters.forkAndNext(), cur, typeCount, territorialSeen); 
 
             // produce allocations for all the available numbers of this monster
             for (const alloc of repeats) {
                 cur = acc.slice(); // copy array
                 cur[cur.length] = alloc;
 
-                yield* allocate(remainingPoints - alloc.cost, monstersIdx + 1, cur, 
+                yield* allocate(remainingPoints - alloc.cost, monsters.forkAndNext(), cur, 
                                 typeCount + 1, territorialSeen);
             }
         }
 
-        return groupMonsters(iter.take(allocate(points, 0, []), 10000));
+        return groupMonsters(iter.take(allocate(points, new ForkingBufferCursor(monstersArray), []), 10000));
     }
 
 
