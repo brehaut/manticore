@@ -652,6 +652,17 @@
     ["Laughing demon", 8, "normal", "troop", ["demon"], 0],
     ["Chaos hydra", 8, "huge", "wrecker", ["hydra", "dragon"], 0],
     ["Death knight", 8, "double strength", "wrecker", [], 0],
-    ["Taranar great stone", 8, "huge", "wrecker", ["taranar"], 0]
+    ["Taranar great stone", 8, "huge", "wrecker", ["taranar"], 0],
+
+    ["Jackal high mage", 9, "normal", "caster", ["jackal"], 0],
+    ["Rakshasa mastermind", 9, "double strength", "caster", ["rakshasa"], 0],
+    ["Briar tree", 9, "normal", "leader", ["plant"], 0],
+    ["Epic haunting", 9, "normal", "mook", [], 0],
+    ["Greenscale spine-back", 9, "normal", "spoiler", ["lizard"], 0],
+    ["Spell golum mage hunter", 9, "large", "spoiler", [], 0],
+    ["Briar elf warrior", 9, "normal", "troop", [], 0],
+    ["Eidolon in gaurdian form", 9, "triple strength", "troop", ["eidolon"], 0],
+    ["Great flux elemental", 9, "normal", "troop", ["elemental", "flux"], 0],
+    ["Great hubris devil", 9, "huge", "wrecker", ["hubris", "devil"], 0]
  ]
 }
