@@ -47,7 +47,7 @@ module manticore.ui.filters {
 
                     <div>
                         <AttributeFilter name="By Name" 
-                                         attributes={catalog.allNames()} 
+                                         attributes={catalog.allNames().sort()} 
                                          selected={filterSelections.name}
                                          counts={counts.names}
                                          onChanged={(attrs) => this.filterChanged("name", attrs)} />
