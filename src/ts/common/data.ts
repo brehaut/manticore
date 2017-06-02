@@ -1,8 +1,10 @@
 /// <reference path="types.d.ts" />
 
 module manticore.data {  
-    export type MonsterSize = "normal" | "large" | "huge";
-    export type MonsterScale = "mook" | MonsterSize;
+    export type MonsterSizeBase = "normal" | "large" | "huge" | "weakling" | "elite";
+    export type MonsterSize = MonsterSizeBase | "double strength" | "triple strength";
+    export type MonsterThreat = "normal" | "mook";
+    export type MonsterScale = [MonsterSizeBase, MonsterThreat];
     
                               // name, level, size,           , type ,  tags
     export type MonsterRecord = [string, number, data.MonsterSize, string, string[], number];
@@ -19,7 +21,15 @@ module manticore.data {
         readonly book:string;
         readonly pageNumber: number;
     }
-        
+
+    function normalizedScale(size: MonsterSize, kind: string): MonsterScale {
+        const threat = kind === "mook" ? "mook" : "normal";
+                
+        if (size === "double strength") return ["large", threat];
+        if (size === "triple strength") return ["huge", threat];
+        return [size, threat];
+    }
+
     export function newMonster(name:string, 
                                level:number,
                                size: MonsterSize,
@@ -27,15 +37,13 @@ module manticore.data {
                                attributes: string[],
                                book:string,
                                pageNumber: number) 
-                              : Monster {
-        var scale:MonsterScale = (kind === "mook") ? "mook" : size;
-        
+                              : Monster {           
         return {
             name: name,
             level: level,
             size: size,
             kind: kind,
-            scale: scale,
+            scale: normalizedScale(size, kind),
             attributes: attributes,
             book: book,
             pageNumber: pageNumber

@@ -24,18 +24,30 @@ module manticore.costs {
         return mon;    
     }
 
+    // the following two functions are used by sizeFactor to determine the 
+    // base scale cost of a given monster 
+    function applySize(size: data.MonsterSizeBase, base: number): number {
+        if (size === "normal") {
+            return base;
+        }
+        else if (size === "large") {
+            return base * 2;
+        }
+        else if (size === "huge") {
+            return base * 3;
+        }
+        else if (size === "elite") {
+            return base * 1.5;
+        }
+        else if (size === "weakling") {
+            return base * 0.5;
+        }
 
+        throw new Error("invalid size '" + size + "'");
+    }
 
-    // sizeFactor is the multiplier for relative cost by monster scale.
-    // mooks are equal to 1/5 of an ordinary monster from level 3 up,
-    // at level 1 they are equal to 1/3, and level 2 they are 1/4
-    //
-    // the size values for the non-mook sizes are calculated to result in
-    // an even number for a mook at each size.
-    function scaleFactor(scale: data.MonsterScale, partyLevel: number) {
-        var base = (3 * 4 * 5);
-
-        if (scale === "mook") {
+    function applyThreat(threat: data.MonsterThreat, base: number, partyLevel: number): number {
+        if (threat === "mook") {
             if (partyLevel === 1) {
                 return base / 3;
             }
@@ -46,17 +58,19 @@ module manticore.costs {
                 return base / 5;
             }
         }
-        else if (scale === "normal") {
-            return base;
-        }
-        else if (scale === "large") {
-            return base * 2;
-        }
-        else if (scale === "huge") {
-            return base * 3;
-        }
 
-        throw new Error("invalid scale '" + scale + "'");
+        return base;
+    }
+    // scaleFactor is the multiplier for relative cost by monster scale.
+    // mooks are equal to 1/5 of an ordinary monster from level 3 up,
+    // at level 1 they are equal to 1/3, and level 2 they are 1/4
+    //
+    // the size values for the non-mook sizes are calculated to result in
+    // an even number for a mook at each size.
+    function scaleFactor([scale, threat]: data.MonsterScale, partyLevel: number): number {
+        const base = (3 * 4 * 5);
+
+        return applyThreat(threat, applySize(scale, base), partyLevel);
     }
 
 
@@ -122,7 +136,7 @@ module manticore.costs {
 
         // monsters that are huge and 4 levels above the PCs are specifically
         // omitted from the table.
-        if (levelDiff === 4 && monster.scale === "huge") return false;
+        if (levelDiff === 4 && monster.scale[0] === "huge") return false;
         
         var cost = relativeCost(levelDiff);
         if (cost === null) return false;
@@ -155,6 +169,6 @@ module manticore.costs {
 
 
     export function priceParty(characters:number): number {
-        return characters * scaleFactor("normal", 1) * (relativeCost(0)!);
+        return characters * scaleFactor(["normal", "normal"], 1) * (relativeCost(0)!);
     }
 }

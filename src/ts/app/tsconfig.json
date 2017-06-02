@@ -6,6 +6,7 @@
         "jsx": "react",
         "strictNullChecks": true,
         "noImplicitUseStrict": true,
-        "noImplicitAny": false
+        "noImplicitAny": true,
+        "downlevelIteration": true
     }
 }
