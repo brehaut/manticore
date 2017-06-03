@@ -702,7 +702,9 @@
     ["Pyroclastic salamander", 12, "huge", "troop", [], 0],
     ["Greate Ghoul's Maw", 12, "huge", "wrecker", ["ghoul"], 0],
     ["Omniversal hubris devil", 12, "huge", "wrecker", ["devil", "hubris"], 0],
-    ["Redscale flamewing", 12, "normal", "wrecker", [], 0]
+    ["Redscale flamewing", 12, "normal", "wrecker", [], 0],
+
+    ["The Gold King", 13, "triple strength", "wrecker", ["fallen icon", "dwarf"], 0]
     
  ]
 }
