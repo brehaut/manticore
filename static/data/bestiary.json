@@ -704,7 +704,9 @@
     ["Omniversal hubris devil", 12, "huge", "wrecker", ["devil", "hubris"], 0],
     ["Redscale flamewing", 12, "normal", "wrecker", [], 0],
 
-    ["The Gold King", 13, "triple strength", "wrecker", ["fallen icon", "dwarf"], 0]
+    ["The Gold King", 13, "triple strength", "wrecker", ["fallen icon", "dwarf"], 0],
     
+    ["The Forest that Walks", 14, "huge", "spoiler", ["fallen icon"], 0],
+    ["Star-brain dungeon heart", 14, "huge", "wrecker", [], 0]
  ]
 }
