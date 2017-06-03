@@ -663,6 +663,24 @@
     ["Briar elf warrior", 9, "normal", "troop", [], 0],
     ["Eidolon in gaurdian form", 9, "triple strength", "troop", ["eidolon"], 0],
     ["Great flux elemental", 9, "normal", "troop", ["elemental", "flux"], 0],
-    ["Great hubris devil", 9, "huge", "wrecker", ["hubris", "devil"], 0]
+    ["Great hubris devil", 9, "huge", "wrecker", ["hubris", "devil"], 0],
+
+    ["Blackscale light-killer", 10, "normal", "archer", [], 0],
+    ["Bronze kingsguard", 10, "normal", "blocker", [], 0],
+    ["Most hungry ghost", 10, "normal", "blocker", [], 0],
+    ["Briar elf sorcerer", 10, "normal", "caster", [], 0],
+    ["Grandmother", 10, "triple strength", "caster", [], 0],
+    ["Rakshasa saint", 10, "double strength", "caster", [], 0],
+    ["Royal bearer", 10, "normal", "caster", [], 0],
+    ["Jackal high priest", 10, "double strength", "leader", ["jackal"], 0],
+    ["Frenzied wolf pack", 10, "normal", "mook", [], 0],
+    ["Greater summoned ghoul", 10, "normal", "mook", ["ghoul", "undead"], 0],
+    ["Gruesome death shade", 10, "normal", "mook", ["shade"], 0],
+    ["Loyal gatherer", 10, "normal", "mook", [], 0],
+    ["Opportunistic orc band", 10, "normal", "mook", ["orc"], 0],
+    ["Star-mask floating brain", 10, "normal", "mook", ["star-mask"], 0],
+    ["Fomori tyrant", 10, "normal", "spoiler", [], 0],
+    ["Gruesome reaver", 10, "double strength", "spoiler", [], 0],
+    ["Hellwarped brute", 10, "huge", "wrecker", [], 0]
  ]
 }
