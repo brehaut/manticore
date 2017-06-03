@@ -439,7 +439,7 @@
   ["Tarrasque", 15, "huge", "wrecker", ["beast"], 201]
  ],
 
- "Bestiary 2": [ 
+ "Bestiary 2 (preorder)": [ 
     ["Fast xombie", 0, "normal", "spoiler", ["xombie", "star-mask"], 0],
 
     ["Dainty lizard", 1, "normal", "mook", ["beast"], 0],
@@ -681,6 +681,28 @@
     ["Star-mask floating brain", 10, "normal", "mook", ["star-mask"], 0],
     ["Fomori tyrant", 10, "normal", "spoiler", [], 0],
     ["Gruesome reaver", 10, "double strength", "spoiler", [], 0],
-    ["Hellwarped brute", 10, "huge", "wrecker", [], 0]
+    ["Hellwarped brute", 10, "huge", "wrecker", [], 0],
+
+    ["Briar elf assassin", 11, "normal", "archer", [], 0],
+    ["Epic sunder wraith", 11, "normal", "blocker", [], 0],
+    ["Bluescale orb-bearer", 11, "normal", "caster", [], 0],
+    ["Rakshasa magician", 11, "normal", "caster", [], 0],
+    ["Fanatical druid circle", 11, "normal", "mook", [], 0],
+    ["Militant ranger squad", 11, "normal", "mook", [], 0],
+    ["Barrier beast", 11, "huge", "spoiler", [], 0],
+    ["Epic flux elemental", 11, "normal", "troop", ["elemental", "flux"], 0],
+
+    ["Star-mask brain zealot", 12, "normal", "archer", ["star-mask"], 0],
+    ["The purple dragon (epic)", 12, "huge", "caster", ["purple", "dragon"], 0],
+    ["Solar phoenix", 12, "huge", "caster", ["phoenix"], 0],
+    ["Star-mask omnipotent brain", 12, "huge", "caster", ["star-mask"], 0],
+    ["Briar elf sovereign", 12, "double strength", "leader", [], 0],
+    ["Treant avenger", 12, "normal", "mook", [], 0],
+    ["Fomori torturer", 12, "normal", "spoiler", [], 0],
+    ["Pyroclastic salamander", 12, "huge", "troop", [], 0],
+    ["Greate Ghoul's Maw", 12, "huge", "wrecker", ["ghoul"], 0],
+    ["Omniversal hubris devil", 12, "huge", "wrecker", ["devil", "hubris"], 0],
+    ["Redscale flamewing", 12, "normal", "wrecker", [], 0]
+    
  ]
 }
