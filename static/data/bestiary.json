@@ -566,7 +566,7 @@
 
     ["Coin collector zombie", 6, "normal", "blocker", ["undead", "zombie", "coin zombie"], 0],
     ["Gauntlet’s mascot", 6, "normal", "blocker", ["ebon gauntlet", "humanoid", "beast", "demon"], 0],
-    ["Spell golem warder", 6, "normal", "blocker", [], 0],
+    ["Spell golem warder", 6, "normal", "blocker", ["golem", "spell golem", "construct"], 0],
     ["Spriggan", 6, "normal", "blocker", ["fey", "humanoid"], 0],
     ["Ebon gauntlet eye", 6, "normal", "caster", ["ebon gauntlet", "humanoid"], 0],
     ["Glittering bearer", 6, "normal", "caster", ["gold king", "undead"], 0],
@@ -661,7 +661,7 @@
     ["Briar tree", 9, "normal", "leader", ["plant", "briar elf"], 0],
     ["Epic haunting", 9, "normal", "mook", ["ghost", "spirit", "undead"], 0],
     ["Greenscale spine-back", 9, "normal", "spoiler", ["kroma dragonic", "humanoid"], 0],
-    ["Spell golum mage hunter", 9, "large", "spoiler", [], 0],
+    ["Spell golem mage hunter", 9, "large", "spoiler", ["golem", "spell golem", "construct"], 0],
     ["Briar elf warrior", 9, "normal", "troop", ["humanoid", "elf", "briar elf"], 0],
     ["Eidolon in gaurdian form", 9, "triple strength", "troop", ["eidolon", "spirit"], 0],
     ["Great flux elemental", 9, "normal", "troop", ["elemental", "flux"], 0],
