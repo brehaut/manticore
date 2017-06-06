@@ -22,6 +22,7 @@ out/*
 static/js/worker.js
 static/js/data-access.js
 static/js/processing.js
+static/js/processing-fallback.js
 static/js/contrib.js
 static/css/common.css
 static/css/global.css

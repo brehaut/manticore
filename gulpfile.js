@@ -27,6 +27,17 @@ var generationWorkerProject = ts({
     removeComments: true,
     strictNullChecks: true,
     noImplicitAny: true,
+    target: "es6",
+    downlevelIteration: false,
+    lib: ["webworker", "es6", "ES2015.Iterable", 'ES2015.Generator']
+})
+
+var generationWorkerProjectFallback = ts({
+    noImplicitAny: false,
+    out: 'processing-fallback.js',
+    removeComments: true,
+    strictNullChecks: true,
+    noImplicitAny: true,
     target: "es5",
     downlevelIteration: true,
     lib: ["webworker", "es6"]
@@ -92,9 +103,15 @@ gulp.task('build:processing', function () {
         ;
 })
 
+gulp.task('build:processing:fallback', function () {
+	return gulp.src('src/ts/workers/generation-process.ts')
+        .pipe(generationWorkerProjectFallback)
+        .pipe(gulp.dest('static/js'))        
+        ;
+})
 
 
-gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:data-access', 'build:processing']);
+gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:data-access', 'build:processing', 'build:processing:fallback']);
 
 
 gulp.task('dist', ['build'], function () {
