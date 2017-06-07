@@ -1,6 +1,7 @@
 /// <reference path="../../vendor/react.d.ts" />
 
 /// <reference path="strings.ts" />
+/// <reference path="text.ts" />
 /// <reference path="attribute-filter.tsx" />
 
 module manticore.ui.filters {
@@ -47,7 +48,7 @@ module manticore.ui.filters {
 
                     <div>
                         <AttributeFilter name="By Name" 
-                                         attributes={catalog.allNames().sort()} 
+                                         attributes={catalog.allNames().sort(text.compareText)} 
                                          selected={filterSelections.name}
                                          counts={counts.names}
                                          onChanged={(attrs) => this.filterChanged("name", attrs)} />

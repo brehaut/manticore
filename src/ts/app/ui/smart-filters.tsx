@@ -61,7 +61,7 @@ module manticore.ui.filters {
                                          counts={counts.kinds}
                                          onChanged={(attrs) => this.filterChanged("kind", attrs)} />
                         <AttributeFilter name="Tags" 
-                                         attributes={catalog.allAttributes().sort()}
+                                         attributes={catalog.allAttributes().sort(text.compareText)}
                                          selected={filterSelections.attributes}
                                          counts={counts.attributes} 
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
