@@ -36,7 +36,7 @@ module manticore.ui {
             };
 
             // kludge
-            this.state.filterStore.onChanged.register((_:any) => this.forceUpdate());
+            this.state.filterStore.onChanged.register(({}) => this.forceUpdate());
 
             // temporary kludge
             this.props.dataAccess.addEventListener("message", (message) => {

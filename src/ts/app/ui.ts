@@ -27,7 +27,7 @@ module manticore.ui {
 
     // testing utility
     function awaitDelay<T>(t: number) {
-        return (v:T) => new Promise<T>((resolve, _) => setTimeout(() => resolve(v), t));
+        return (v:T) => new Promise<T>((resolve, {}) => setTimeout(() => resolve(v), t));
     }
 
 
@@ -37,7 +37,7 @@ module manticore.ui {
         loading.appendChild(document.createTextNode(_("Loading...")));
         root.appendChild(loading);
 
-        promise.then((_) => {
+        promise.then(({}) => {
             root.removeChild(loading);
         });
     }
@@ -53,7 +53,7 @@ module manticore.ui {
         dataAccessWorker.postMessage(messaging.dataAccess.linkLocalStorageMessage(), [localstorage.localStoragePort()]);
 
         ready
-            .then<void>((_) => {
+            .then<void>(({}) => {
                 new UI(root, allocator, dataAccessWorker);
             })
             .catch((e) => {
