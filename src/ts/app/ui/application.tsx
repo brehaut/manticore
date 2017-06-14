@@ -76,7 +76,7 @@ module manticore.ui {
 
         public render() {
             if (!this.state) {
-                return <div className="loading">{ _("Loading...") }</div>;
+                return <div className="loading">{ _`Loading...` }</div>;
             }
             return (
                 <div>

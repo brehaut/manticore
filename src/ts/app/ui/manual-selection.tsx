@@ -43,7 +43,7 @@ module manticore.ui.filters {
             return (
                 <div className="filters">
                     <header>
-                        <p>{_("[pick monsters]")}</p>
+                        <p>{_`[pick monsters]`}</p>
                     </header>
 
                     <div>

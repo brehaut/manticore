@@ -61,7 +61,7 @@ module manticore.ui.results {
 
                     <em>
                         <a href="#" onClick={e => {this.setState({open: !this.state.open}); e.preventDefault(); } }>
-                            {template(_("[{n} variations.]"), {n: encounters.length - 1})}
+                            {_`[${encounters.length - 1} variations.]`}
                         </a>
                     </em>
 
@@ -110,19 +110,20 @@ module manticore.ui.results {
             return (
                 <section className="C results">
                     <header>
-                        <h1>{ _("Encounters") }</h1>
-                        <p>{ _("[results summary]") }</p>
+                        <h1>{ _`Encounters` }</h1>
+                        <p>{ _`[results summary]` }</p>
                     </header>
 
-                    <div className="button generate" onClick={ (_) => this.generateClicked() }>{_("generate encounters") }</div>
+                    <div className="button generate" onClick={ (_) => this.generateClicked() }>{_`generate encounters` }</div>
 
                     <section className="C encounters">
                         <header>
-                            <h1>{ _("Possible encounters") }</h1>
-                            <p>{ template(_("{count} encounters for {num} level {level} characters."),
-                                          {count: this.props.generatedEncounters ? this.props.generatedEncounters.length : 0,
-                                           num: party.size,
-                                           level: party.level}) }
+                            <h1>{ _`Possible encounters` }</h1>
+                            <p>{ 
+                                _`${this.props.generatedEncounters 
+                                     ? this.props.generatedEncounters.length 
+                                     : 0} encounters for ${party.size} level ${party.level} characters.`
+                            }
                             </p>
                         </header>
 

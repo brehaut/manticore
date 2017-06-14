@@ -67,7 +67,7 @@ module manticore.ui.filters {
             
             return <div className={classname}>
                 <header>
-                    <h2>{this.props.name} <a className="reset" onClick={() => this.clearAll()}>{_("[reset]")}</a></h2>
+                    <h2>{this.props.name} <a className="reset" onClick={() => this.clearAll()}>{_`[reset]`}</a></h2>
                 </header>
 
                 <CheckboxList attributes={this.props.attributes} 

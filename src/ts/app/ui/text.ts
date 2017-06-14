@@ -19,6 +19,7 @@ module manticore.ui.text {
         }
     }
 
+
     export function normalizeText(text: string | null | undefined): string {
         if (text === undefined) return "";
         if (text === null) return "";
@@ -31,6 +32,7 @@ module manticore.ui.text {
             .replace(elidable, "")
             .trim();
     }
+    
 
     export function compareText(a: string, b: string) {
         const an = normalizeText(a);

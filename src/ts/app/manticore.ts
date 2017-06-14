@@ -57,7 +57,7 @@ module manticore {
         model.dataAccessWorker(),
         awaitContentLoaded()
             .then(_ => undefined)
-            .catch(e => console.error("An error occured bootstrapping the application", e)),
+            .catch(e => console.error(ui.strings._`An error occured bootstrapping the application`, e)),
         allocate
     );
 }

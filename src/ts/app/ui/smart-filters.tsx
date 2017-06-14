@@ -40,7 +40,7 @@ module manticore.ui.filters {
             return (
                 <div class="filters">
                     <header>
-                        <p>{_("[filter summary]")}</p>
+                        <p>{_`[filter summary]`}</p>
                     </header>
 
                     <div>
@@ -67,7 +67,7 @@ module manticore.ui.filters {
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
                     </div>
 
-                    <div class="selection-count">{_("Number selected ")} { this.props.totalSelectedCount }</div>
+                    <div class="selection-count">{_`Number selected` + ' '} { this.props.totalSelectedCount }</div>
                 </div>
             );
         }

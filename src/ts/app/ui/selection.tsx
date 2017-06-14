@@ -65,23 +65,23 @@ module manticore.ui.filters {
             return (
                 <section className="selection">
                     <header>
-                        <h1>{_("Filter monsters")}</h1>
+                        <h1>{_`Filter monsters`}</h1>
                         <p>
-                            {_("[select monsters]")}
+                            {_`[select monsters]`}
                         </p>
                     </header>
 
                     <div>
                         <p>
-                            {_("[selection mode]") + " "}
+                            {_`[selection mode]` + " "}
                             <a className={`mode-switch -filters ${mode === SelectionMode.Smart ? "-active" : ""}`}
                                onClick={() => this.switchMode(SelectionMode.Smart)}>
-                                {_("[use filters]")}
+                                {_`[use filters]`}
                             </a>
                             {" "}
                             <a className={`mode-switch -filters ${mode === SelectionMode.Manual ? "-active" : ""}`}
                                onClick={() => this.switchMode(SelectionMode.Manual)}>
-                                {_("[use pickers]")}
+                                {_`[use pickers]`}
                             </a>
                         </p>
                     </div>

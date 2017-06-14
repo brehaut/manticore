@@ -40,7 +40,7 @@ module manticore.ui.strings {
             "generate encounters": "Generate encounters",
             "more": "More…",
             "Number selected ": "Number of viable monsters selected: ",
-            "[{n} variations.]": "{n} variations.",
+            "[${0} variations.]": "${0} variations.",
         },
 
         normalization: {
@@ -48,7 +48,7 @@ module manticore.ui.strings {
         }
     });
     
-    export function _(key:string, locale = Locale.EN):string {
+    export function getText(key:string, locale = Locale.EN):string {
         if (text === undefined) return key;
         if (!text.has(locale)) return key;
 
@@ -64,5 +64,37 @@ module manticore.ui.strings {
 
         const info = text.get(locale)!;
         return info.normalization.prefixes || [];
+    }
+
+
+        function computeKey(strings: TemplateStringsArray, bits: number): string {
+        const ret: string[] = [];
+
+        for (let i = 0, j = strings.length; i < j; i++) {
+            ret.push(strings[i]);
+            if (i < bits) {
+                ret.push(`\${${i}}`);
+            }
+        }  
+
+        return ret.join("");
+    }
+
+
+    export function template(locale = Locale.EN):(v: TemplateStringsArray, ...bits:any[]) => string {
+        return (keyParts: TemplateStringsArray, ...bits:any[]) => {
+            const pattern = getText(computeKey(keyParts, bits.length));
+
+            return pattern.replace(/\$\{(\d+)\}/g, (s, i) => {
+                return bits[+i];
+            });
+        }
+    }
+
+    export function _(v:string | TemplateStringsArray, ...r: any[]): string {
+        if (typeof(v) === "string") {
+            return getText(v);
+        }
+        return template()(v, ...r);
     }
 }
