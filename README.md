@@ -6,9 +6,9 @@ A Typescript program to generate encounters for [*13th Age*](http://13thage.com/
 
 The easy way is to visit the online instance at [http://manticore.brehaut.net](http://manticore.brehaut.net).
 	
-If you want to run/develop it locally you will need [Node JS](https://nodejs.org/), [Gulp](http://gulpjs.com), and `make` installed to build this project:
+If you want to run/develop it locally you will need [Node JS](https://nodejs.org/), [Yarn](https://yarnpkg.com/en/), [Gulp](http://gulpjs.com), and `make` installed to build this project:
 
-    $ npm install
+    $ yarn
     $ gulp
 
 will install the typescript compiler in the project, and compile the typescript source and move it and other resources into the `dist` directory ready for deployment. 
