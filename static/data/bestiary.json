@@ -442,12 +442,12 @@
  "Bestiary 2": [ 
     ["Fast xombie", 0, "normal", "spoiler", ["xombie", "star-mask", "aberration"], 257],
 
-    ["Dainty lizard", 1, "normal", "mook", ["beast", "thunder lizard"], 0],
-    ["Meteorite xombie", 1, "normal", "mook", ["xombie", "star-mask", "aberration"], 0],
-    ["Rat swarm", 1, "normal", "spoiler", ["swarm", "beast", "elemental"], 0],
-    ["Eidolon in human form", 1, "triple strength", "troop", ["eidolon", "spirit", "humanoid"], 0],
-    ["Venomous snake", 1, "normal", "troop", ["beast", "elemental"], 0],
-    ["Badger", 1, "normal", "wrecker", ["beast", "elemental"], 0],
+    ["Dainty lizard", 1, "normal", "mook", ["beast", "thunder lizard"], 270],
+    ["Meteorite xombie", 1, "normal", "mook", ["xombie", "star-mask", "aberration"], 257],
+    ["Rat swarm", 1, "normal", "spoiler", ["swarm", "beast", "elemental"], 55],
+    ["Eidolon in human form", 1, "triple strength", "troop", ["eidolon", "spirit", "humanoid"], 46],
+    ["Venomous snake", 1, "normal", "troop", ["beast", "elemental"], 55],
+    ["Badger", 1, "normal", "wrecker", ["beast", "elemental"], 55],
 
     ["Kobold golden-demon warrior", 2, "normal", "archer", ["kobold", "golden-demon", "gold", "humanoid"], 0],
     ["Bloody shade", 2, "double strength", "mook", ["undead", "shade", "spirit"], 0],
