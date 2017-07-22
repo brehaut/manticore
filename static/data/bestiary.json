@@ -439,8 +439,8 @@
   ["Tarrasque", 15, "huge", "wrecker", ["beast"], 201]
  ],
 
- "Bestiary 2 (preorder)": [ 
-    ["Fast xombie", 0, "normal", "spoiler", ["xombie", "star-mask", "aberration"], 0],
+ "Bestiary 2": [ 
+    ["Fast xombie", 0, "normal", "spoiler", ["xombie", "star-mask", "aberration"], 257],
 
     ["Dainty lizard", 1, "normal", "mook", ["beast", "thunder lizard"], 0],
     ["Meteorite xombie", 1, "normal", "mook", ["xombie", "star-mask", "aberration"], 0],
