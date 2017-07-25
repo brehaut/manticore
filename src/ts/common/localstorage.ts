@@ -1,6 +1,3 @@
-/// <reference path="messaging.ts" />
-/// <reference path="reply.ts" />
-
 import { localstorage as ls } from "./messaging";
 import { reply } from "./reply";
 
