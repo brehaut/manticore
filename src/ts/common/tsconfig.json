@@ -8,6 +8,10 @@
         "strictNullChecks": true,
         "noImplicitUseStrict": true,
         "noImplicitAny": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "types": [
+            "react", 
+            "react-dom"
+        ]
     }
 }

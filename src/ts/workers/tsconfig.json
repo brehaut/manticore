@@ -5,6 +5,7 @@
         "strictNullChecks": true,
         "moduleResolution": "node",
         "module": "commonjs",
-        "lib": ["webworker", "es6"]
+        "lib": ["webworker", "es6"],
+        "types": [ ]
     }
 }

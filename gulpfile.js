@@ -26,7 +26,6 @@ var commonProject = ts.createProject('src/ts/common/tsconfig.json');
 var generationWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
 
 var generationWorkerProjectFallback = ts.createProject('src/ts/workers/tsconfig.json', {
-    out: 'processing-fallback.js',
     target: "es5",
     downlevelIteration: true,
     lib: ["webworker", "es6"],
