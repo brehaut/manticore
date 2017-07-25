@@ -9,7 +9,19 @@ var rm = require('gulp-rimraf');
 var path = require('path');
 
 
+const BUILD_PATH = "build/";
+const DIST_PATH = "dist/";
+const SRC_PATH = "src/";
+
+function resolve() {
+    return path.resolve(path.join.apply(path, arguments));
+}
+
+
+
 var uiProject = ts.createProject('src/ts/app/tsconfig.json');
+
+var commonProject = ts.createProject('src/ts/common/tsconfig.json');
 
 var generationWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
 
@@ -51,35 +63,35 @@ gulp.task('build:contrib', function () {
 })
 
 gulp.task('build:main', function () {
-	return gulp.src('src/ts/app/manticore.ts')
+	return gulp.src([resolve(SRC_PATH, '/ts/app/**/*.ts'), resolve(SRC_PATH, 'src/ts/app/**/*.tsx')])
         .pipe(uiProject())
-        .pipe(gulp.dest('static/js'))
+        .pipe(gulp.dest('static/js/main'))
         ;
 })
 
-gulp.task('build:data-access', function () {
-	return gulp.src('src/ts/workers/data-access.ts')
+gulp.task('build:common', function () {
+	return gulp.src([resolve(SRC_PATH, '/ts/common/**/*.ts'), resolve(SRC_PATH, '/ts/model/**/*.ts')])
+        .pipe(commonProject())
+        .pipe(gulp.dest('static/js/common'))
+        ;
+})
+
+gulp.task('build:workers', function () {
+	return gulp.src(resolve(SRC_PATH, '/ts/workers/**/*.ts'))
         .pipe(dataAccessWorkerProject())
-        .pipe(gulp.dest('static/js'))
+        .pipe(gulp.dest('static/js/workers'))
         ;
 })
 
-gulp.task('build:processing', function () {
-	return gulp.src('src/ts/workers/generation-process.ts')
-        .pipe(generationWorkerProject())
-        .pipe(gulp.dest('static/js'))
-        ;
-})
-
-gulp.task('build:processing:fallback', function () {
-	return gulp.src(['src/ts/workers/generation-process.ts'])
+gulp.task('build:workers:fallback', function () {
+	return gulp.src([resolve(SRC_PATH, '/ts/workers/**/*.ts')])
         .pipe(generationWorkerProjectFallback())
-        .pipe(gulp.dest('static/js'))        
+        .pipe(gulp.dest('static/js/workers-fallback'))        
         ;
 })
 
 
-gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:data-access', 'build:processing', 'build:processing:fallback']);
+gulp.task('build', ['styles', 'build:contrib', 'build:common', 'build:main', 'build:workers', 'build:workers:fallback']);
 
 
 gulp.task('dist', ['build'], function () {

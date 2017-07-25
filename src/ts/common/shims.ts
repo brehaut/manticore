@@ -1,7 +1,5 @@
-/// <reference path="types.d.ts" />
-
 // a utility for doing simple ajax requests.
-function awaitAjax(url:string, method?:string):Promise<string> {
+export function awaitAjax(url:string, method?:string):Promise<string> {
     return new Promise<any>((resolve, reject) => {
         var req:XMLHttpRequest | undefined;
 

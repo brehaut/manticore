@@ -3,10 +3,8 @@
         "target": "es5",
         "sourceMap": true,
         "strictNullChecks": true,
+        "moduleResolution": "node",
+        "module": "commonjs",
         "lib": ["webworker", "es6"]
-    },
-
-    "exclude": [
-        "node_modules"
-    ]
+    }
 }

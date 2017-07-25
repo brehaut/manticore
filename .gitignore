@@ -12,8 +12,7 @@ pom.xml
 .lein-repl-history
 /.nrepl-port
 out/*
-/static/js/main.js
-/static/js/main.js.map
+/static/js/**/*
 /static/data/custom.json
 /manticore-release.zip
 /manifest.appcache

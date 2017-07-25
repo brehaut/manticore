@@ -1,15 +1,13 @@
-/// <reference path="../common/allocator.ts" />
-/// <reference path="../common/data.ts" />
+import * as allocator from "../common/allocator"; 
+import * as data from "../common/data"; 
 
-module manticore.workers.processing {
-    interface ProcessingMessageEvent extends MessageEvent {
-        data: [data.IParty, data.Monster[]];
-    }
+interface ProcessingMessageEvent extends MessageEvent {
+    data: [data.IParty, data.Monster[]];
+}
+
+onmessage = (message:ProcessingMessageEvent) => {
+    const [party, monsters] = message.data;
     
-    onmessage = (message:ProcessingMessageEvent) => {
-        const [party, monsters] = message.data;
-        
-        postMessage(allocator.allocationsForParty(party, monsters));
-        close();
-    };
-} 
+    postMessage(allocator.allocationsForParty(party, monsters));
+    close();
+};
