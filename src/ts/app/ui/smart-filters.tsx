@@ -1,5 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
 /// <reference path="strings.ts" />
 /// <reference path="attribute-filter.tsx" />
 
@@ -38,7 +36,7 @@ module manticore.ui.filters {
             const counts = this.props.counts;
 
             return (
-                <div class="filters">
+                <div className="filters">
                     <header>
                         <p>{_`[filter summary]`}</p>
                     </header>
@@ -67,7 +65,7 @@ module manticore.ui.filters {
                                          onChanged={(attrs) => this.filterChanged("attributes", attrs)} />
                     </div>
 
-                    <div class="selection-count">{_`Number selected` + ' '} { this.props.totalSelectedCount }</div>
+                    <div className="selection-count">{_`Number selected` + ' '} { this.props.totalSelectedCount }</div>
                 </div>
             );
         }

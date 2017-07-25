@@ -4,5 +4,9 @@
         "sourceMap": true,
         "strictNullChecks": true,
         "lib": ["webworker", "es6"]
-    }
+    },
+
+    "exclude": [
+        "node_modules"
+    ]
 }

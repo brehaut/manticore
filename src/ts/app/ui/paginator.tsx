@@ -1,6 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
-
 module manticore.ui.paginator {
     
     function Pager(props: {currentPage: number, pages: number[], onPageClick: (n: number)=>void}) {

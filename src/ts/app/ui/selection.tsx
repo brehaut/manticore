@@ -1,5 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
 /// <reference path="strings.ts" />
 /// <reference path="smart-filters.tsx" />
 /// <reference path="manual-selection.tsx" />

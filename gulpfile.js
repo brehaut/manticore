@@ -9,50 +9,18 @@ var rm = require('gulp-rimraf');
 var path = require('path');
 
 
-var uiProject = ts({
-    noImplicitAny: false,
-    out: 'main.js',
-    removeComments: true,
-    jsx: "react",
+var uiProject = ts.createProject('src/ts/app/tsconfig.json');
+
+var generationWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
+
+var generationWorkerProjectFallback = ts.createProject('src/ts/workers/tsconfig.json', {
+    out: 'processing-fallback.js',
     target: "es5",
-    lib: ["es6", "dom"],
-    strictNullChecks: true,
-    noImplicitAny: true,
-    downlevelIteration: true
+    downlevelIteration: true,
+    lib: ["webworker", "es6"],
 });
 
-var generationWorkerProject = ts({
-    noImplicitAny: false,
-    out: 'processing.js',
-    removeComments: true,
-    strictNullChecks: true,
-    noImplicitAny: true,
-    target: "es6",
-    downlevelIteration: false,
-    lib: ["webworker", "es6", "ES2015.Iterable", 'ES2015.Generator']
-})
-
-var generationWorkerProjectFallback = ts({
-    noImplicitAny: false,
-    out: 'processing-fallback.js',
-    removeComments: true,
-    strictNullChecks: true,
-    noImplicitAny: true,
-    target: "es5",
-    downlevelIteration: true,
-    lib: ["webworker", "es6"]
-})
-
-var dataAccessWorkerProject = ts({
-    noImplicitAny: false,
-    out: 'data-access.js',
-    removeComments: true,
-    strictNullChecks: true,
-    noImplicitAny: true,
-    target: "es5",
-    downlevelIteration: true,
-    lib: ["webworker", "es6"]
-})
+var dataAccessWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
 
 
 gulp.task("clean",
@@ -84,28 +52,28 @@ gulp.task('build:contrib', function () {
 
 gulp.task('build:main', function () {
 	return gulp.src('src/ts/app/manticore.ts')
-        .pipe(uiProject)
+        .pipe(uiProject())
         .pipe(gulp.dest('static/js'))
         ;
 })
 
 gulp.task('build:data-access', function () {
 	return gulp.src('src/ts/workers/data-access.ts')
-        .pipe(dataAccessWorkerProject)
+        .pipe(dataAccessWorkerProject())
         .pipe(gulp.dest('static/js'))
         ;
 })
 
 gulp.task('build:processing', function () {
 	return gulp.src('src/ts/workers/generation-process.ts')
-        .pipe(generationWorkerProject)
+        .pipe(generationWorkerProject())
         .pipe(gulp.dest('static/js'))
         ;
 })
 
 gulp.task('build:processing:fallback', function () {
-	return gulp.src('src/ts/workers/generation-process.ts')
-        .pipe(generationWorkerProjectFallback)
+	return gulp.src(['src/ts/workers/generation-process.ts'])
+        .pipe(generationWorkerProjectFallback())
         .pipe(gulp.dest('static/js'))        
         ;
 })

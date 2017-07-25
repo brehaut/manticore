@@ -1,5 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
 /// <reference path="strings.ts" />
 
 module manticore.ui.party {
@@ -39,7 +37,7 @@ module manticore.ui.party {
             )
         }
 
-        public onChangeHandler(e:React.FormEvent) {
+        public onChangeHandler(e:React.FormEvent<{}>) {
             const computedValue = +(e.target as any).value;    
 
             if (this.props.onChanged) {

@@ -1,5 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
 /// <reference path="strings.ts" />
 /// <reference path="text.ts" />
 /// <reference path="attribute-filter.tsx" />

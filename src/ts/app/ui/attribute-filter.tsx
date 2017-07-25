@@ -1,5 +1,4 @@
 /// <reference path="strings.ts" />
-/// <reference path="../../vendor/react.d.ts" />
 
 module manticore.ui.filters {
     "use strict";    
@@ -29,7 +28,7 @@ module manticore.ui.filters {
             </ul>;
         }
 
-        private handleClick(e: React.MouseEvent, key: string) {
+        private handleClick(e: React.MouseEvent<{}>, key: string) {
             e.preventDefault();
             if (!this.props.onToggle) return;
             this.props.onToggle(key);
@@ -49,7 +48,7 @@ module manticore.ui.filters {
         selected: {[index: string]: boolean}
     }
 
-    export class AttributeFilter extends React.Component<AttributeFilterProps, undefined> {
+    export class AttributeFilter extends React.Component<AttributeFilterProps> {
         constructor(props: AttributeFilterProps) {
             super(props);
         }

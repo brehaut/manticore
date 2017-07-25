@@ -1,5 +1,3 @@
-/// <reference path="../../vendor/react.d.ts" />
-
 /// <reference path="strings.ts" />
 /// <reference path="paginator.tsx" />
 

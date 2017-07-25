@@ -105,6 +105,6 @@ module manticore.ui {
     }
 
     export function installApplication(el: HTMLElement, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
-        return ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as Application;
+        return (ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as any) as Application;
     }
 }

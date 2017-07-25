@@ -30,9 +30,9 @@ module manticore.workers.dataAccess.dataset {
     const dataset:Promise<data.DataSet> = Promise.all<string>([
         awaitAjax("../../static/data/bestiary.json"),
         awaitAjax("../../static/data/custom.json")
-            .then<string>(resp => Promise.resolve<string>(resp), 
-                          _ => Promise.resolve<string>("{}")
-                         )
+            .then<string, string>(resp => Promise.resolve<string>(resp), 
+                                  ({}) => Promise.resolve<string>("{}")
+                                 )
     ])
         .then(texts => texts.map((s) => JSON.parse(s) as data.DataSet)) 
         .then(mergeWith<data.MonsterRecord[]>((a, b) => a.concat(b)))

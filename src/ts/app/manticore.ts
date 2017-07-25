@@ -40,7 +40,7 @@ module manticore {
         return `static/js/processing${GENERATORS_AVAILABLE ? "" : "-fallback"}.js`;
     }
         
-    function allocate(party: data.IParty, monsters: data.Monster[]) {                
+    function allocate(party: data.IParty, monsters: data.Monster[]): Promise<data.GroupedEncounters> {                
         const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>(workerResource());
         
         return new Promise(resolve => {
