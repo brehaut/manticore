@@ -28,7 +28,7 @@ var generationWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
 var generationWorkerProjectFallback = ts.createProject('src/ts/workers/tsconfig.json', {
     target: "es5",
     downlevelIteration: true,
-    lib: ["webworker", "es6"],
+    lib: ["webworker", "es6"]
 });
 
 var dataAccessWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
