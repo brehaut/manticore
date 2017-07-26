@@ -1,3 +1,5 @@
+ /// <reference types="common" />
+
 /* the dataAccess worker wraps up network (and in future, indexdb) requests
  * to the raw bestiary data. 
  * 
@@ -5,7 +7,9 @@
  * (at least while Bestiary is still a class with methods)
  */
 
-import { reply, messaging } from "common"; 
+import reply = manticore.common.reply.reply; 
+import messaging = manticore.common.messaging; 
+
 
 import { DataSet } from "./data-access/dataset";
 import { Party } from "./data-access/Party";

@@ -1,8 +1,12 @@
-import { _ } from "./ui/strings"; 
 import * as React from "react";
+/// <reference types="common" />
+import data = manticore.common.data;
+import workers = manticore.common.typedWorkers;
 
-import { shims, data } from "common";
-import * as workers from "common/typed-workers";
+import { _ } from "./ui/strings"; 
+
+
+
 import * as appcache from "./appcache";
 import * as ui from "./ui";
 import * as model from "./data-access-worker";

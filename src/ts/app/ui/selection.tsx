@@ -1,8 +1,9 @@
 import * as React from "react";
+/// <reference types="common" />
+import bestiary = manticore.common.bestiary;
+import Event = manticore.common.event.Event;
 
 import { _ } from "./strings";
-import { Event } from "common/event";
-import { bestiary } from "common/";
 
 import { SmartFilter } from "./smart-filters";
 import { ManualSelection } from "./manual-selection";

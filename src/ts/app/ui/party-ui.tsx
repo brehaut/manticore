@@ -1,10 +1,12 @@
 "use strict";
 import * as React from "react";
+/// <reference types="common" />
+import data = manticore.common.data;
+import dataAccess = manticore.common.messaging.dataAccess;
 
 import { _ } from "./strings";
 import * as model from "../data-access-worker";
-import { data } from "common/";
-import { dataAccess } from "common/messaging";
+
 
 interface NumericInputProps {
     label: string;

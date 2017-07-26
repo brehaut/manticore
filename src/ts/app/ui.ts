@@ -1,11 +1,14 @@
+/// <reference types="common" />
+import data = manticore.common.data;
+import messaging = manticore.common.messaging;
+import dataAccess = messaging.dataAccess;
+import workers = manticore.common.typedWorkers;
+import localStoragePort = manticore.common.localstorage.localStoragePort;
+
 import { _ } from "./ui/strings";
-import { shims, data } from "common";
-import * as workers from "common/typed-workers";
 import * as model from "./data-access-worker";
 import * as ui from "./ui";
 import { installApplication } from "./ui/application";
-import { dataAccess } from "common/messaging";
-import { localStoragePort } from "common/localstorage";
 
 
 // UI represents the whole UI, and is constructed of a series

@@ -1,6 +1,8 @@
 
+/// <reference types="common" />
+import messaging = manticore.common.messaging;
+
 import * as storage from "../libs/storage";
-import { messaging } from "common";
 
 const PARTY_STATE_KEY = "state.party";
 

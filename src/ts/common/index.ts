@@ -1,23 +1,14 @@
-import * as allocator from './allocator';
-import * as bestiary from './bestiary';
-import * as costs from './costs';
-import * as data from './data';
-import * as event from './event';
-import * as localstorage from './localstorage';
-import * as messaging from './messaging';
-import * as reply from './reply';
-import * as shims from './shims';
-import * as typedWorkers from './typed-workers';
+/// <reference path="allocator.ts" />';
+/// <reference path="bestiary.ts" />';
+/// <reference path="costs.ts" />';
+/// <reference path="data.ts" />';
+/// <reference path="event.ts" />';
+/// <reference path="localstorage.ts" />';
+/// <reference path="messaging.ts" />';
+/// <reference path="reply.ts" />';
+/// <reference path="shims.ts" />';
+/// <reference path="typed-workers.ts" />';
 
-export { 
-    allocator,
-    bestiary,
-    costs,
-    data,
-    event,
-    localstorage,
-    messaging,
-    reply,
-    shims,
-    typedWorkers
-};
+module manticore.common {
+    
+}

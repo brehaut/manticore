@@ -1,50 +1,50 @@
-// a utility for doing simple ajax requests.
-export function awaitAjax(url:string, method?:string):Promise<string> {
-    return new Promise<any>((resolve, reject) => {
-        var req:XMLHttpRequest | undefined;
+module manticore.common.shims {
+  // a utility for doing simple ajax requests.
+  export function awaitAjax(url:string, method?:string):Promise<string> {
+      return new Promise<any>((resolve, reject) => {
+          var req:XMLHttpRequest | undefined;
 
-        if ((<any>self).XMLHttpRequest) {
-	          req = new XMLHttpRequest();
-        }
-        else {
-            return reject(new Error("No XMLHttpReqest support"));
-        }
+          if ((<any>self).XMLHttpRequest) {
+              req = new XMLHttpRequest();
+          }
+          else {
+              return reject(new Error("No XMLHttpReqest support"));
+          }
 
-        function cleanup() {
-            if (req === undefined) return;
-            delete req.onreadystatechange;
-            delete req.onerror;
-            delete req.ontimeout;
-            req = undefined;
-        }
-        
-        req.onreadystatechange = () => {
-            if (req === undefined) return;
-            if (req.readyState < 4) return;
-            
-            if (req.status === 200) {
-                resolve(req.responseText)
-            }
-            else {
-                reject(req);
-            }
+          function cleanup() {
+              if (req === undefined) return;
+              delete req.onreadystatechange;
+              delete req.onerror;
+              delete req.ontimeout;
+              req = undefined;
+          }
+          
+          req.onreadystatechange = () => {
+              if (req === undefined) return;
+              if (req.readyState < 4) return;
+              
+              if (req.status === 200) {
+                  resolve(req.responseText)
+              }
+              else {
+                  reject(req);
+              }
 
-            cleanup();            
-        };
+              cleanup();            
+          };
 
-        if (req.onerror) {
-           req.onerror = reject;
-        }
-        if (req.ontimeout) {
-            req.ontimeout = reject;
-        }
+          if (req.onerror) {
+            req.onerror = reject;
+          }
+          if (req.ontimeout) {
+              req.ontimeout = reject;
+          }
 
-        req.open(method || "GET", url, true);
-        req.send();
-    });
+          req.open(method || "GET", url, true);
+          req.send();
+      });
+  }
 }
-
-
 
 
 

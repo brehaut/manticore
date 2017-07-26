@@ -60,7 +60,7 @@ var uiProject = new ExecutionUnit('src/ts/app/tsconfig.json', {
 });
 
 var commonProject = new ExecutionUnit('src/ts/common/tsconfig.json', { 
-    entrypoint: "js/common/index.js", 
+    entrypoint: "js/common/*.js", 
     unitName: "common.js" 
 });
 

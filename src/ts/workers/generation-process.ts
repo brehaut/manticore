@@ -1,4 +1,7 @@
-import { allocator, data } from "common"; 
+/// <reference types="common" />
+import data = manticore.common.data;
+import allocator = manticore.common.allocator;
+
 
 interface ProcessingMessageEvent extends MessageEvent {
     data: [data.IParty, data.Monster[]];

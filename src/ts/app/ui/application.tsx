@@ -1,12 +1,14 @@
 "use strict";    
-
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+/// <reference types="common" />
 
-import * as common from "common";
-import { bestiary, data, messaging } from "../../../../build/types/common";
-import { Allocator, IParty } from "common/data";
-
+import common = manticore.common;
+import bestiary = manticore.common.bestiary;
+import data = manticore.common.data;
+import messaging = manticore.common.messaging;
+import Allocator = data.Allocator;
+import IParty = data.IParty;
 
 import { _ } from "./strings"; 
 import * as strings from "./strings";

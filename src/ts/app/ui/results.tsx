@@ -1,9 +1,11 @@
 "use strict";
 import * as React from "react";
+/// <reference types="common" />
+import data = manticore.common.data;
 
 import { _ } from "./strings";
 import { Paginator } from "./paginator";
-import { data } from "common";
+
 
 function Allocation(props: { alloc: data.Allocation }) {
     const alloc = props.alloc;

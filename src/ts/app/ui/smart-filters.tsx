@@ -1,10 +1,11 @@
 "use strict";    
-
 import * as React from "react";
+/// <reference types="common" />
+import bestiary = manticore.common.bestiary;
+
 import { AttributeFilter } from "./attribute-filter";
 import { _ } from "./strings";
 import * as text from "./text";
-import { bestiary } from "common/";
 
 
 interface FilterSelections  {

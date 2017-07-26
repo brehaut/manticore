@@ -9,9 +9,9 @@
         "lib": ["webworker", "es6", "es2015.iterable", "es2015.generator"],
         "types": [ "common" ],
         "baseUrl": "./",
-        "paths": {
-            "*": ["*", "../../../build/types/*"]
-        }
+        "typeRoots": [
+            "../../../build/types/"
+        ]
     }
 }
 

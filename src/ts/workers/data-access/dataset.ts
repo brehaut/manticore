@@ -1,6 +1,9 @@
-import { data, messaging, reply } from "common";
-import { awaitAjax } from "common/shims";
-
+/// <reference types="common" />
+import common = manticore.common;
+import data = manticore.common.data;
+import messaging = manticore.common.messaging;
+import reply = manticore.common.reply.reply;
+import awaitAjax = manticore.common.shims.awaitAjax;
 
 function mergeWith<T>(merge:(a:T, b:T) => T) {
     return (os:{[index:string]: T}[]):{[index:string]: T} => {

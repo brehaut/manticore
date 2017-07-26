@@ -1,7 +1,10 @@
-import * as reply from "common/reply";
-import * as event from "common/event";
-import * as messaging from "common/messaging";
-import { localstorage } from "common/messaging";
+/// <reference types="common" />
+import common = manticore.common;
+import event = manticore.common.event;
+import messaging = manticore.common.messaging;
+import reply = manticore.common.reply.reply;
+
+import localstorage = messaging.localstorage;
 
 export class Storage {
     private localStoragePort?: MessagePort;
