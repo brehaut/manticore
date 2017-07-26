@@ -8,12 +8,12 @@ import * as strings from "./strings";
 import * as common from "./common";
 import { FilterStore, Selection } from "./selection";
 
-import { DataAccessWorker } from "../../model/bestiary";
+import { DataAccessWorker } from "../data-access-worker";
 import * as bestiary from "../../common/bestiary";
 import { Allocator, IParty } from "../../common/data";
 import * as data from "../../common/data";
 import * as messaging from "../../common/messaging";
-import * as model from "../../model/bestiary";
+import * as model from "../data-access-worker";
 import { Party } from "./party-ui";
 import { Results } from "./results";
 

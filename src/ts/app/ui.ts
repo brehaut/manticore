@@ -2,7 +2,7 @@ import { _ } from "./ui/strings";
 import * as shims from "../common/shims";
 import * as data from "../common/data";
 import * as workers from "../common/typed-workers";
-import * as model from "../model/bestiary";
+import * as model from "./data-access-worker";
 import * as ui from "./ui";
 import { installApplication } from "./ui/application";
 import { dataAccess } from "../common/messaging";

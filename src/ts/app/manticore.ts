@@ -6,7 +6,7 @@ import * as data from "../common/data";
 import * as workers from "../common/typed-workers";
 import * as appcache from "./appcache";
 import * as ui from "./ui";
-import * as model from "../model/bestiary";
+import * as model from "./data-access-worker";
 
 function awaitContentLoaded() {
     return new Promise((resolve, reject) => {

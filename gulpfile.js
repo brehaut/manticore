@@ -1,3 +1,4 @@
+"use strict";
 var gulp = require('gulp');
 var concat = require("gulp-concat");
 var uglify = require("gulp-uglify");
@@ -7,8 +8,10 @@ var merge = require('merge2');
 var manifest = require("gulp-manifest");
 var rm = require('gulp-rimraf');
 var path = require('path');
+var webpack = require('webpack-stream');
 
 
+const STATIC_PATH = "static/";
 const BUILD_PATH = "build/";
 const DIST_PATH = "dist/";
 const SRC_PATH = "src/";
@@ -19,19 +22,72 @@ function resolve() {
 
 
 
-var uiProject = ts.createProject('src/ts/app/tsconfig.json');
 
-var commonProject = ts.createProject('src/ts/common/tsconfig.json');
+class ExecutionUnit {    
+    constructor(tsconfig, unitInfo, override) {
+        const entrypoint = unitInfo.entrypoint;
+        const unitName = unitInfo.unitName;
 
-var generationWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
+        this.ts = ts.createProject(tsconfig, override);
+        this.entrypoint = resolve(BUILD_PATH, entrypoint);
+        this.unitName = unitName;        
+    }
 
-var generationWorkerProjectFallback = ts.createProject('src/ts/workers/tsconfig.json', {
+    gulpProcessor() {
+        return this.ts();
+    }
+
+    bundleScript() {
+        return gulp.src(this.entrypoint)
+            .pipe(webpack({                
+                output: {
+                    filename: this.unitName,                    
+                }
+            }))
+            .pipe(gulp.dest(DIST_PATH))
+    }
+}
+
+
+var uiProject = new ExecutionUnit('src/ts/app/tsconfig.json', { 
+    entrypoint: 'js/main/manticore.js',
+    unitName: "static/js/main.js" 
+});
+
+var commonProject = new ExecutionUnit('src/ts/common/tsconfig.json', { 
+    entrypoint: "js/common/lib.js", 
+    unitName: "static/js/common.js" 
+});
+
+var generationWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
+     entrypoint: 'js/workers/generation-process.js', 
+     unitName: "static/js/processing.js" 
+});
+
+var generationWorkerProjectFallback = new ExecutionUnit('src/ts/workers/tsconfig.json', { 
+    entrypoint: 'js/workers/generation-process.js', 
+    unitName: "static/js/processing-fallback.js"
+}, 
+{
     target: "es5",
     downlevelIteration: true,
     lib: ["webworker", "es6"]
 });
 
-var dataAccessWorkerProject = ts.createProject('src/ts/workers/tsconfig.json');
+var dataAccessWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
+    entrypoint: 'js/workers/data-access.js',
+    unitName: "static/js/data-access.js"
+});
+
+
+const units = [
+    commonProject,
+
+    uiProject,
+    generationWorkerProject,
+    generationWorkerProjectFallback,
+    dataAccessWorkerProject
+]
 
 
 gulp.task("clean",
@@ -62,30 +118,33 @@ gulp.task('build:contrib', function () {
 })
 
 gulp.task('build:main', function () {
-	return gulp.src([resolve(SRC_PATH, '/ts/app/**/*.ts'), resolve(SRC_PATH, 'src/ts/app/**/*.tsx')])
-        .pipe(uiProject())
-        .pipe(gulp.dest('static/js/main'))
+	return gulp.src([
+        resolve(SRC_PATH, '/ts/app/**/*.ts'), 
+        resolve(SRC_PATH, '/ts/app/**/*.tsx')
+    ])
+        .pipe(uiProject.gulpProcessor())
+        .pipe(gulp.dest(resolve(BUILD_PATH, '/js/main')))
         ;
 })
 
 gulp.task('build:common', function () {
 	return gulp.src([resolve(SRC_PATH, '/ts/common/**/*.ts'), resolve(SRC_PATH, '/ts/model/**/*.ts')])
-        .pipe(commonProject())
-        .pipe(gulp.dest('static/js/common'))
+        .pipe(commonProject.gulpProcessor())
+        .pipe(gulp.dest(resolve(BUILD_PATH, '/js/common')))
         ;
 })
 
 gulp.task('build:workers', function () {
 	return gulp.src(resolve(SRC_PATH, '/ts/workers/**/*.ts'))
-        .pipe(dataAccessWorkerProject())
-        .pipe(gulp.dest('static/js/workers'))
+        .pipe(dataAccessWorkerProject.gulpProcessor())
+        .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers')))
         ;
 })
 
 gulp.task('build:workers:fallback', function () {
 	return gulp.src([resolve(SRC_PATH, '/ts/workers/**/*.ts')])
-        .pipe(generationWorkerProjectFallback())
-        .pipe(gulp.dest('static/js/workers-fallback'))        
+        .pipe(generationWorkerProjectFallback.gulpProcessor())
+        .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers-fallback')))
         ;
 })
 
@@ -97,10 +156,13 @@ gulp.task('dist', ['build'], function () {
     function copy(src, dest) {
         return gulp.src(src).pipe(gulp.dest(dest));
     }
-    return merge([
+
+    const outputs = units.map(u => u.bundleScript()).concat([        
         copy('index.html', 'dist'),
         copy('static/**/*', 'dist/static'),
     ])
+
+    return merge(outputs)
 });
 
 
