@@ -1,4 +1,6 @@
 /// <reference types="common" />
+importScripts("common.js");
+
 import data = manticore.common.data;
 import allocator = manticore.common.allocator;
 

@@ -6,6 +6,7 @@
  * For now querying etc still occurs within the UI window process.
  * (at least while Bestiary is still a class with methods)
  */
+importScripts("common.js");
 
 import reply = manticore.common.reply.reply; 
 import messaging = manticore.common.messaging; 

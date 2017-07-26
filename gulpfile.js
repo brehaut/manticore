@@ -22,14 +22,36 @@ function resolve() {
 
 
 
+class TsConcatUnit {
+    constructor(tsconfig, unitInfo, override) {
+        const inFiles = unitInfo.entrypoint;
+        const outFile = unitInfo.unitName;
 
-class ExecutionUnit {    
+        this.ts = ts.createProject(tsconfig, override);
+        this.inFiles = inFiles instanceof Array ? inFiles.map(e => resolve(BUILD_PATH, e)) : resolve(BUILD_PATH, inFiles);
+        this.outFile = outFile;
+    }
+
+    gulpProcessor() {
+        return this.ts();
+    }
+
+    bundleScript() {
+        console.log("concat", this.inFiles, this.outFile, resolve(DIST_PATH, STATIC_PATH, '/js/'))
+        return gulp.src(this.inFiles)
+            .pipe(concat(this.outFile))
+            .pipe(gulp.dest(resolve(DIST_PATH, STATIC_PATH, '/js/')));
+    }
+}
+
+
+class TSExecutionUnit {    
     constructor(tsconfig, unitInfo, override) {
         const entrypoint = unitInfo.entrypoint;
         const unitName = unitInfo.unitName;
 
         this.ts = ts.createProject(tsconfig, override);
-        this.entrypoint = resolve(BUILD_PATH, entrypoint);
+        this.entrypoint = entrypoint instanceof Array ? entrypoint.map(e => resolve(BUILD_PATH, e)) : resolve(BUILD_PATH, entrypoint);
         this.unitName = unitName;       
     }
 
@@ -41,16 +63,15 @@ class ExecutionUnit {
         return gulp.src(this.entrypoint)
             .pipe(webpack({                
                 output: {
-                    filename: resolve(STATIC_PATH, "/js/", this.unitName),              
-                },
-                
+                    filename: resolve(STATIC_PATH, "/js/", this.unitName),                                  
+                },                
             }))
             .pipe(gulp.dest(DIST_PATH))
     }
 }
 
 
-var uiProject = new ExecutionUnit('src/ts/app/tsconfig.json', { 
+var uiProject = new TSExecutionUnit('src/ts/app/tsconfig.json', { 
     entrypoint: 'js/main/manticore.js',
     unitName: "main.js" 
 }, {
@@ -59,17 +80,31 @@ var uiProject = new ExecutionUnit('src/ts/app/tsconfig.json', {
     ]
 });
 
-var commonProject = new ExecutionUnit('src/ts/common/tsconfig.json', { 
-    entrypoint: "js/common/*.js", 
+var commonProject = new TsConcatUnit('src/ts/common/tsconfig.json', { 
+    entrypoint: [
+        // ordered for dependancy
+        "js/common/shims.js",
+        "js/common/data.js",
+        "js/common/event.js",
+        "js/common/reply.js",
+        "js/common/iter.js",
+        "js/common/typed-workers.js",
+        "js/common/costs.js",
+        "js/common/messaging.js",
+        "js/common/bestiary.js",
+        "js/common/allocator.js",
+        "js/common/localstorage.js",
+        "js/common/index.js",
+    ], 
     unitName: "common.js" 
 });
 
-var generationWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
+var generationWorkerProject = new TSExecutionUnit('src/ts/workers/tsconfig.json', {
      entrypoint: 'js/workers/generation-process.js', 
      unitName: "processing.js" 
 });
 
-var generationWorkerProjectFallback = new ExecutionUnit('src/ts/workers/tsconfig.json', { 
+var generationWorkerProjectFallback = new TSExecutionUnit('src/ts/workers/tsconfig.json', { 
     entrypoint: 'js/workers/generation-process.js', 
     unitName: "processing-fallback.js"
 }, 
@@ -82,7 +117,7 @@ var generationWorkerProjectFallback = new ExecutionUnit('src/ts/workers/tsconfig
     ]
 });
 
-var dataAccessWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
+var dataAccessWorkerProject = new TSExecutionUnit('src/ts/workers/tsconfig.json', {
     entrypoint: 'js/workers/data-access.js',
     unitName: "data-access.js"
 }, {
