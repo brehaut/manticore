@@ -1,6 +1,6 @@
 
 import * as storage from "../libs/storage";
-import * as messaging from "../../common/messaging";
+import { messaging } from "common";
 
 const PARTY_STATE_KEY = "state.party";
 

@@ -9,6 +9,15 @@
         "strictNullChecks": true,
         "noImplicitUseStrict": true,
         "noImplicitAny": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "baseUrl": "./",
+        "paths": {
+            "*": ["*", "../../../build/types/*"]
+        },
+        "types": [
+            "react", 
+            "react-dom", 
+            "common"
+        ]
     }
 }

@@ -1,7 +1,5 @@
-import { reply } from "../../common/reply";
-import * as data from "../../common/data";
-import * as messaging from "../../common/messaging";
-import { awaitAjax } from "../../common/shims";
+import { data, messaging, reply } from "common";
+import { awaitAjax } from "common/shims";
 
 
 function mergeWith<T>(merge:(a:T, b:T) => T) {

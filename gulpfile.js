@@ -30,7 +30,7 @@ class ExecutionUnit {
 
         this.ts = ts.createProject(tsconfig, override);
         this.entrypoint = resolve(BUILD_PATH, entrypoint);
-        this.unitName = unitName;        
+        this.unitName = unitName;       
     }
 
     gulpProcessor() {
@@ -41,8 +41,9 @@ class ExecutionUnit {
         return gulp.src(this.entrypoint)
             .pipe(webpack({                
                 output: {
-                    filename: this.unitName,                    
-                }
+                    filename: resolve(STATIC_PATH, "/js/", this.unitName),              
+                },
+                
             }))
             .pipe(gulp.dest(DIST_PATH))
     }
@@ -51,32 +52,43 @@ class ExecutionUnit {
 
 var uiProject = new ExecutionUnit('src/ts/app/tsconfig.json', { 
     entrypoint: 'js/main/manticore.js',
-    unitName: "static/js/main.js" 
+    unitName: "main.js" 
+}, {
+    typeRoots: [
+        resolve(BUILD_PATH, "/types/")
+    ]
 });
 
 var commonProject = new ExecutionUnit('src/ts/common/tsconfig.json', { 
-    entrypoint: "js/common/lib.js", 
-    unitName: "static/js/common.js" 
+    entrypoint: "js/common/index.js", 
+    unitName: "common.js" 
 });
 
 var generationWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
      entrypoint: 'js/workers/generation-process.js', 
-     unitName: "static/js/processing.js" 
+     unitName: "processing.js" 
 });
 
 var generationWorkerProjectFallback = new ExecutionUnit('src/ts/workers/tsconfig.json', { 
     entrypoint: 'js/workers/generation-process.js', 
-    unitName: "static/js/processing-fallback.js"
+    unitName: "processing-fallback.js"
 }, 
 {
     target: "es5",
     downlevelIteration: true,
-    lib: ["webworker", "es6"]
+    lib: ["webworker", "es6"],
+    typeRoots: [
+        resolve(BUILD_PATH, "/types/")
+    ]
 });
 
 var dataAccessWorkerProject = new ExecutionUnit('src/ts/workers/tsconfig.json', {
     entrypoint: 'js/workers/data-access.js',
-    unitName: "static/js/data-access.js"
+    unitName: "data-access.js"
+}, {
+    typeRoots: [
+        resolve(BUILD_PATH, "/types/")
+    ]
 });
 
 
@@ -92,7 +104,11 @@ const units = [
 
 gulp.task("clean",
     function(cb) {
-        gulp.src(["static/js/*", "dist/*"]).pipe(rm());
+        gulp.src([
+            resolve(STATIC_PATH, "/js/*"), 
+            resolve(DIST_PATH, "/*"),
+            resolve(BUILD_PATH, "/*")
+        ]).pipe(rm());
         gulp.src(["static/css/style.css"]).pipe(rm());
         cb();
     });
@@ -117,7 +133,19 @@ gulp.task('build:contrib', function () {
         .pipe(gulp.dest('static/js/'));
 })
 
-gulp.task('build:main', function () {
+
+gulp.task('build:common', function () {
+    const result = gulp.src([resolve(SRC_PATH, '/ts/common/**/*.ts')])
+                       .pipe(commonProject.gulpProcessor());
+
+	return merge([
+        result.js.pipe(gulp.dest(resolve(BUILD_PATH, '/js/common'))),
+        result.dts.pipe(gulp.dest(resolve(BUILD_PATH, '/types/common')))
+    ]);
+})
+
+
+gulp.task('build:main', ["build:common"],  function () {
 	return gulp.src([
         resolve(SRC_PATH, '/ts/app/**/*.ts'), 
         resolve(SRC_PATH, '/ts/app/**/*.tsx')
@@ -127,21 +155,15 @@ gulp.task('build:main', function () {
         ;
 })
 
-gulp.task('build:common', function () {
-	return gulp.src([resolve(SRC_PATH, '/ts/common/**/*.ts'), resolve(SRC_PATH, '/ts/model/**/*.ts')])
-        .pipe(commonProject.gulpProcessor())
-        .pipe(gulp.dest(resolve(BUILD_PATH, '/js/common')))
-        ;
-})
 
-gulp.task('build:workers', function () {
+gulp.task('build:workers', ["build:common"], function () {
 	return gulp.src(resolve(SRC_PATH, '/ts/workers/**/*.ts'))
         .pipe(dataAccessWorkerProject.gulpProcessor())
         .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers')))
         ;
 })
 
-gulp.task('build:workers:fallback', function () {
+gulp.task('build:workers:fallback', ["build:common"], function () {
 	return gulp.src([resolve(SRC_PATH, '/ts/workers/**/*.ts')])
         .pipe(generationWorkerProjectFallback.gulpProcessor())
         .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers-fallback')))
@@ -149,7 +171,7 @@ gulp.task('build:workers:fallback', function () {
 })
 
 
-gulp.task('build', ['styles', 'build:contrib', 'build:common', 'build:main', 'build:workers', 'build:workers:fallback']);
+gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:workers', 'build:workers:fallback']);
 
 
 gulp.task('dist', ['build'], function () {

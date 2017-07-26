@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { _ } from "./strings";
 import { Paginator } from "./paginator";
-import * as data from "../../common/data";
+import { data } from "common";
 
 function Allocation(props: { alloc: data.Allocation }) {
     const alloc = props.alloc;
@@ -47,13 +47,13 @@ class AllocationGroup extends React.Component<{ encounters: data.Encounters }, {
         const encounters = this.props.encounters;
         
         if (encounters.length === 1) {
-            return <li className="C encounter -single">{ encounters[0].map(alloc => <Allocation alloc={alloc} />) }</li>;
+            return <li className="C encounter -single">{ encounters[0].map((alloc: data.Allocation) => <Allocation alloc={alloc} />) }</li>;
         }
 
         return (
             <li className={`C encounter -multiple ${this.state.open ? "-open" : ""}`}>
                 <div className="stereotype">
-                    { encounters[0].map(alloc => <Allocation alloc={alloc} />) }
+                    { encounters[0].map((alloc: data.Allocation) => <Allocation alloc={alloc} />) }
                 </div>
 
                 <em>
@@ -63,9 +63,9 @@ class AllocationGroup extends React.Component<{ encounters: data.Encounters }, {
                 </em>
 
                 <ul className="variants">
-                    { encounters.slice(1).map(enc => 
+                    { encounters.slice(1).map((enc) => 
                         <li>
-                            { enc.map(alloc => <AbbreviatedAllocation alloc={alloc} />) }
+                            { enc.map((alloc: data.Allocation) => <AbbreviatedAllocation alloc={alloc} />) }
                         </li>
                     )}
                 </ul>

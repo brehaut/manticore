@@ -3,8 +3,8 @@ import * as React from "react";
 
 import { _ } from "./strings";
 import * as model from "../data-access-worker";
-import * as data from "../../common/data";
-import { dataAccess } from "../../common/messaging";
+import { data } from "common/";
+import { dataAccess } from "common/messaging";
 
 interface NumericInputProps {
     label: string;

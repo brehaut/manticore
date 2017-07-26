@@ -7,7 +7,11 @@
         "module": "commonjs",
         "downlevelIteration": false,
         "lib": ["webworker", "es6", "es2015.iterable", "es2015.generator"],
-        "types": [ ]
+        "types": [ "common" ],
+        "baseUrl": "./",
+        "paths": {
+            "*": ["*", "../../../build/types/*"]
+        }
     }
 }
 

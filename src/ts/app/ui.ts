@@ -1,12 +1,11 @@
 import { _ } from "./ui/strings";
-import * as shims from "../common/shims";
-import * as data from "../common/data";
-import * as workers from "../common/typed-workers";
+import { shims, data } from "common";
+import * as workers from "common/typed-workers";
 import * as model from "./data-access-worker";
 import * as ui from "./ui";
 import { installApplication } from "./ui/application";
-import { dataAccess } from "../common/messaging";
-import { localStoragePort } from "../common/localstorage";
+import { dataAccess } from "common/messaging";
+import { localStoragePort } from "common/localstorage";
 
 
 // UI represents the whole UI, and is constructed of a series

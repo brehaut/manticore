@@ -15,4 +15,9 @@ export {
     costs,
     data,
     event,
+    localstorage,
+    messaging,
+    reply,
+    shims,
+    typedWorkers
 };

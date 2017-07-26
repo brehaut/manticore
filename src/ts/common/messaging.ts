@@ -13,13 +13,13 @@ export interface IMessage<TKey extends string> {
 }
 
 export module localstorage {
-    type LocalStorageGetKeyT = "localstorage.get";
+    export type LocalStorageGetKeyT = "localstorage.get";
     const LocalStorageGetKey:LocalStorageGetKeyT = "localstorage.get";
-    type LocalStoragePutKeyT = "localstorage.put";
+    export type LocalStoragePutKeyT = "localstorage.put";
     const LocalStoragePutKey:LocalStoragePutKeyT = "localstorage.put";
-    type LocalStorageDeleteKeyT = "localstorage.delete";
+    export type LocalStorageDeleteKeyT = "localstorage.delete";
     const LocalStorageDeleteKey:LocalStorageDeleteKeyT = "localstorage.delete"; 
-    type LocalStorageDataKeyT = "localstorage.data";
+    export type LocalStorageDataKeyT = "localstorage.data";
     const LocalStorageDataKey:LocalStorageDataKeyT = "localstorage.data";
 
     export interface LocalStorageGet extends IMessage<LocalStorageGetKeyT> {
@@ -85,11 +85,11 @@ export module dataAccess {
     }
 
     // messages for accessing party information       
-    type PartyGetKeyT = "party.get";   
+    export type PartyGetKeyT = "party.get";   
     const PartyGetKey: PartyGetKeyT = "party.get";    
-    type PartyPutKeyT = "party.put";   
+    export type PartyPutKeyT = "party.put";   
     const PartyPutKey: PartyPutKeyT = "party.put"; 
-    type PartyDataKeyT = "party.data";
+    export type PartyDataKeyT = "party.data";
     const PartyDataKey: PartyDataKeyT = "party.data";
     
     export interface PartyGet extends IMessage<PartyGetKeyT> { }
@@ -131,10 +131,10 @@ export module dataAccess {
     
     
     // messages for accessing bestiary data.
-    type BestiaryGetKeyT = "bestiary.get";
+    export type BestiaryGetKeyT = "bestiary.get";
     const BestiaryGetKey: BestiaryGetKeyT = "bestiary.get";
     
-    type BestiaryDataKeyT = "bestiary.data";
+    export type BestiaryDataKeyT = "bestiary.data";
     const BestiaryDataKey: BestiaryDataKeyT = "bestiary.data";
             
     export interface BestiaryGet extends IMessage<BestiaryGetKeyT> { };

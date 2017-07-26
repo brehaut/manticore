@@ -12,6 +12,7 @@
         "types": [
             "react", 
             "react-dom"
-        ]
+        ],
+        "declaration": true
     }
 }

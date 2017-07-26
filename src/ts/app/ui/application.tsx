@@ -3,17 +3,16 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import * as common from "common";
+import { bestiary, data, messaging } from "../../../../build/types/common";
+import { Allocator, IParty } from "common/data";
+
+
 import { _ } from "./strings"; 
 import * as strings from "./strings";
-import * as common from "./common";
 import { FilterStore, Selection } from "./selection";
-
-import { DataAccessWorker } from "../data-access-worker";
-import * as bestiary from "../../common/bestiary";
-import { Allocator, IParty } from "../../common/data";
-import * as data from "../../common/data";
-import * as messaging from "../../common/messaging";
 import * as model from "../data-access-worker";
+import { DataAccessWorker } from "../data-access-worker";
 import { Party } from "./party-ui";
 import { Results } from "./results";
 
@@ -45,7 +44,7 @@ export class Application extends React.Component<ApplicationProps, ApplicationSt
         this.state.filterStore.onChanged.register(({}) => this.forceUpdate());
 
         // temporary kludge
-        this.props.dataAccess.addEventListener("message", (message) => {
+        this.props.dataAccess.addEventListener("message", (message: any) => {
             if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
                 this.setState({partyInfoCache: message.data.party});
             }
@@ -106,7 +105,7 @@ export class Application extends React.Component<ApplicationProps, ApplicationSt
 
         this.props.allocator(this.state.partyInfoCache,
                                 selection)
-            .then(alloc => this.setState({generatedEncounters: alloc}));
+            .then((alloc:data.GroupedEncounters) => this.setState({generatedEncounters: alloc}));
     }
 }
 

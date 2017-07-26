@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { _ } from "./strings";
-import { Event } from "../../common/event";
-import * as bestiary from "../../common/bestiary";
+import { Event } from "common/event";
+import { bestiary } from "common/";
 
 import { SmartFilter } from "./smart-filters";
 import { ManualSelection } from "./manual-selection";
@@ -45,7 +45,7 @@ export class Selection extends React.Component<SelectionProps, SelectionState> {
     constructor(props: SelectionProps) {
         super(props);
 
-        this.props.store.onChanged.register(_ => {
+        this.props.store.onChanged.register(({}) => {
             this.setState({ filters: this.props.store.getFilters()});
         });
 

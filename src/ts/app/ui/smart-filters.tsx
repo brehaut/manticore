@@ -4,7 +4,7 @@ import * as React from "react";
 import { AttributeFilter } from "./attribute-filter";
 import { _ } from "./strings";
 import * as text from "./text";
-import * as bestiary from "../../common/bestiary";
+import { bestiary } from "common/";
 
 
 interface FilterSelections  {

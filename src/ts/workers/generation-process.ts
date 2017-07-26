@@ -1,5 +1,4 @@
-import * as allocator from "../common/allocator"; 
-import * as data from "../common/data"; 
+import { allocator, data } from "common"; 
 
 interface ProcessingMessageEvent extends MessageEvent {
     data: [data.IParty, data.Monster[]];

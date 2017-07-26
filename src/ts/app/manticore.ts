@@ -1,9 +1,8 @@
 import { _ } from "./ui/strings"; 
 import * as React from "react";
 
-import * as shims from "../common/shims";
-import * as data from "../common/data";
-import * as workers from "../common/typed-workers";
+import { shims, data } from "common";
+import * as workers from "common/typed-workers";
 import * as appcache from "./appcache";
 import * as ui from "./ui";
 import * as model from "./data-access-worker";
@@ -42,7 +41,7 @@ function allocate(party: data.IParty, monsters: data.Monster[]): Promise<data.Gr
     const allocationWorker = workers.newWorker<[data.IParty, data.Monster[]], any>(workerResource());
     
     return new Promise(resolve => {
-        allocationWorker.onmessage = (message) => {
+        allocationWorker.onmessage = (message: any) => {
             resolve(message.data);
         };
         allocationWorker.postMessage([party, monsters]);

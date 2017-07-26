@@ -1,7 +1,7 @@
-import * as reply from "../../common/reply";
-import * as event from "../../common/event";
-import * as messaging from "../../common/messaging";
-import { localstorage } from "../../common/messaging";
+import * as reply from "common/reply";
+import * as event from "common/event";
+import * as messaging from "common/messaging";
+import { localstorage } from "common/messaging";
 
 export class Storage {
     private localStoragePort?: MessagePort;

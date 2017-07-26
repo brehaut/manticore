@@ -1,5 +1,3 @@
-"use strict";    
-
 export enum Locale {
     EN
 }

@@ -5,8 +5,7 @@
  * (at least while Bestiary is still a class with methods)
  */
 
-import * as messaging from "../common/messaging"; 
-import * as reply from "../common/reply"; 
+import { reply, messaging } from "common"; 
 
 import { DataSet } from "./data-access/dataset";
 import { Party } from "./data-access/Party";
