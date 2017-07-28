@@ -1,19 +1,8 @@
 {
+    "extends": "../tsconfig.json",
+    
     "compilerOptions": {
-        "target": "es5",
-        "lib": ["es6", "dom"],
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "module": "commonjs",
         "jsx": "react",
-        "strictNullChecks": true,
-        "noImplicitUseStrict": true,
-        "noImplicitAny": true,
-        "downlevelIteration": true,
-        "baseUrl": "./",
-        "typeRoots": [
-            "../../../build/types/"
-        ],
         "types": [
             "react", 
             "react-dom", 

@@ -1,12 +1,8 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "lib": ["es6", "dom"],
-        "sourceMap": true,
-        "module": "none",
-        "strictNullChecks": true,
-        "noImplicitUseStrict": true,
-        "noImplicitAny": true,
+    "extends": "../tsconfig.json",
+
+    "compilerOptions": {        
+        "module": "none",        
         "downlevelIteration": true,
         "types": [],
         "declaration": true

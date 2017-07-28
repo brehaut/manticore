@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es6", "dom"],
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "strict": true,
+        "downlevelIteration": true,
+        "baseUrl": "./",
+        "typeRoots": [
+            "../../build/types/"
+        ]
+    }
+}
