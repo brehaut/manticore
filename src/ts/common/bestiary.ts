@@ -1,7 +1,10 @@
-/// <reference path="data.ts" />
 /// <reference path="costs.ts" />
+/// <reference path="data.ts" />
 
-module manticore.bestiary {
+module manticore.common.bestiary {
+    import data = common.data;
+    import costs = common.costs;
+
     import newPricedMonster = costs.newPricedMonster;
     import PricedMonster = costs.PricedMonster;
     import Tier = costs.Tier;
@@ -11,12 +14,12 @@ module manticore.bestiary {
 
     function monsterFromRecord(book: string) {
         return (record:data.MonsterRecord) => data.newMonster(record[0], 
-                                                              record[1],
-                                                              record[2],
-                                                              record[3],
-                                                              record[4],
-                                                              book,
-                                                              record[5]);
+                                                                record[1],
+                                                                record[2],
+                                                                record[3],
+                                                                record[4],
+                                                                book,
+                                                                record[5]);
     }
 
 
@@ -135,7 +138,7 @@ module manticore.bestiary {
         }
     }
 
-    
+
     export function createBestiary(dataset:data.DataSet) {
         var catalog:data.Monster[] = [];
         for (var key in dataset) if (dataset.hasOwnProperty(key)) {
@@ -145,4 +148,3 @@ module manticore.bestiary {
         return new Bestiary(catalog);
     }
 }
-

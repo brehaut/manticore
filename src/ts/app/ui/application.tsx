@@ -1,110 +1,116 @@
-/// <reference path="../../common/data.ts" />
-/// <reference path="../../common/bestiary.ts" />
-/// <reference path="../../model/bestiary.ts" />
-/// <reference path="strings.ts" />
-/// <reference path="common.ts" />
-/// <reference path="party-ui.tsx" />
-/// <reference path="selection.tsx" />
-/// <reference path="results.tsx" />
+"use strict";    
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+/// <reference types="common" />
 
-module manticore.ui {
-    "use strict";    
-    import _ = strings._;
+import common = manticore.common;
+import bestiary = manticore.common.bestiary;
+import data = manticore.common.data;
+import messaging = manticore.common.messaging;
+import Allocator = data.Allocator;
+import IParty = data.IParty;
 
-
-    interface ApplicationProps {
-        dataAccess: model.DataAccessWorker; 
-        allocator: data.Allocator;
-    }
-
-    interface ApplicationState {
-        partyInfoCache: data.IParty;
-        catalog: bestiary.Bestiary;
-        filterStore: filters.FilterStore;
-        generatedEncounters?: data.GroupedEncounters; 
-    }
+import { _ } from "./strings"; 
+import * as strings from "./strings";
+import { FilterStore, Selection } from "./selection";
+import * as model from "../data-access-worker";
+import { DataAccessWorker } from "../data-access-worker";
+import { Party } from "./party-ui";
+import { Results } from "./results";
 
 
-    export class Application extends React.Component<ApplicationProps, ApplicationState> {
-        constructor(props: ApplicationProps) {
-            super(props);
+interface ApplicationProps {
+    dataAccess: DataAccessWorker; 
+    allocator: Allocator;
+}
 
-            this.state = {
-                partyInfoCache: {size: 1, level: 1},
-                catalog: bestiary.createBestiary({}),
-                filterStore: new filters.FilterStore()
-            };
+interface ApplicationState {
+    partyInfoCache: IParty;
+    catalog: bestiary.Bestiary;
+    filterStore: FilterStore;
+    generatedEncounters?: data.GroupedEncounters; 
+}
 
-            // kludge
-            this.state.filterStore.onChanged.register(({}) => this.forceUpdate());
 
-            // temporary kludge
-            this.props.dataAccess.addEventListener("message", (message) => {
-                if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
-                    this.setState({partyInfoCache: message.data.party});
-                }
-            });
-            this.props.dataAccess.postMessage(messaging.dataAccess.partyGetMessage());
+export class Application extends React.Component<ApplicationProps, ApplicationState> {
+    constructor(props: ApplicationProps) {
+        super(props);
 
-            this.requestBestiary();
-        }
+        this.state = {
+            partyInfoCache: {size: 1, level: 1},
+            catalog: bestiary.createBestiary({}),
+            filterStore: new FilterStore()
+        };
 
-        private requestBestiary() {
-            const chan = new MessageChannel();
-            chan.port2.onmessage = (message) => this.updateBestiary(message.data);
-            this.props.dataAccess.postMessage(messaging.dataAccess.bestiaryGetMessage(), [chan.port1]);
-        }
+        // kludge
+        this.state.filterStore.onChanged.register(({}) => this.forceUpdate());
 
-        private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
-            if (messaging.dataAccess.isBestiaryData(message)) {
-                this.setState({ catalog: bestiary.createBestiary(message.dataset) });
+        // temporary kludge
+        this.props.dataAccess.addEventListener("message", (message: any) => {
+            if (messaging.dataAccess.isPartyMessage(message.data) && messaging.dataAccess.isPartyData(message.data)) {
+                this.setState({partyInfoCache: message.data.party});
             }
-            else {
-                console.warn("Unexpected message", message);
-            }
+        });
+        this.props.dataAccess.postMessage(messaging.dataAccess.partyGetMessage());
+
+        this.requestBestiary();
+    }
+
+    private requestBestiary() {
+        const chan = new MessageChannel();
+        chan.port2.onmessage = (message) => this.updateBestiary(message.data);
+        this.props.dataAccess.postMessage(messaging.dataAccess.bestiaryGetMessage(), [chan.port1]);
+    }
+
+    private updateBestiary(message: messaging.dataAccess.BestiaryMessage) {
+        if (messaging.dataAccess.isBestiaryData(message)) {
+            this.setState({ catalog: bestiary.createBestiary(message.dataset) });
         }
-
-        private featureCounts():any {            
-            return this.state.catalog.featureCounts(this.state.partyInfoCache,
-                                                    this.state.filterStore.getFilters());
-        }
-
-        private getSelection() {
-            const pred = data.predicateForFilters(this.state.filterStore.getFilters());
-            return this.state.catalog.filteredBestiary(this.state.partyInfoCache, pred);
-        }
-
-        public render() {
-            if (!this.state) {
-                return <div className="loading">{ _`Loading...` }</div>;
-            }
-            return (
-                <div>
-                    <party.Party worker={ this.props.dataAccess } 
-                                 party={ this.state.partyInfoCache } />
-                    <filters.Selection 
-                        store={ this.state.filterStore } 
-                        catalog={ this.state.catalog } 
-                        counts={ this.featureCounts() }
-                        totalSelectedCount={ this.getSelection().length } />
-                    <results.Results 
-                        generatedEncounters={this.state.generatedEncounters}
-                        onRequestGenerate={() => this.generate() }
-                        party={this.state.partyInfoCache} />
-                </div>
-            );
-        }
-
-        private generate() {
-            const selection = this.getSelection();
-
-            this.props.allocator(this.state.partyInfoCache,
-                                 selection)
-                .then(alloc => this.setState({generatedEncounters: alloc}));
+        else {
+            console.warn("Unexpected message", message);
         }
     }
 
-    export function installApplication(el: HTMLElement, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
-        return ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as Application;
+    private featureCounts():any {            
+        return this.state.catalog.featureCounts(this.state.partyInfoCache,
+                                                this.state.filterStore.getFilters());
     }
+
+    private getSelection() {
+        const pred = data.predicateForFilters(this.state.filterStore.getFilters());
+        return this.state.catalog.filteredBestiary(this.state.partyInfoCache, pred);
+    }
+
+    public render() {
+        if (!this.state) {
+            return <div className="loading">{ _`Loading...` }</div>;
+        }
+        return (
+            <div>
+                <Party worker={ this.props.dataAccess } 
+                                party={ this.state.partyInfoCache } />
+                <Selection 
+                    store={ this.state.filterStore } 
+                    catalog={ this.state.catalog } 
+                    counts={ this.featureCounts() }
+                    totalSelectedCount={ this.getSelection().length } />
+                <Results 
+                    generatedEncounters={this.state.generatedEncounters}
+                    onRequestGenerate={() => this.generate() }
+                    party={this.state.partyInfoCache} />
+            </div>
+        );
+    }
+
+    private generate() {
+        const selection = this.getSelection();
+
+        this.props.allocator(this.state.partyInfoCache,
+                                selection)
+            .then((alloc:data.GroupedEncounters) => this.setState({generatedEncounters: alloc}));
+    }
+}
+
+export function installApplication(el: HTMLElement, allocator: data.Allocator, dataAccess: model.DataAccessWorker):Application {
+    return (ReactDOM.render(<Application allocator={ allocator } dataAccess={ dataAccess } />, el) as any) as Application;
 }

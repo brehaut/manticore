@@ -1,16 +1,14 @@
-/// <reference path="types.d.ts" />
-
-module manticore.data {  
+module manticore.common.data {
     export type MonsterSizeBase = "normal" | "large" | "huge" | "weakling" | "elite";
     export type MonsterSize = MonsterSizeBase | "double strength" | "triple strength";
     export type MonsterThreat = "normal" | "mook";
     export type MonsterScale = [MonsterSizeBase, MonsterThreat];
-    
-                              // name, level, size,           , type ,  tags
-    export type MonsterRecord = [string, number, data.MonsterSize, string, string[], number];
-    
+
+                                // name, level, size,           , type ,  tags
+    export type MonsterRecord = [string, number, MonsterSize, string, string[], number];
+
     export type DataSet = {[index:string]: MonsterRecord[]};
-    
+
     export interface Monster {
         readonly name:string; 
         readonly level:number; 
@@ -31,13 +29,13 @@ module manticore.data {
     }
 
     export function newMonster(name:string, 
-                               level:number,
-                               size: MonsterSize,
-                               kind: string,
-                               attributes: string[],
-                               book:string,
-                               pageNumber: number) 
-                              : Monster {           
+                                level:number,
+                                size: MonsterSize,
+                                kind: string,
+                                attributes: string[],
+                                book:string,
+                                pageNumber: number) 
+                                : Monster {           
         return {
             name: name,
             level: level,
@@ -92,7 +90,7 @@ module manticore.data {
             return true;
         };
     }
-    
+
     // monster specific predicate functions
     function sizePredicate(size:string) {
         return (m:Monster) => m.size === size;
@@ -109,7 +107,7 @@ module manticore.data {
     function namePredicate(name:string) {
         return (m:Monster) => m.name === name;
     }
-    
+
     function hasOneAttributePredicate(attributes:string[]) {
         return (m:Monster) => {
             var mattrs = m.attributes;
@@ -122,29 +120,29 @@ module manticore.data {
 
 
     export function predicateForFilters(filters:{[index: string]:string[]}) {
-        var predicates:Array<(m:data.Monster) => boolean> = [];
+        var predicates:Array<(m:Monster) => boolean> = [];
 
         for (var key in filters) if (filters.hasOwnProperty(key)) {
             var attributes = filters[key];
             if (attributes === null || attributes.length == 0) continue;
 
             if (key === "name") {
-                predicates.push(anyPredicate<data.Monster>(
+                predicates.push(anyPredicate<Monster>(
                     attributes.map(namePredicate)
                 ));
             }
             else if (key === "size") {
-                predicates.push(anyPredicate<data.Monster>(
+                predicates.push(anyPredicate<Monster>(
                     attributes.map(sizePredicate)
                 ));
             } 
             else if (key === "kind") {
-                predicates.push(anyPredicate<data.Monster>(
+                predicates.push(anyPredicate<Monster>(
                     attributes.map(kindPredicate)
                 ));
             }
             else if (key === "sources") {
-                predicates.push(anyPredicate<data.Monster>(
+                predicates.push(anyPredicate<Monster>(
                     attributes.map(sourcePredicate)
                 ));
             }

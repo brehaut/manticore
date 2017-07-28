@@ -1,11 +1,7 @@
-/// <reference path="../../common/data.ts" />
-/// <reference path="strings.ts" />
+"use strict";    
 
-module manticore.ui {
-    "use strict";    
-    import _ = strings._;
+import * as strings from "./strings";
     
-    export function cssClassName(text:string):string {
-        return text.replace(/[^-a-zA-Z0-9]+/g, "-");
-    }
+export function cssClassName(text:string):string {
+    return text.replace(/[^-a-zA-Z0-9]+/g, "-");
 }

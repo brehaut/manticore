@@ -1,23 +1,25 @@
 /// <reference path="data.ts" />
 
-module manticore.costs {
+module manticore.common.costs {
+    import data = manticore.common.data;
+
     export type Tier = "adventurer" | "champion" | "epic";
 
 
     // Monster records
     export interface PricedMonster extends data.Monster {
-         price: number;    
+            price: number;    
     }   
-   
+
     export function newPricedMonster(name:string,  
-                              level:number, 
-                              size:data.MonsterSize,
-                              kind:string,
-                              attributes: string[],
-                              book: string,
-                              pageNumber: number,
-                              price:number) 
-                              : PricedMonster { 
+                                level:number, 
+                                size:data.MonsterSize,
+                                kind:string,
+                                attributes: string[],
+                                book: string,
+                                pageNumber: number,
+                                price:number) 
+                                : PricedMonster { 
         // type hint to convince the compiler that we are going to mix in the new values                                  
         var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book, pageNumber);
         mon.price = price;
@@ -119,7 +121,7 @@ module manticore.costs {
     function adjustment(level:number):number {
         return tierAdjustment(levelToTier(level));
     }
-    
+
 
     function relativeLevel(partyLevel:number, monsterLevel:number):number {
         var monsterAdjusted = monsterLevel - adjustment(partyLevel);
@@ -171,4 +173,5 @@ module manticore.costs {
     export function priceParty(characters:number): number {
         return characters * scaleFactor(["normal", "normal"], 1) * (relativeCost(0)!);
     }
+
 }

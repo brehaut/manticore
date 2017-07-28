@@ -1,5 +1,0 @@
-This folder contains model storage / access layer code. 
-
-This is seperate to the data that travels through various layers and sub processes 
-(such as the bestiary types and implemtation and data definitions) found in common 
-

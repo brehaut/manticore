@@ -1,4 +1,4 @@
-module manticore.reply {
+module manticore.common.reply {
     export interface IReplyable {
         postMessage(message: any, transferrables?: any[]): void;
     }

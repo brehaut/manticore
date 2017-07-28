@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es6"],
+        "sourceMap": true,
+        "module": "none",
+        "strictNullChecks": true,
+        "noImplicitUseStrict": true,
+        "noImplicitAny": true,
+        "downlevelIteration": true,
+        "types": [],
+        "declaration": true
+    }
+}

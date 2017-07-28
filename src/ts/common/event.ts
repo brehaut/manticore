@@ -1,4 +1,4 @@
-module manticore.event {
+module manticore.common.event {
     export class Event<T> {
         private handlers: Array<(v:T) => void>;
         constructor () {

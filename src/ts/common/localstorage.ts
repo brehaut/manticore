@@ -1,9 +1,9 @@
 /// <reference path="messaging.ts" />
 /// <reference path="reply.ts" />
 
-module manticore.localstorage {
-    import ls = messaging.localstorage;
-    import reply = manticore.reply.reply;
+module manticore.common.localstorage {
+    import ls = common.messaging.localstorage;
+    import reply = common.reply.reply;
 
 
     export function localStoragePort() {

@@ -1,45 +1,43 @@
-/// <reference path="strings.ts" />
+import * as strings from  "./strings";
 
-module manticore.ui.text {
-    export class ElidableText {
-        private readonly prefixes: string[];
+export class ElidableText {
+    private readonly prefixes: string[];
 
-        constructor (prefixes: string[]) { 
-            this.prefixes = prefixes.map(p => p.toLocaleLowerCase());
-        }
+    constructor (prefixes: string[]) { 
+        this.prefixes = prefixes.map(p => p.toLocaleLowerCase());
+    }
 
-        [Symbol.replace](string: string, replaceValue: string): string {
-            for (const prefix of this.prefixes) {
-                if (string.startsWith(prefix) && string[prefix.length] === " ") {
-                    return string.slice(prefix.length);
-                }
+    [Symbol.replace](string: string, replaceValue: string): string {
+        for (const prefix of this.prefixes) {
+            if (string.startsWith(prefix) && string[prefix.length] === " ") {
+                return string.slice(prefix.length);
             }
-
-            return string;
         }
+
+        return string;
     }
+}
 
 
-    export function normalizeText(text: string | null | undefined): string {
-        if (text === undefined) return "";
-        if (text === null) return "";
+export function normalizeText(text: string | null | undefined): string {
+    if (text === undefined) return "";
+    if (text === null) return "";
 
-        const elidable = new ElidableText(strings.normalizationPrefixes());
+    const elidable = new ElidableText(strings.normalizationPrefixes());
 
-        return text
-            .trim()
-            .toLocaleLowerCase()
-            .replace(elidable, "")
-            .trim();
-    }
-    
+    return text
+        .trim()
+        .toLocaleLowerCase()
+        .replace(elidable, "")
+        .trim();
+}
 
-    export function compareText(a: string, b: string) {
-        const an = normalizeText(a);
-        const bn = normalizeText(b);
 
-        if (an < bn) return -1;
-        if (an > bn) return 1;    
-        return 0;
-    }
+export function compareText(a: string, b: string) {
+    const an = normalizeText(a);
+    const bn = normalizeText(b);
+
+    if (an < bn) return -1;
+    if (an > bn) return 1;    
+    return 0;
 }
