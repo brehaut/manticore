@@ -101,14 +101,11 @@ var generationWorkerProject = new TSExecutionUnit('src/ts/workers/tsconfig.json'
      unitName: "processing.js" 
 });
 
-var generationWorkerProjectFallback = new TSExecutionUnit('src/ts/workers/tsconfig.json', { 
+var generationWorkerProjectFallback = new TSExecutionUnit('src/ts/workers/tsconfig-fallback.json', { 
     entrypoint: 'js/workers/generation-process.js', 
     unitName: "processing-fallback.js"
 }, 
 {
-    target: "es5",
-    downlevelIteration: true,
-    lib: ["webworker", "es6"],
     typeRoots: [
         resolve(BUILD_PATH, "/types/")
     ]
@@ -212,7 +209,7 @@ gulp.task('dist', ['build'], function () {
     }
 
     const outputs = units.map(u => u.bundleScript()).concat([        
-        copy('src/html/index.html', 'dist'),
+        copy('index.html', 'dist'),
         copy('static/**/*', 'dist/static'),
     ])
 
