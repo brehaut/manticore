@@ -1,4 +1,3 @@
-/// <reference path="allocator.ts" />';
 /// <reference path="bestiary.ts" />';
 /// <reference path="costs.ts" />';
 /// <reference path="data.ts" />';
@@ -8,6 +7,7 @@
 /// <reference path="reply.ts" />';
 /// <reference path="shims.ts" />';
 /// <reference path="typed-workers.ts" />';
+/// <reference path="iter.ts" />';
 
 module manticore.common {
     

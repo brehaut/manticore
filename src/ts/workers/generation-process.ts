@@ -2,7 +2,7 @@
 importScripts("common.js");
 
 import data = manticore.common.data;
-import allocator = manticore.common.allocator;
+import * as allocator from 'libs/allocator';
 
 
 interface ProcessingMessageEvent extends MessageEvent {
