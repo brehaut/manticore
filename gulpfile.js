@@ -212,7 +212,7 @@ gulp.task('dist', ['build'], function () {
     }
 
     const outputs = units.map(u => u.bundleScript()).concat([        
-        copy('index.html', 'dist'),
+        copy('src/html/index.html', 'dist'),
         copy('static/**/*', 'dist/static'),
     ])
 
