@@ -36,8 +36,7 @@ class TsConcatUnit {
         return this.ts();
     }
 
-    bundleScript() {
-        console.log("concat", this.inFiles, this.outFile, resolve(DIST_PATH, STATIC_PATH, '/js/'))
+    bundleScript() {    
         return gulp.src(this.inFiles)
             .pipe(concat(this.outFile))
             .pipe(gulp.dest(resolve(DIST_PATH, STATIC_PATH, '/js/')));
@@ -87,12 +86,10 @@ var commonProject = new TsConcatUnit('src/ts/common/tsconfig.json', {
         "js/common/data.js",
         "js/common/event.js",
         "js/common/reply.js",
-        "js/common/iter.js",
         "js/common/typed-workers.js",
         "js/common/costs.js",
         "js/common/messaging.js",
         "js/common/bestiary.js",
-        "js/common/allocator.js",
         "js/common/localstorage.js",
         "js/common/index.js",
     ], 

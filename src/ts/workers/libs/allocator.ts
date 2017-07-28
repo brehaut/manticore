@@ -1,11 +1,12 @@
 /// <reference types="common" />
 
 import common = manticore.common;
-import iter = manticore.common.iter;
 import PricedMonster = common.costs.PricedMonster;
 import priceMonster = common.costs.priceMonster;
 import priceParty = common.costs.priceParty;
 import data = common.data;
+
+import * as iter from './iter';
 
 const MAXIMUM_TYPES = 6;
 

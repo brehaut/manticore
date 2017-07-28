@@ -7,7 +7,6 @@
 /// <reference path="reply.ts" />';
 /// <reference path="shims.ts" />';
 /// <reference path="typed-workers.ts" />';
-/// <reference path="iter.ts" />';
 
 module manticore.common {
     
