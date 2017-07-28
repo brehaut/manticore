@@ -17,7 +17,7 @@ class CheckboxList extends React.Component<{attributes: string[], data: Attribut
                     const classname = count > 0 ? "viable" : "";
                     const selected = this.props.data.selected[key] || false;
 
-                    return <li className={classname} onClick={e => this.handleClick(e, key)}> 
+                    return <li key={k} className={classname} onClick={e => this.handleClick(e, key)}> 
                         <input type="checkbox" name={k} checked={selected} onClick={(e) => this.handleClick(e, key)}/>
                         <label htmlFor={k}>{key}</label>
                         <span className="count">{count}</span>

@@ -32,7 +32,7 @@ class NumericInput extends React.Component<NumericInputProps, any> {
                         list={dataId}
                         />
                 <datalist id={dataId}>
-                        {[1,2,3,4,5,6,7,8,9,10].map(v => <option value={v.toString()} />)}
+                        {[1,2,3,4,5,6,7,8,9,10].map(v => <option key={v} value={v.toString()} />)}
                     </datalist>
                 <span>{this.props.value}</span>
             </div>
