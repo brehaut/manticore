@@ -18,7 +18,7 @@ The application is a simple client side web app, so you need to place the `dist`
 ##  Known issues:
 
  * It will never work in Internet Explorer 10 or lower (Version 0.4 works in IE9), but [you shouldn’t be using IE10 or earlier](https://www.microsoft.com/en-us/WindowsForBusiness/End-of-IE-support) anyway.
-
+ * Internet Explorer 11 is supported by TypeScripts downlevel iteration compiler mode and performs significantly slower than the native version used by every other browser. Consider using something else. Edge is better (if not as snappy as Chrome or Firefox)
 See [Issues](https://github.com/brehaut/manticore/issues) for more. 
 
 ## Thanks
