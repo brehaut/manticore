@@ -61,7 +61,7 @@ const monster = jsc.record({
   rec.attributes,
   rec.book,
   rec.pageNumber
-));
+), v => v);
 const monsters = jsc.array(monster);
 
 
@@ -70,10 +70,13 @@ function genEncounters(party, monsters) {
 }
 
 
+const costs = manticore.common.costs;
+console.log(costs)
+
 describe("bestiary", () => {
   property("encounters are under party price", party, monsters, (party, monsters) => {
     const encounterGroups = genEncounters(party, monsters);
-    return _.every(encounterGroups, encounter =>  _.sum(_.map(encounter, alloc => alloc.cost)) <= manticore.costs.priceParty(party.size));
+    return _.every(encounterGroups, encounter =>  _.sum(_.map(encounter, alloc => alloc.cost)) <= costs.priceParty(party.size));
   });
 
   property("allocations don't repeat", party, monsters, (party, monsters) => {
@@ -82,12 +85,12 @@ describe("bestiary", () => {
   });
 
   property("unspent budget is not greater than the cheapest monster", party, monsters, (party, monsters) => {
-    const pricedMonsters = _.compact(_.map(monsters, m => manticore.costs.priceMonster(party.level, m))); 
+    const pricedMonsters = _.compact(_.map(monsters, m => costs.priceMonster(party.level, m))); 
     const cheapestMonster = _.minBy(pricedMonsters, m => m.price);
 
     if (!cheapestMonster) return true;
 
-    const partyBudget = manticore.costs.priceParty(party.size);
+    const partyBudget = costs.priceParty(party.size);
     const encounterGroups = genEncounters(party, monsters);
 
     function calculateUnspentBudget(encounter) {
