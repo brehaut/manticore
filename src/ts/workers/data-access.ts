@@ -13,7 +13,7 @@ import messaging = manticore.common.messaging;
 
 
 import { DataSet } from "./data-access/dataset";
-import { Party } from "./data-access/Party";
+import { Party } from "./data-access/party";
 import { Storage } from "./libs/storage";
     
 const dataset = new DataSet((m) => postMessage(m));
