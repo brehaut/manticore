@@ -27,7 +27,6 @@ var requireWithGlobal = function(script) {
   
   vm.runInNewContext(fs.readFileSync(filename, 'utf8'), global, filename);
 
-  console.log(global.exports);
   return global.exports;
 }
 
@@ -35,7 +34,6 @@ var requireWithGlobal = function(script) {
 
 const allocator = requireWithGlobal('./build/js/workers/libs/allocator');
 
-console.log(allocator);
 
 const partyLevel = jsc.integer(1, 10);
 const partySize = jsc.integer(1, 10);
@@ -44,19 +42,26 @@ const party = jsc.record({
   level: partyLevel
 });
 
-const size = jsc.elements(["normal", "large", "huge"]);
-const scale = jsc.elements(["mook", "normal", "large", "huge"]);
+const size = jsc.elements(["normal", "large", "huge", "weakling", "elite", "double strength", "triple strength"]);
+const kind = jsc.elements(["troop", "mook", "wrecker", "blocker", "archer", "caster", "leader", "spoiler", "stalker"]);
 const monsterLevel = jsc.integer(0, 14);
 const monster = jsc.record({
   name: jsc.nestring, 
   level: monsterLevel, 
   size: size,
-  kind: jsc.nestring,
-  scale: scale,
+  kind: kind,
   attributes: jsc.nearray(jsc.nestring),
   book: jsc.nestring,
   pageNumber: jsc.nat
-});
+}).smap(rec => new manticore.common.data.newMonster(
+  rec.name,
+  rec.level,
+  rec.size,
+  rec.kind,
+  rec.attributes,
+  rec.book,
+  rec.pageNumber
+));
 const monsters = jsc.array(monster);
 
 
@@ -92,3 +97,4 @@ describe("bestiary", () => {
     return _.every(encounterGroups, encounter => calculateUnspentBudget(encounter) < (cheapestMonster.price));
   });
 });
+

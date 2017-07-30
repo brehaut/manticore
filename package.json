@@ -33,5 +33,4 @@
   "scripts": {
     "test": "mocha"
   }
-  
 }

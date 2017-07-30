@@ -25,6 +25,7 @@ module manticore.common.data {
                 
         if (size === "double strength") return ["large", threat];
         if (size === "triple strength") return ["huge", threat];
+
         return [size, threat];
     }
 
@@ -35,7 +36,7 @@ module manticore.common.data {
                                 attributes: string[],
                                 book:string,
                                 pageNumber: number) 
-                                : Monster {           
+                                : Monster {      
         return {
             name: name,
             level: level,
