@@ -496,7 +496,7 @@
     ["Horned azinth calf", 3, "double strength", "wrecker", ["azinth", "beast"], 0],
     ["Red haze berserker", 3, "normal", "wrecker", ["berserker", "red", "kobold", "humanoid"] , 0],
     ["Wild dryad", 3, "large", "wrecker", ["fey"], 0],
-    ["The Rascal", 3, "normal", "mook", ["fey", "humanoid"]],
+    ["The Rascal", 3, "normal", "mook", ["fey", "humanoid"], 0],
 
     ["Derro whisperer", 4, "normal", "archer", ["dwarf", "humanoid", "derro"], 0],
     ["Faun harrier", 4, "normal", "archer", ["faun", "humanoid"], 0],
@@ -527,7 +527,7 @@
     ["Demon-drake", 4, "normal", "troop", ["drake", "golden-demon", "demon"], 0],
     ["Phantomaton", 4, "normal", "troop", ["undead", "silver hand", "lich king"], 0],
     ["Trihorn", 4, "large", "troop", ["beast", "thunder lizard"], 0],
-    ["Slaughter pit shade", 4, "large", "wrecker", ["shade", "spirit", "undead"]],
+    ["Slaughter pit shade", 4, "large", "wrecker", ["shade", "spirit", "undead"], 0],
     ["Spiketail", 4, "large", "wrecker", ["beast", "thunder lizard"], 0],
     
     ["Jackal scout", 5, "normal", "archer", ["jackal", "humanoid", "great ghoul"], 0],
