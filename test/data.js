@@ -30,13 +30,23 @@ function isNumber() {
     }
 }
 
+function isArray(pred) {
+    return (v) => {
+        if (!(v instanceof Array)) throw new Error(`${v} is not an array`);
+        
+        for (var i = 0; i < Math.min(v.length, arguments.length); i++) {
+            pred(v[i]);
+        }
+    }
+}
+
 function isTuple() {
     return (v) => {
         if (!(v instanceof Array)) throw new Error(`${v} is not an array`);
         if (v.length !== arguments.length) throw new Error(`${v} is not ${arguments.length} items long`);
 
         for (var i = 0; i < Math.min(v.length, arguments.length); i++) {
-            !arguments[i](v[i]);
+            arguments[i](v[i]);
         }
 
         return true;
@@ -48,7 +58,7 @@ const isEntry = isTuple( // ["Redscale flamewing", 12, "normal", "wrecker", ["kr
     isNumber(),
     isString(),
     isString(),
-    (v) => v instanceof Array,
+    isArray(isString()),
     isNumber() 
 )
 
