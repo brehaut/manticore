@@ -45,19 +45,33 @@ function isTuple() {
         if (!(v instanceof Array)) throw new Error(`${v} is not an array`);
         if (v.length !== arguments.length) throw new Error(`${v} is not ${arguments.length} items long`);
 
-        for (var i = 0; i < Math.min(v.length, arguments.length); i++) {
-            arguments[i](v[i]);
+        try {
+            for (var i = 0; i < Math.min(v.length, arguments.length); i++) {
+                arguments[i](v[i]);
+            }
+        }
+        catch (e) {
+            throw new Error(`Error in tuple ${JSON.stringify(v)}: ${e.message}`);
         }
 
         return true;
     };
 }
 
+function isInSet(setName, set) {    
+    return (v) => {
+        for (var i = 0; i < set.length; i++) {
+            if (set[i] === v) return;
+        }
+        throw new Error(`${v} is not in set '${setName}'`);
+    }
+}
+
 const isEntry = isTuple( // ["Redscale flamewing", 12, "normal", "wrecker", ["kroma dragonic", "humanoid"], 0],
     isString(),
     isNumber(),
-    isString(),
-    isString(),
+    isInSet("sizes", ["weakling", "normal", "elite", "large", "huge", "double strength", "triple strength"]),
+    isInSet("type", ["troop", "mook", "wrecker", "blocker", "archer", "caster", "leader", "spoiler", "stalker"]),
     isArray(isString()),
     isNumber() 
 )
