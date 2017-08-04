@@ -4,7 +4,7 @@ module manticore.common.data {
     export type MonsterThreat = "normal" | "mook";
     export type MonsterScale = [MonsterSizeBase, MonsterThreat];
 
-                                // name, level, size,           , type ,  tags
+                              // name,   level,  size,        type,   tags,     page number
     export type MonsterRecord = [string, number, MonsterSize, string, string[], number];
 
     export type DataSet = {[index:string]: MonsterRecord[]};
