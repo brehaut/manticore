@@ -79,6 +79,13 @@ class ForkingBufferCursor<T> {
         ptr.index = this.index + 1;
         return ptr;
     }
+
+    public skipWhile(pred: (v:T)=>boolean): void {
+        while (pred(this.value())) {
+            this.next();
+            if (this.done()) return;
+        }
+    }
 }
 
 
@@ -107,15 +114,14 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[]): data.Gr
         
         if (monsters.done()) return;
 
-        // recursive behaviour follows
+
         // skip any solitary monsters if we have already encountered a solitary monster
         // TODO: clean up this logic to work for any kind on tracked constraint
-        while (territorialSeen && monsterIsTerritorial(monsters.value())) {
-            monsters.next();
-            if (monsters.done()) return;
-        }
+        monsters.skipWhile(m => territorialSeen && monsterIsTerritorial(m));
+        
         territorialSeen = territorialSeen || monsterIsTerritorial(monsters.value());
 
+        // recursive behaviour follows
         const repeats = repeatMonster(remainingPoints, monsters.value());
         let cur = acc;
 

@@ -3,36 +3,15 @@ const _ = require("lodash");
 const fs = require("fs");
 const vm = require("vm");
 const path = require("path");
+const support = require("./support/require");
 
 const property = jsc.property;
 const assert = jsc.assert;
 
-var importScripts = function(path) {
-  vm.runInThisContext(fs.readFileSync("dist/static/js/" + path, 'utf8'), path);
-};
-
-importScripts("common.js");
-
-var requireWithGlobal = function(script) {
-  const global = {
-    manticore: manticore,
-    require: requireWithGlobal,
-    exports: {}
-  };
-  
-  const normalized = path.normalize(script + ".js")
-  const dir = path.dirname(normalized);
-  const filename = path.basename(normalized)
-  process.chdir(dir)
-  
-  vm.runInNewContext(fs.readFileSync(filename, 'utf8'), global, filename);
-
-  return global.exports;
-}
-
+support.importScripts("common.js");
 // code under test
 
-const allocator = requireWithGlobal('./build/js/workers/libs/allocator');
+const allocator = support.requireWithGlobal('./build/js/workers/libs/allocator');
 
 
 const partyLevel = jsc.integer(1, 10);
@@ -71,7 +50,7 @@ function genEncounters(party, monsters) {
 
 
 const costs = manticore.common.costs;
-console.log(costs)
+
 
 describe("bestiary", () => {
   property("encounters are under party price", party, monsters, (party, monsters) => {
