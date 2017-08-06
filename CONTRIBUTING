@@ -1,12 +1,13 @@
-Thank you for taking the time to consider contributing to Manticore. Please be aware that this is a hobby project. It is developered and maintained when I have the time, as a result it changes sporadically. 
+Thank you for taking the time to consider contributing to Manticore. Please be aware that this is a hobby project. It is developered and maintained when I have the time, as a result it changes sporadically. The following guidelines are to 
+
+## Contributions.
+
+### Reporting a data error.
+
+If you encounter bugs in the data — where the data used in Manticore deviates from the material printed in the 13th Age rule books — please feel free to either make a note in the github issue tracker (https://github.com/brehaut/manticore/issues), or by making the correction to the datafile itself (static/data/bestiary.json) and making a pull request. If you opt to do the pull request, please run the test suite prior to making the request to ensure that you haven't made any errors.
 
 
-### Data errors 
-
-If you encounter bugs in the data please feel free to either make a note in the github issue tracker (https://github.com/brehaut/manticore/issues), or by making the correction to the datafile itself (static/data/bestiary.json) and making a pull request. If you opt to do the pull request, please run the test suite prior to making the request to ensure that you haven't made any errors.
-
-
-### Bugs 
+### Reporting a user interface or generation bug. 
 
 Please report bugs in the github issue tracker (https://github.com/brehaut/manticore/issues). Please mention the browser or browsers (and version numbers), operating systems or devices (and version numbers) in addition to the steps necessary to reproduce the issue. 
 
@@ -15,17 +16,16 @@ While I try to respond to bugs in a timely fashion please note that sometimes li
 Like with data errors, pull requests are welcome for bug fixes. If you are able to make a test case but cannot figure out how to make a fix yourself, I will gladly take a pull request for that. Please attempt to match the coding style of the piece of code you modify, and do not include any new dependancies. I am quite finickity about the code in the project, and may request changes before I accept your request; please do not be offended. As always, run the test suite before logging a pull request.
 
 
-### Feature requests
+### Suggesting a new feature.
 
 Before making a feature request or pull request please look at the existing issues in the issue tracker. The 'Enhancement' label — https://github.com/brehaut/manticore/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement — contains a list of all the features and improvements I am currently considering.
 
 I prioritize features that will improve the quality of the generated results over other features. A feature that will significantly increase the overall complexity of the codebase, or the performance profile of the allocation algorithm are not likely to be accepted. 
 
-Please do not start working on a pull request for a feature without first raising it as an issue. There is no garuntee it will be accepted. I will also be the fussiest about code style and quality for feature requests. 
+Please do not start working on a pull request for a feature without first raising it as an issue. There is no garuntee it will be accepted. I will also be the fussiest about code style and quality for feature requests. Again, pull requests that require additional dependancies will not be accepted. 
 
 
+## On the codebase.
 
-
-
-
+I try to keep the wiki on the project github — https://github.com/brehaut/manticore/wiki — maintained and up to date with resources to help you understand the project. Please look there first!
 
