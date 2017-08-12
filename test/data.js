@@ -30,6 +30,14 @@ function isNumber() {
     }
 }
 
+function isPositiveNumber() {
+    return (v) => {
+        if (((typeof v) === "number" || v instanceof number)
+            && v > 0) return;
+        throw new Error(`${v} is not a positive number`);
+    };
+}
+
 function isArray(pred) {
     return (v) => {
         if (!(v instanceof Array)) throw new Error(`${v} is not an array`);
@@ -73,8 +81,12 @@ const isEntry = isTuple( // ["Redscale flamewing", 12, "normal", "wrecker", ["kr
     isInSet("sizes", ["weakling", "normal", "elite", "large", "huge", "double strength", "triple strength"]),
     isInSet("type", ["troop", "mook", "wrecker", "blocker", "archer", "caster", "leader", "spoiler", "stalker"]),
     isArray(isString()),
-    isNumber() 
+    isPositiveNumber() 
 )
+
+function allEntries(data) {
+    return _.concat([], _.values(data));
+}
 
 describe("format", () => {
     const data = loadfile("static/data/bestiary.json");
@@ -84,8 +96,8 @@ describe("format", () => {
     );
     
     it("book arrays contain only arrays",
-        () => ok(_.values(data).every(book => book.every(record => record instanceof Array
-                                                                && record.length == 5 || record.length == 6)))
+        () => ok(_.every(allEntries(data), record => record instanceof Array
+                                           && record.length == 5 || record.length == 6))
     );
 
     it("entries are in appropriate format", 
