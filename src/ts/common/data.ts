@@ -1,7 +1,7 @@
 module manticore.common.data {
-    export type MonsterSizeBase = "normal" | "large" | "huge" | "weakling" | "elite";
-    export type MonsterSize = MonsterSizeBase | "double strength" | "triple strength";
-    export type MonsterThreat = "normal" | "mook";
+    export type MonsterSizeBase = "normal" | "large" | "huge";
+    export type MonsterSize = MonsterSizeBase  | "weakling" | "elite" | "double strength" | "triple strength" | "large elite";
+    export type MonsterThreat = "normal" | "mook"  | "weakling" | "elite";
     export type MonsterScale = [MonsterSizeBase, MonsterThreat];
 
                               // name,   level,  size,        type,   tags,     page number
@@ -20,13 +20,30 @@ module manticore.common.data {
         readonly pageNumber: number;
     }
 
-    function normalizedScale(size: MonsterSize, kind: string): MonsterScale {
-        const threat = kind === "mook" ? "mook" : "normal";
-                
-        if (size === "double strength") return ["large", threat];
-        if (size === "triple strength") return ["huge", threat];
+    function normalizeThreat(size: MonsterSize, kind: string): MonsterThreat {
+        if (kind === "mook") return "mook";
+        if (size === "weakling") return "weakling";
+        if (size === "elite" || size === "large elite") return "elite";
+        return "normal";
+    }
 
-        return [size, threat];
+    function normalizeSize(size: MonsterSize): MonsterSizeBase {
+        switch (size) {
+            case "double strength": 
+            case "large elite": 
+                return "large";
+            case "triple strength":
+                return "huge";
+            case "weakling":
+            case "elite":
+                return "normal";
+            default: 
+                return size;
+        }
+    }
+
+    function normalizedScale(size: MonsterSize, kind: string): MonsterScale {
+        return [normalizeSize(size), normalizeThreat(size, kind)];
     }
 
     export function newMonster(name:string, 

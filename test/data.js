@@ -78,26 +78,26 @@ function isInSet(setName, set) {
 const isEntry = isTuple( // ["Redscale flamewing", 12, "normal", "wrecker", ["kroma dragonic", "humanoid"], 0],
     isString(),
     isNumber(),
-    isInSet("sizes", ["weakling", "normal", "elite", "large", "huge", "double strength", "triple strength"]),
+    isInSet("sizes", ["weakling", "normal", "elite", "large", "huge", "double strength", "triple strength", "large elite"]),
     isInSet("type", ["troop", "mook", "wrecker", "blocker", "archer", "caster", "leader", "spoiler", "stalker"]),
     isArray(isString()),
-    isPositiveNumber() 
+    isNumber() 
 )
 
 function allEntries(data) {
-    return _.concat([], _.values(data));
+    return _.flatten(_.values(data));
 }
 
 describe("format", () => {
     const data = loadfile("static/data/bestiary.json");
 
     it("toplevel datastructure is {[index:string]: Array}", 
-        () => ok(typeof data === "object" && _.every(data, (v, k) => v instanceof Array))
+        () => ok(typeof data === "object" && _.every(_.values(data), v => v instanceof Array))
     );
     
     it("book arrays contain only arrays",
         () => ok(_.every(allEntries(data), record => record instanceof Array
-                                           && record.length == 5 || record.length == 6))
+                                                    && (record.length == 5 || record.length == 6)))
     );
 
     it("entries are in appropriate format", 
@@ -105,3 +105,4 @@ describe("format", () => {
                   .every(book => book.every(isEntry)))
     );
 });
+

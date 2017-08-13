@@ -641,7 +641,7 @@
     ["Rakshasa delver", 8, "double strength", "caster", ["Rakshasa"], 0],
     ["Golden eye necromancer", 8, "triple strength", "caster", ["undead", "humanoid", "silver hand", "lich king"], 0],
     ["Bonded prophet", 8, "triple strength", "leader", ["bonded", "construct"], 0],
-    ["Fire giant priest-general", 8, "large", "elite", ["giant", "fire", "fire giant"], 0],
+    ["Fire giant priest-general", 8, "large elite", "caster", ["giant", "fire", "fire giant"], 0],
     ["Koruku landkiller", 8, "huge", "leader", ["koruku", "beast"], 0],
     ["Whitescale blighter", 8, "normal", "leader", ["kroma dragonic", "humanoid"], 0],
     ["Koruku servitor", 8, "normal", "mook", ["koruku", "spirit"], 0],

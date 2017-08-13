@@ -60,6 +60,12 @@ module manticore.common.costs {
                 return base / 5;
             }
         }
+        else if (threat === "weakling") {
+            return base * 0.5;
+        }
+        else if (threat === "elite") {
+            return base * 1.5;
+        }
 
         return base;
     }
