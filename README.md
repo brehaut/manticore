@@ -15,6 +15,8 @@ will install the typescript compiler in the project, and compile the typescript 
 
 The application is a simple client side web app, so you need to place the `dist` directory into your webserver and point your browser there. If you have python installed running `make server` will launch a simple http server on port 8080 for testing.
 
+If you are here using this app, you may find Matthew Colville's [video on Challenge Ratings](https://www.youtube.com/watch?v=xANZTijbrw8) useful or interesting.
+
 ##  Known issues:
 
  * It will never work in Internet Explorer 10 or lower (Version 0.4 works in IE9), but [you shouldn’t be using IE10 or earlier](https://www.microsoft.com/en-us/WindowsForBusiness/End-of-IE-support) anyway.
