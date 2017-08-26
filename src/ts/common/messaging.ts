@@ -112,7 +112,7 @@ module manticore.common.messaging {
         }
         
         export function isPartyPut(msg:PartyMessage): msg is PartyPut {
-            return (msg.messageKey === PartyMessageTypes.Get);
+            return (msg.messageKey === PartyMessageTypes.Put);
         }
         
         export function isPartyData(msg:PartyMessage): msg is PartyData {
