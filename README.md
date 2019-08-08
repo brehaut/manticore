@@ -4,7 +4,7 @@ A Typescript program to generate encounters for [*13th Age*](http://13thage.com/
 
 ## Usage
 
-The easy way is to visit the online instance at [http://manticore.brehaut.net](http://manticore.brehaut.net).
+The easy way is to visit the online instance at [https://manticore.brehaut.net](https://manticore.brehaut.net).
 	
 If you want to run/develop it locally you will need [Node JS](https://nodejs.org/), [Gulp](http://gulpjs.com), and `make` installed to build this project:
 
