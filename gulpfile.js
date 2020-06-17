@@ -24,16 +24,19 @@ function resolve() {
 
 class TsConcatUnit {
     constructor(tsconfig, unitInfo, override) {
+        this.tsconfig = tsconfig;
+        this.override = override;
+
         const inFiles = unitInfo.entrypoint;
         const outFile = unitInfo.unitName;
 
-        this.ts = ts.createProject(tsconfig, override);
         this.inFiles = inFiles instanceof Array ? inFiles.map(e => resolve(BUILD_PATH, e)) : resolve(BUILD_PATH, inFiles);
         this.outFile = outFile;
     }
 
     gulpProcessor() {
-        return this.ts();
+        const tsp = ts.createProject(this.tsconfig, this.override);
+        return tsp();
     }
 
     bundleScript() {    
@@ -155,8 +158,8 @@ gulp.task('styles', function () {
 gulp.task('build:contrib', function () {
 	return gulp.src([
             'src/js/contrib/promise-1.0.0.min.js',
-            'src/js/contrib/react.min.js',
-            'src/js/contrib/react-dom.min.js'
+//            'src/js/contrib/react.min.js',
+//            'src/js/contrib/react-dom.min.js'
         ])
         .pipe(concat('contrib.js'))
         .pipe(gulp.dest('static/js/'));
@@ -200,7 +203,13 @@ gulp.task('build:workers:fallback', gulp.series("build:common", function () {
 }));
 
 
-gulp.task('build',gulp.parallel('styles', 'build:contrib', 'build:main', 'build:workers', 'build:workers:fallback'));
+gulp.task('build',gulp.parallel(
+    'styles', 
+    'build:contrib', 
+    'build:main', 
+    'build:workers', 
+    'build:workers:fallback')
+);
 
 
 gulp.task('dist', gulp.series('build', function () {
