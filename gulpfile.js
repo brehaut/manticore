@@ -160,7 +160,7 @@ gulp.task('build:contrib', function () {
         ])
         .pipe(concat('contrib.js'))
         .pipe(gulp.dest('static/js/'));
-})
+});
 
 
 gulp.task('build:common', function () {
@@ -171,10 +171,10 @@ gulp.task('build:common', function () {
         result.js.pipe(gulp.dest(resolve(BUILD_PATH, '/js/common'))),
         result.dts.pipe(gulp.dest(resolve(BUILD_PATH, '/types/common')))
     ]);
-})
+});
 
 
-gulp.task('build:main', ["build:common"],  function () {
+gulp.task('build:main', gulp.series("build:common", function () {
 	return gulp.src([
         resolve(SRC_PATH, '/ts/app/**/*.ts'), 
         resolve(SRC_PATH, '/ts/app/**/*.tsx')
@@ -182,28 +182,28 @@ gulp.task('build:main', ["build:common"],  function () {
         .pipe(uiProject.gulpProcessor())
         .pipe(gulp.dest(resolve(BUILD_PATH, '/js/main')))
         ;
-})
+}));
 
 
-gulp.task('build:workers', ["build:common"], function () {
+gulp.task('build:workers', gulp.series("build:common", function () {
 	return gulp.src(resolve(SRC_PATH, '/ts/workers/**/*.ts'))
         .pipe(dataAccessWorkerProject.gulpProcessor())
         .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers')))
         ;
-})
+}));
 
-gulp.task('build:workers:fallback', ["build:common"], function () {
+gulp.task('build:workers:fallback', gulp.series("build:common", function () {
 	return gulp.src([resolve(SRC_PATH, '/ts/workers/**/*.ts')])
         .pipe(generationWorkerProjectFallback.gulpProcessor())
         .pipe(gulp.dest(resolve(BUILD_PATH, '/js/workers-fallback')))
         ;
-})
+}));
 
 
-gulp.task('build', ['styles', 'build:contrib', 'build:main', 'build:workers', 'build:workers:fallback']);
+gulp.task('build',gulp.parallel('styles', 'build:contrib', 'build:main', 'build:workers', 'build:workers:fallback'));
 
 
-gulp.task('dist', ['build'], function () {
+gulp.task('dist', gulp.series('build', function () {
     function copy(src, dest) {
         return gulp.src(src).pipe(gulp.dest(dest));
     }
@@ -214,10 +214,10 @@ gulp.task('dist', ['build'], function () {
     ])
 
     return merge(outputs)
-});
+}));
 
 
-gulp.task('manifest', ['dist'], function () {
+gulp.task('manifest', gulp.series('dist', function () {
     return gulp.src(["dist/**/*"])
         .pipe(manifest({
             filename: "manifest.appcache",
@@ -232,12 +232,12 @@ gulp.task('manifest', ['dist'], function () {
         }))
         .pipe(gulp.dest("./dist/"))
         ;
-})
+}));
 
 
-gulp.task('default', ['manifest']);
+gulp.task('default', gulp.task('manifest'));
 
 
-gulp.task('watch', [], function() {
+gulp.task('watch', function() {
     gulp.watch('src/ts/**/*.ts', ['default']);
 });
