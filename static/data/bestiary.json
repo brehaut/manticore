@@ -664,7 +664,7 @@
     ["Briar elf warrior", 9, "normal", "troop", ["humanoid", "elf", "briar elf"], 28],
     ["Eidolon in gaurdian form", 9, "triple strength", "troop", ["eidolon", "spirit"], 48],
     ["Greater flux elemental", 9, "normal", "troop", ["elemental", "flux"], 78],
-    ["Great hubris devil", 9, "huge", "wrecker", ["hubris devil", "devil"], 149
+    ["Great hubris devil", 9, "huge", "wrecker", ["hubris devil", "devil"], 149],
 
     ["Blackscale light-killer", 10, "normal", "archer", ["kroma dragonic", "humanoid"], 177],
     ["Bronze kingsguard", 10, "normal", "blocker", ["gold king", "construct"], 115],
