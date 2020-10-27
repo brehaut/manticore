@@ -5,7 +5,6 @@ var uglify = require("gulp-uglify");
 var ts = require('gulp-typescript');
 var less = require('gulp-less');
 var merge = require('merge2'); 
-var manifest = require("gulp-manifest");
 var rm = require('gulp-rimraf');
 var path = require('path');
 var webpack = require('webpack-stream');
@@ -19,7 +18,6 @@ const SRC_PATH = "src/";
 function resolve() {
     return path.resolve(path.join.apply(path, arguments));
 }
-
 
 
 class TsConcatUnit {
@@ -63,9 +61,10 @@ class TSExecutionUnit {
 
     bundleScript() {
         return gulp.src(this.entrypoint)
-            .pipe(webpack({                
+            .pipe(webpack({               
+                mode: 'production', 
                 output: {
-                    filename: resolve(STATIC_PATH, "/js/", this.unitName),                                  
+                    filename: (STATIC_PATH + "/js/" + this.unitName),                                  
                 },                
             }))
             .pipe(gulp.dest(DIST_PATH))
@@ -218,7 +217,7 @@ gulp.task('dist', gulp.series('build', function () {
     }
 
     const outputs = units.map(u => u.bundleScript()).concat([        
-        copy('index.html', 'dist'),
+        copy('src/html/index.html', 'dist'),
         copy('static/**/*', 'dist/static'),
     ])
 
@@ -226,25 +225,7 @@ gulp.task('dist', gulp.series('build', function () {
 }));
 
 
-gulp.task('manifest', gulp.series('dist', function () {
-    return gulp.src(["dist/**/*"])
-        .pipe(manifest({
-            filename: "manifest.appcache",
-            hash: true,
-            exclude: [
-                "manifest.appcache",
-                "**/Thumbs.db"
-            ],
-            network: [
-
-            ]
-        }))
-        .pipe(gulp.dest("./dist/"))
-        ;
-}));
-
-
-gulp.task('default', gulp.task('manifest'));
+gulp.task('default', gulp.task('dist'));
 
 
 gulp.task('watch', function() {

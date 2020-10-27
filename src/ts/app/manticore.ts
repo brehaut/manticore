@@ -6,15 +6,12 @@ import workers = manticore.common.typedWorkers;
 import { _ } from "./ui/strings"; 
 
 
-
-import * as appcache from "./appcache";
 import * as ui from "./ui";
 import * as model from "./data-access-worker";
 
 function awaitContentLoaded() {
     return new Promise((resolve, reject) => {
         document.addEventListener("DOMContentLoaded", ({}) => {
-            appcache.handleReloads();
             resolve({});
         })
     });
