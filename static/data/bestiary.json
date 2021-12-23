@@ -46,6 +46,7 @@
   ["Otyugh",3,"large","blocker",["aberration"], 243],
   ["Trog chanter",3,"normal","leader",["troglodyte", "humanoid"], 247],
 
+  ["Big zombie",4,"large","wrecker",["zombie","undead"], 251],
   ["Blackamber skeletal legionnaire",4,"normal","troop",["skeleton","undead"], 246],
   ["Derro maniac",4,"normal","troop",["dwarf","derro", "humanoid"], 216],
   ["Derro sage",4,"normal","caster",["dwarf","derro", "humanoid"], 216],
@@ -84,7 +85,7 @@
   ["Large black dragon",6,"large","wrecker",["black","dragon"], 220],
   ["Manticore",6,"large","archer",["beast"], 238],
   ["Medium red dragon",6,"normal","wrecker",["dragon","red"], 220],
-  ["Medusa",6,"large","wrecker",["humanoid"], 238],
+  ["Medusa outlaw",6,"large","wrecker",["humanoid"], 238],
   ["Vampire spawn",6,"normal","spoiler",["vampire","undead"], 249],
   ["Vrock",6,"normal","spoiler",["demon"], 211],
 
@@ -93,21 +94,24 @@
   ["Hyrda, 7 heads",7,"huge","wrecker",["hydra","beast"], 236],
   ["Large green dragon",7,"large","spoiler",["green","dragon"], 220],
   ["Ogre mage",7,"large","caster",["giant"], 240],
-  ["Ogre rager",7,"normal","mook",["giant"], 242],
+  ["Orc rager",7,"normal","mook",["giant"], 242],
   ["Phase spider",7,"large","spoiler",["beast"], 244],
 
   ["Fire giant",8,"large","wrecker",["giant"], 227],
   ["Glabrezou",8,"large","caster",["demon"], 212],
+  ["Half-orc commander",8,"normal","leader",["half-orc", "humanoid"], 233],
   ["Large blue dragon",8,"large","caster",["dragon","blue"], 221],
   ["Rakshasa",8,"large","caster",["humanoid"], 245],
   ["Stone giant",8,"large","troop",["giant"], 226],
   ["Stone golem",8,"large","blocker",["golem","construct"], 232],
+  ["Trog underling",8,"normal","mook",["troglodyte", "humanoid"], 247],
 
   ["Black pudding",9,"huge","wrecker",["ooze"], 241],
   ["Chimera",9,"large","wrecker",["beast"], 209],
   ["Despoiler mage",9,"normal","wrecker",["demon"], 213],
-  ["Fire giant warlock",9,"large","leader",["giant"], 227],
+  ["Fire giant warlord",9,"large","leader",["giant"], 227],
   ["Giant vrock",9,"large","spoiler",["demon"], 214],
+  ["Giant zombie",9,"large","mook",["zombie","undead"], 251],
   ["Hooked demon",9,"normal","mook",["demon"], 213],
   ["Huge black dragon",9,"huge","wrecker",["black","dragon"], 221],
 
@@ -125,7 +129,8 @@
   ["Huge blue dragon",12,"huge","caster",["dragon","blue"], 222],
   ["Marilith",12,"large","troop",["demon"], 215],
 
-  ["Balor",13,"large","wrecker",["demon"], 215]
+  ["Balor",13,"large","wrecker",["demon"], 215],
+  ["Huge red dragon",13,"huge","wrecker",["dragon","red"], 223]
  ],
 
  "13 True Ways": 
@@ -182,6 +187,7 @@
   ["Big water elemental", 7, "normal", "blocker", ["elemental", "water"], 191], 
   ["Cloud giant mage", 7, "huge", "caster", ["giant", "cloud"], 165], 
   ["Cloud giant thane", 7, "huge", "wrecker", ["giant", "cloud"], 165], 
+  ["Cloud giant warrior", 7, "huge", "troop", ["giant", "cloud"], 165], 
   ["Devil of the fangs", 7, "huge", "spoiler", ["devil"], 180], 
   ["Gnoll fiendfletch", 7, "normal", "archer", ["gnoll", "humanoid"], 196],
   ["Gnoll shredder", 7, "normal", "blocker", ["gnoll", "humanoid"], 196], 
@@ -212,6 +218,7 @@
   ["Huge copper dragon", 11, "huge", "spoiler", ["dragon", "copper"], 187], 
   ["Ice devil (gelugon)", 11, "normal", "leader", ["devil"], 177], 
   ["Large gold dragon", 11, "large", "caster", ["dragon", "gold"], 187], 
+  
   ["Horned devil (conugon)", 12, "large", "troop", ["devil"], 177], 
 
   ["Huge silver dragon", 13, "huge", "spoiler",  ["dragon", "silver"], 188], 
