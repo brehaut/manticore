@@ -1,35 +1,32 @@
 {
-  "name": "manticore",
-  "version": "0.5.0",
-  "description": "13th Age fair encounter generator.",
-  "author": "Andrew Brehaut <andrew@brehaut.net>",
-  "license": "Eclipse Public License, 13th Age Community Use Policy",
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/brehaut/manticore"
-  },
-  "devDependencies": {
-    "gulp": "^4.0.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-less": "^4.0.1",
-    "gulp-rimraf": "^0.2.0",
-    "gulp-typescript": "^5.0.1",
-    "gulp-uglify": "^1.5.3",
-    "jsverify": "0.7.4",
-    "lodash": "^4.17.21",
-    "merge2": "^1.0.2",
-    "mocha": "^10.1.0",
-    "typescript": "2.7.*",
-    "webpack-stream": "^6.1.0"
-  },
-  "dependencies": {
-    "@types/react": "^16.0.40",
-    "@types/react-dom": "^16.0.4",
-    "react": "16.14.*",
-    "react-dom": "^16.13.1"
-  },
-  "scripts": {
-    "test": "mocha"
-  }
+	"name": "manticore-2",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:unit": "vitest",
+		"lint": "eslint ."
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.5.0",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"eslint": "^8.28.0",
+		"eslint-plugin-svelte3": "^4.0.0",
+		"svelte": "^3.54.0",
+		"svelte-check": "^3.0.1",
+		"tslib": "^2.4.1",
+		"typescript": "^4.9.3",
+		"vite": "^4.0.0",
+		"vitest": "^0.25.3"
+	},
+	"type": "module",
+	"dependencies": {
+		"@sveltejs/adapter-static": "^2.0.1"
+	}
 }

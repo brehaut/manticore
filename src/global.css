@@ -1,0 +1,205 @@
+body {
+    --brand-color: #097E6C;
+    --body-copy-color: #461B0E;
+    --background-color: #F2F2EB;
+}
+
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('fonts/alegreya/Alegreya-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('fonts/alegreya/Alegreya-Italic.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('fonts/alegreya/Alegreya-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('fonts/alegreya/Alegreya-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+* {
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box;  box-sizing: border-box;
+}
+
+img { 
+    -moz-box-sizing: content-box; -webkit-box-sizing: content-box;  box-sizing: content-box;
+}
+
+body {   
+    background: var(--background-color);
+    color: var(--body-copy-color);
+    font-family: 'Alegreya', serif;
+    font-size: 12pt;
+    line-height: 1.2;
+    border-top: 10px solid var(--brand-color);
+    margin: 0;
+}
+
+h1 {
+    margin: 0.25em 0;
+}
+
+a {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(14, 0, 194, 0.5);
+    color: rgb(14, 0, 194);
+}
+
+
+body > div >header {
+    margin-top: 3em;
+    padding: 0 10px;
+  }
+    
+  @media screen and (min-width:640px) {
+    body > div >div >header {
+        padding: 0 20px;    
+    }
+  }
+
+  body > div >header h1 {
+    font-size: 1.55em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  body > div >header h2 {
+    font-size: 1.5em;
+    line-height: 1em;
+    margin: 0;
+    font-weight: normal;
+  }
+
+  body > div >header > .blurb {
+    position: relative;
+  }
+  body > div >header > .blurb > .logo {
+    display: none;
+  }
+
+  body > div >header > .blurb > .unfair {
+      display: none;
+  }
+
+  @media screen and (min-width:740px) {
+    body > div >header > .blurb > p 
+    {
+        width: 66.666%;
+    }
+
+    body > div >header > .blurb > .logo {
+        display: block;
+        height: 150%;
+        max-height: 180px;
+        position: absolute;
+        bottom: 0; right: 0;
+        transform: scale(-1, 1);
+    } 
+
+    body > div >header > .blurb > .unfair {
+        display: block;
+    }
+  }
+
+
+
+body > div >footer {
+    background: rgba(40, 15, 7, 1);
+    color: #F2F2EB;
+    font-size: 0.9em;
+    margin-top: 3em;
+  }
+   
+  body > div >footer > div {
+    margin-top: 2em;
+    margin-bottom: 0;
+    padding: 3em 10px;
+    line-height: 1.5;
+    display: grid;
+    grid-template-columns: 12fr 4fr;
+    grid-template: 'fireopal code' 'fireopal illustration' 'fireopal font';
+  }
+  
+  .fire-opal { grid-area: fireopal; }
+  .code { grid-area: code; }
+  .illustration { grid-area: illustration; }
+  .alegreya { grid-area: font; }
+  
+  @media screen and (min-width:640px) {
+    body > div >footer > div {
+      padding: 3em 20px;
+    }
+  }
+  
+  
+  body > div >footer a {
+    color: #6DD6C6;
+    border-bottom-color: rgba(255,255,255,0.25);
+  }
+  
+  body > div >footer a:hover {
+    color: white;
+    border-bottom-color: rgba(255,255,255,0.5);
+  }
+  
+  
+  @media screen and (min-width:320px) {
+    body > div >header,
+    body > div >section,
+    body > div >footer > div,
+    body > div >#application {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  
+  
+  @media screen and (min-width:640px) {
+    body > div >footer > div > section {
+      float: left;
+      padding-left: 10px;
+    }
+  
+    body > div >footer section > p:last-child {
+      margin-top: 0;
+    }
+    
+    body > div >footer section > p:last-child {
+      margin-bottom: 0;
+    }
+    
+    body > div >footer section.fire-opal {
+      padding-left: 0;
+      padding-right: 10px;
+      margin-bottom: 3em;
+    }
+    
+    body > div >footer section.code {
+      margin-top: 0;
+    }
+  
+    section.illustration,
+    section.alegreya {
+      margin-top: 1em;            
+    }            
+  }
+  
