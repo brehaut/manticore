@@ -18,7 +18,7 @@
             {_(summary)}
         </p>
         {#if collapsable}
-        <a href="#"  on:click|preventDefault={toggle}>{_(collapsed ? "expand" : "collapse")}</a>
+        <button on:click|preventDefault={toggle}>{_(collapsed ? "expand" : "collapse")}</button>
         {/if}
     </header>
 
@@ -57,6 +57,7 @@
         font-size: 0.9em;
         margin-top: 0.25em;
         margin-bottom: 1.5em;
+        max-width: 60em;
     }
 
     section > div {

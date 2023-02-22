@@ -19,3 +19,8 @@ export function groupBy<T, TKey>(iter: Iterable<T>, key: (v:T) => TKey): Map<TKe
 
     return groups;
 }
+
+
+export function* range(start:number, stop:number) {
+    for (let i = start; i <= stop; i++) yield i;
+}
