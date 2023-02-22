@@ -38,3 +38,23 @@
         <Loading/>
     {/if}
 </Section>
+
+<style>
+    button {
+        border: 1px solid rgba(70, 27, 14, 0.2);
+        background: var(--brand-color);
+        color: white;
+        border-radius: 3px;
+        cursor: pointer;
+        display: inline-block;
+        padding: 0.5rem 2em;
+        margin-bottom: 2em;
+        font-family: Alegreya;
+        font-size: 1.2rem;
+    }
+
+    button:hover {
+        background: rgba(70, 27, 14, 0.05);
+        color: #461B0E;
+    }
+</style>
