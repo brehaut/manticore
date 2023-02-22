@@ -75,6 +75,7 @@ export interface IParty {
 export interface Allocation {
     readonly monster: Monster;
     readonly num:number;
+    readonly cost:number;
 }
 
 export type Encounters = Allocation[][];

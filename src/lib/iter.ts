@@ -26,3 +26,9 @@ export function* range(start:number, stop:number) {
 }
 
 
+export function every<X>(xs:Iterable<X>, pred:(x:X) => boolean): boolean {
+    for (const x of xs) {
+        if (pred(x) === false) return false;
+    }
+    return true;
+}

@@ -6,23 +6,29 @@ A Typescript program to generate encounters for [*13th Age*](http://13thage.com/
 
 The easy way is to visit the online instance at [https://manticore.brehaut.net](https://manticore.brehaut.net).
 	
-If you want to run/develop it locally you will need [Node JS](https://nodejs.org/), [Gulp](http://gulpjs.com), and `make` installed to build this project:
+If you want to run/develop it locally you will need [Node JS](https://nodejs.org/).
+
+Install dependancies with:
 
     $ npm install
-    $ gulp
 
-will install the typescript compiler in the project, and compile the typescript source and move it and other resources into the `dist` directory ready for deployment. 
+Spin up the development build process with 
 
-The application is a simple client side web app, so you need to place the `dist` directory into your webserver and point your browser there. If you have python installed running `make server` will launch a simple http server on port 8080 for testing.
+    $ npm run dev 
 
-If you are here using this app, you may find Matthew Colville's [video on Challenge Ratings](https://www.youtube.com/watch?v=xANZTijbrw8) useful or interesting.
+Note: At the time of writing, the dev process only works with a Blink based browser such as Chromium, as other browsers have not implemented modules in workers the way the build process expects. This is not a problem during production.
 
-##  Known issues:
+You can build a distributable artefact for production with 
 
- * It will never work in Internet Explorer 10 or lower (Version 0.4 works in IE9), but [you shouldn’t be using IE10 or earlier](https://www.microsoft.com/en-us/WindowsForBusiness/End-of-IE-support) anyway.
- * Internet Explorer 11 is supported by TypeScripts downlevel iteration compiler mode and performs significantly slower than the native version used by every other browser. Consider using something else. Edge is better (if not as snappy as Chrome or Firefox)
+    $ npm run build
 
-See [Issues](https://github.com/brehaut/manticore/issues) for more. 
+Tests are run with:
+
+    $ npm run test:unit
+
+### Platform changes since the 2.0 banch 
+
+Previously manticore was built with react, gulp, and rollup, and tested with mocha. From 2.0 onward, the application is built with Svelte, and Svelte Kit. If you built an earlier version, it pays to just delete your node_modules and reinstall.
 
 ## Thanks
 
