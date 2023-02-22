@@ -1,6 +1,7 @@
 <script lang="ts">
     import { range } from '$lib/iter.js';
-
+    import { onMount } from 'svelte';
+    import { debounce } from './debounce.js';
 
     export let count: number;
     export let page: number;
@@ -12,6 +13,22 @@
     function toPage(n:number) { page = Math.max(Math.min(totalPages, n), 0); }
 
     let numberPages = 20;
+
+    const setNumberPages = debounce(() => {
+        if (window.matchMedia("(min-width:800px)").matches) {
+            numberPages = 20;
+        }
+        else {
+            numberPages = 10;
+        }
+    });
+
+    setNumberPages();
+
+    onMount(() => {
+        window.addEventListener('resize', setNumberPages);
+    });
+
     $: firstShorthandPage = Math.max(0, page - (numberPages / 2));
     $: lastShorthandPage = Math.min(firstShorthandPage + numberPages, totalPages)
     $: pageNumbers = Array.from(range(Math.max(0, lastShorthandPage - numberPages), lastShorthandPage));

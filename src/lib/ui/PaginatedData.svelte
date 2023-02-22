@@ -5,7 +5,8 @@
     type T = $$Generic;
 
     export let items:T[];
-    export let pageSize = 20;
+    export let pageSize = 50;
+
     let page = 0;
     $: view = items.slice(page * pageSize, (page * pageSize) + pageSize);
 </script>

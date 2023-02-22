@@ -26,7 +26,6 @@ body {
     src: url('fonts/alegreya/Alegreya-Italic.woff2') format('woff2');
     font-weight: normal;
     font-style: italic;
-
 }
 
 @font-face {
@@ -34,7 +33,6 @@ body {
     src: url('fonts/alegreya/Alegreya-Bold.woff2') format('woff2');
     font-weight: bold;
     font-style: normal;
-
 }
 
 @font-face {
@@ -110,7 +108,7 @@ body > div >header > .blurb > .logo {
 }
 
 body > div >header > .blurb > .unfair {
-    display: none;
+  display: none;
 }
 
 @media screen and (min-width:740px) {
