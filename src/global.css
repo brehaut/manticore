@@ -150,8 +150,14 @@ body > div > footer > div {
   padding: 3em 10px;
   line-height: 1.5;
   display: grid;
-  grid-template-columns: 12fr 4fr;
-  grid-template: 'fireopal code' 'fireopal illustration' 'fireopal font';
+  grid-template: 'fireopal' 'code' 'illustration' 'font';
+}
+
+@media screen and (min-width:725px) {
+  body > div > footer > div {
+    grid-template: 'fireopal code' 'fireopal illustration' 'fireopal font';
+    grid-template-columns: 2fr 2fr;
+  }
 }
 
 .fire-opal { grid-area: fireopal; }
