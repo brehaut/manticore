@@ -22,7 +22,7 @@
             <FacetFilter facet="kind" heading="Kind" values={bestiary.allKinds()} width={1} {counts} on:change />
         </div>
         <div class="attributes">
-            <FacetFilter facet="attributes" heading="Attributes" values={bestiary.allAttributes()} width={4} {counts} on:change />
+            <FacetFilter facet="attributes" heading="Attributes" values={bestiary.allAttributes()} width={4} {counts} cluster on:change />
         </div>
     </div>
     <div>{_("Total available monsters after filtering:")} {totalMonsters}</div>

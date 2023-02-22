@@ -23,3 +23,14 @@
         <Paginator count={items.length} bind:page {pageSize} />
     </footer>
 </section>
+
+<style>
+    header {
+        margin-top: 1rem;
+        margin-bottom: -2rem;
+    }
+
+    footer {
+        margin-top: 1rem;
+    }
+</style>

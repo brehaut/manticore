@@ -37,11 +37,15 @@
         margin-bottom:0.25rem;
     }
 
-    .unavailable label, .unavailable input, .unavailable .count {
+    .unavailable label, .unavailable .count {
+        color: var(--faded-body-copy-color);
+    }
+    .unavailable input {
         opacity: 0.5;
     }
 
     label { 
+        text-transform: capitalize;
     }
 
     input {
@@ -53,5 +57,6 @@
         padding-left: 0.25rem;
         font-size: 0.9em;
         opacity: 0.7;
+        text-transform: uppercase;
     }
 </style>

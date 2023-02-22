@@ -37,7 +37,7 @@
     }
 
     section > header {
-        border-top: 2px solid #097E6C; /*#461B0E;*/
+        border-top: 2px solid var(--brand-color);
         border-bottom: 1px solid rgba(70, 27, 14, 0.1);
         margin: 1em 0;
         padding: 1em 0 0 0;
