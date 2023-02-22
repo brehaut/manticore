@@ -4,7 +4,13 @@ body {
   --faded-body-copy-color: #9a8d89;
   --background-color: #F2F2EB;
 
-  --page-margin: 2rem;
+  --page-margin: 0.25rem;
+}
+
+@media screen and (min-width:725px) { 
+  body {
+    --page-margin: 2rem;
+  }
 }
 
 

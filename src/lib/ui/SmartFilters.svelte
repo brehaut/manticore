@@ -29,12 +29,27 @@
 </Section>
 
 <style>
+
     .facets {
         display: grid;
-        grid-template: "book book book" "size kind attributes";
+        grid-template: "book book" "size kind" "attributes attributes";
         grid-column-gap: 0;
-        grid-template-columns: 1fr 1fr 4fr;
+        grid-template-columns: 1fr 1fr;
     }
+
+    @media screen and (min-width:725px) {
+        .facets {
+            grid-template: "book book book" "size kind attributes";
+            grid-template-columns: 1fr 1fr 2fr;
+        }
+    }
+
+    @media screen and (min-width:1000px) {
+        .facets {
+            grid-template-columns: 1fr 1fr 4fr;
+        }
+    }
+
 
     .book { grid-area: book; }
     .size { grid-area: size; }

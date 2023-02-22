@@ -13,7 +13,7 @@
         <span class="count">{ allocation.num }</span>
         {#if !abbreviated}
             <span class="kind">{allocation.monster.kind} {_("lvl")} {allocation.monster.level}</span>
-            <span class="page">{allocation.monster.book} {_("pg.")} {allocation.monster.pageNumber}</span>
+            <span class="page"><span class="book">{allocation.monster.book}</span> {_("pg.")} {allocation.monster.pageNumber}</span>
         {/if}
     </div>
     {/each}
@@ -22,7 +22,7 @@
 <style>
     .encounter {
         display:grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .monster {
@@ -64,16 +64,51 @@
         border-top-right-radius: var(--corner);
     }
 
+    @media screen and (min-width:725px) {
+        .encounter {
+            display:grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .monster:nth-child(2){
+            border-right: var(--border);
+        }
+
+        .monster:nth-last-child(-n+2) {
+            border-bottom: var(--border);
+            margin-bottom:-1px;
+        }
+
+        .monster:nth-child(2n+1):nth-last-child(-n+2) {
+            border-bottom-left-radius: var(--corner);
+        }
+
+        .monster:nth-child(2) {
+            border-top-right-radius: var(--corner);
+        }
+    }
+
     .kind { 
         grid-area: kind; 
-        font-size: 0.9em; 
+        font-size: 0.8em; 
+        color: var(--faded-body-copy-color);
     }
     .page { 
         grid-area: page; 
-        font-size: 0.9em; 
+        font-size: 0.8em; 
         justify-items: end;
         text-align: end;
+        color: var(--faded-body-copy-color);
     }
+    .page .book {
+        display: block;
+    }
+    @media screen and (min-width:725px) {
+        .page .book {
+            display: inline;
+        }
+    }
+
     .name { 
         grid-area: name;
     }

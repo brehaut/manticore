@@ -55,16 +55,24 @@
         grid-column-gap: 0;
     }
 
-    .width-2 ul {
+    .width-2 ul, .width-4 ul, .width-6 ul {
         grid-template-columns: 1fr 1fr;
     }
 
-    .width-4 ul {
-        grid-template-columns: repeat(4, 1fr);
+    @media screen and (min-width:725px) {
+        .width-6 ul {
+            grid-template-columns: repeat(4, 1fr);
+        }
     }
 
-    .width-6 ul {
-        grid-template-columns: repeat(6, 1fr);
+    @media screen and (min-width:1000px) {
+        .width-4 ul {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .width-6 ul {
+            grid-template-columns: repeat(6, 1fr);
+        }
     }
 
     li.title {
