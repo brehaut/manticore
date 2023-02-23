@@ -21,3 +21,11 @@
 <div>
     Loading{repeat(".", count)}
 </div>
+
+<style>
+    div {
+        text-align: center;
+        font-size: 1.2rem;
+        opacity: 0.5;
+    }
+</style>
