@@ -77,5 +77,8 @@
           This Font Software is licensed under the SIL Open Font License, Version 1.1.
         </p>
       </section>
+
+      <div>Version: { __APP_VERSION__ }</div>
+
     </div>
   </footer>    
