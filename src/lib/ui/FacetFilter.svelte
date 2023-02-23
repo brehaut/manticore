@@ -1,5 +1,7 @@
 <script lang="ts">
     import FacetCheckbox from "./FacetCheckbox.svelte";
+    import Toggle from "./Toggle.svelte";
+
     import { _ } from "./strings";
     import { createEventDispatcher } from "svelte";
     import type { Facet, FacetCounts } from "$lib/data";
@@ -15,6 +17,7 @@
     $: showCount = counts !== undefined;
     
     let selected = new Set<string>();
+    let enabled = false;
 
     $: sorted = Array.from(clusterItems(values.sort((a,b) => a.localeCompare(b)), a => a));
 
@@ -28,10 +31,18 @@
 
         dispatcher("change", {facet, selected});
     }
+
+    $: { 
+        dispatcher("change", {facet, selected: enabled ? selected : new Set()});
+    }
+
+    function enable() {
+        enabled = true;
+    }
 </script>
 
 <section class="width-{width}">
-    <header><h1>{_(heading)}</h1></header>
+    <header><h1>{_(heading)} <Toggle bind:enabled/></h1></header>
 
     <ul>
         {#each sorted as group (group.title) }
@@ -40,7 +51,7 @@
         {/if}
         {#each group.items as value}        
         <li> 
-            <FacetCheckbox text={value} value={value} {showCount} count={count?.get(value)} checked={selected.has(value)} on:change={tagToggled}/>
+            <FacetCheckbox text={value} value={value} {showCount} count={count?.get(value)} checked={selected.has(value)} {enabled} on:change={tagToggled} on:click={enable} on:keyup={enable}/>
         </li>
         {/each}
         {/each}

@@ -12,6 +12,7 @@
     export let count:number = 0;
     export let showCount = true;
     export let checked = false;
+    export let enabled = true;
 
     let id = `cb_${counter++}`;
 
@@ -21,8 +22,8 @@
     }
 </script>
 
-<span class="{showCount && (count ?? 0) < 1 ? "unavailable" : ""}">
-<input type="checkbox" {checked} {id} on:change={toggle}/>
+<span class="{showCount && (count ?? 0) < 1 ? "unavailable" : ""}" on:click on:keyup>
+<input type="checkbox" {checked} {id} on:change={toggle} disabled={!enabled}/>
 <label for={id}>{text}</label>
 {#if showCount}<span class="count">{count ?? 0}</span>{/if}
 </span>
