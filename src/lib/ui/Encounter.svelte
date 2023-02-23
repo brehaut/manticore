@@ -25,6 +25,10 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .encounter.abbreviated {
+        grid-template-columns: calc(50% - 0.75em) 1fr;
+    }
+
     .monster {
         display: grid;
         width: 100%;
@@ -69,6 +73,11 @@
             display:grid;
             grid-template-columns: repeat(4, 1fr);
         }
+
+        .encounter.abbreviated {
+            grid-template-columns: calc(25% - 0.75em) repeat(3, 1fr);
+        }
+
 
         .monster:nth-child(2){
             border-right: var(--border);
