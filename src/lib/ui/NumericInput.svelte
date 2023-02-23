@@ -22,9 +22,33 @@
 
 <style>
     .field {
-        max-width: 20rem;
+        width: 100%;
         display: grid;
-        grid-template-columns: 3fr 2fr 1fr;
+        grid-template-columns: 5fr 4fr 1fr;
         align-content: start;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    input[type=range] {
+        margin-top: -0.05rem;
+    }
+
+    @media screen and (min-width: 500px) {
+        .field {
+            width: 66.66%;
+        }
+    }
+
+    @media screen and (min-width: 725px) {
+        .field {
+            width: 50%;
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        .field {
+            width: 33.33%;
+        }
     }
 </style>

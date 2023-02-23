@@ -59,7 +59,7 @@
 <style>
     .paginator { 
         display: grid;
-        grid-template-columns: min-content auto min-content max-content;
+        grid-template-columns: min-content auto min-content;
         gap: 1rem;
         font-size: 1.2rem;
     }
@@ -94,7 +94,17 @@
     }
 
     .summary {
-        display: block;
-        min-width: calc(100% / 12);
+        display: none;
+    }
+
+    @media screen and (min-width: 750px) {
+        .paginator { 
+            grid-template-columns: min-content auto min-content max-content;
+        }
+
+        .summary {
+            display: block;
+            min-width: calc(100% / 12);
+        }
     }
 </style>

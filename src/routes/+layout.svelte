@@ -2,8 +2,6 @@
     import '../global.css';
 </script>
 
-
-
 <header>
     <hgroup>
     <h1>Manticore</h1>
@@ -43,28 +41,28 @@
           access this content. This program is not published, endorsed, or
           specifically approved by Fire Opal Media. For more information about
           Fire Opal Media's 13th Age Community Use Policy, please
-          visit <a href="http://www.fireopalmedia.com/communityuse">www.fireopalmedia.com/communityuse</a>.
+          visit <a href="https://www.fireopalmedia.com/communityuse">www.fireopalmedia.com/communityuse</a>.
           For more information about Fire Opal Media and <em>13th Age</em>
           products, please
-          visit <a href="http://www.fireopalmedia.com">www.fireopalmedia.com</a>
-          and <a href="http://www.pelgranepress.com">www.pelgranepress.com</a>.
+          visit <a href="https://www.fireopalmedia.com">www.fireopalmedia.com</a>
+          and <a href="https://www.pelgranepress.com">www.pelgranepress.com</a>.
         </p>
       </section>
   
       <section class="code">
         <p>
-          <a href="http://github.com/brehaut/manticore">Source code</a>
-          copyright © 2014&ndash;2017 <a href="http://brehaut.net/">Andrew
+          <a href="https://github.com/brehaut/manticore">Source code</a>
+          copyright © 2014&ndash;2017 <a href="https://brehaut.net/">Andrew
             Brehaut</a>
         </p>
       </section>
   
       <section class="illustration">
         <p>
-          Manticore illustration copyright &copy; 2014 <a href="http://blog.trilemma.com">Michael
+          Manticore illustration copyright &copy; 2014 <a href="https://blog.trilemma.com">Michael
             Prescott</a>, used with permission. You can find more of
-          Michael’s work, including his series of <a href="http://www.patreon.com/adventures">One Page Dungeons</a>,
-          on <a href="http://blog.trilemma.com">his blog</a>.
+          Michael’s work, including his series of <a href="https://www.patreon.com/adventures">One Page Dungeons</a>,
+          on <a href="https://blog.trilemma.com">his blog</a>.
         </p>
       </section>
   

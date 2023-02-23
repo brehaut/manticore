@@ -46,10 +46,7 @@
 
     label { 
         text-transform: capitalize;
-    }
-
-    input {
-        margin-right: 0.5rem;           
+        padding-left: 0.5rem;      
     }
 
     span.count {
