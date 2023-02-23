@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PaginatorArrow from "./PaginatorArrow.svelte";
     import { range } from '$lib/iter.js';
     import { onMount } from 'svelte';
     import { debounce } from './debounce.js';
@@ -36,7 +37,8 @@
 
 {#if totalPages > 1}
 <div class="paginator">    
-    <button on:click={() => toPage(page - 1)} disabled={page - 1 < 0} class="prev">◀︎</button> 
+    <!-- svelte-ignore missing-declaration -->
+    <button on:click={() => toPage(page - 1)} disabled={page - 1 < 0} class="prev"><PaginatorArrow /></button> 
     <ul class="pages">
         {#each pageNumbers as p}
             <li>
@@ -48,7 +50,7 @@
             </li>
         {/each}
     </ul>
-    <button on:click={() => toPage(page + 1)} disabled={page + 1 > totalPages} class="next">◀︎</button> 
+    <button on:click={() => toPage(page + 1)} disabled={page + 1 > totalPages} class="next"><PaginatorArrow faceRight/></button> 
     <span class="summary">{page + 1} of {totalPages + 1}</span>
 </div>
 {/if}
@@ -84,10 +86,6 @@
         cursor: pointer;
         font-family: Alegreya;
         font-size: 1.2rem;
-    }
-
-    .next {
-        transform: rotate(180deg);
     }
 
     .prev, .next {
