@@ -1,4 +1,4 @@
-import { type PricedMonster, priceMonster, priceParty } from "./costs";
+import type { PricedMonster, ICostSystem } from "./costs";
 import type * as data from "./data";
 import * as iter from './iter';
 
@@ -138,11 +138,12 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[]): data.Gr
 
 // public API:
 export function allocationsForParty(party:data.IParty, 
-                                    selectedMonsters:data.Monster[]) {
+                                    selectedMonsters:data.Monster[],
+                                    costSystem: ICostSystem) {
 
-    return allocateMonsters(priceParty(party.size),
+    return allocateMonsters(costSystem.priceParty(party),
                             selectedMonsters
-                                .map((m) => priceMonster(party.level, m))
+                                .map((m) => costSystem.priceMonster(party, m))
                                 .filter((m) => m !== null) as PricedMonster[]
                             );
 }

@@ -2,6 +2,42 @@ import * as data from "./data";
 
 export type Tier = "adventurer" | "champion" | "epic";
 
+export enum Edition {
+    First = "First edition",
+}
+
+/** Cost systems implement a pricing model for monsters. 
+ * This caters to the differing systems used by 1e and 2e 
+ * of 13th Age.
+ */
+
+export interface ICostSystem {
+    /** Calculates the how the size 'spend' a party has for a fair fight.      
+     * @param party IParty instace
+     */
+    priceParty(party: data.IParty): number;
+
+    /** Calculates how much it will cost for a monster to join the encounter 
+     * against a given party.
+     * 
+     * @param party 
+     * @param monster 
+     */
+    priceMonster(party: data.IParty, monster: data.Monster): PricedMonster | undefined;
+
+    /** Based on party level and monster details, determine if this monster is 
+     * viable for an encounter at all.
+     * 
+     * Monsters that are too weak or two strong are not viable. 
+     * 
+     * This is a variation on the pricing algorithm.
+     * 
+     * @param party 
+     * @param monster 
+     */
+    isViableForParty(party: data.IParty, monster: data.Monster): boolean;
+}
+
 
 // Monster records
 export interface PricedMonster extends data.Monster {
@@ -107,16 +143,16 @@ function levelToTier(level:number):Tier {
 }
 
 
-function relativeCost(relativeLevel: number): number | null{
+function relativeCost(relativeLevel: number): number | undefined {
     switch (relativeLevel) {
-    case -2: return 2;
-    case -1: return 3;
-    case 0: return 4;
-    case 1: return 6;
-    case 2: return 8;
-    case 3: return 12;
-    case 4: return 16;
-    default: return null
+        case -2: return 2;
+        case -1: return 3;
+        case 0: return 4;
+        case 1: return 6;
+        case 2: return 8;
+        case 3: return 12;
+        case 4: return 16;
+        default: return undefined;
     }
 }
 
@@ -136,7 +172,7 @@ function relativeLevel(partyLevel:number, monsterLevel:number):number {
 
 // this predicate repeats most of priceMonster in a different way
 // TODO: refactor
-export function isViable(party:data.IParty, monster:data.Monster): boolean {
+function isViable(party:data.IParty, monster:data.Monster): boolean {
     var levelDiff = relativeLevel(party.level, monster.level);
 
     // monsters that are huge and 4 levels above the PCs are specifically
@@ -144,7 +180,7 @@ export function isViable(party:data.IParty, monster:data.Monster): boolean {
     if (levelDiff === 4 && monster.scale[0] === "huge") return false;
     
     var cost = relativeCost(levelDiff);
-    if (cost === null) return false;
+    if (cost === undefined) return false;
 
     // if the monsters cost is greater than the whole party's total price
     // then it is not viable.
@@ -154,13 +190,13 @@ export function isViable(party:data.IParty, monster:data.Monster): boolean {
 }
 
 
-export function priceMonster(partyLevel:number, m:data.Monster): PricedMonster|null {
+export function priceMonster(partyLevel:number, m:data.Monster): PricedMonster|undefined {
     var cost = relativeCost(relativeLevel(partyLevel, m.level));
     var multiplier = scaleFactor(m.scale, partyLevel);
 
     // some monster are not viable; ideally they should already be
     // filtered out but just incase.
-    if (cost === null) return null;
+    if (cost === undefined) return undefined;
 
     return newPricedMonster(m.name,
                             m.level,
@@ -177,3 +213,22 @@ export function priceParty(characters:number): number {
     return characters * scaleFactor(["normal", "normal"], 1) * (relativeCost(0)!);
 }
 
+
+const FirstEdition:ICostSystem = {
+    priceParty: function (party: data.IParty): number {
+        return priceParty(party.size);
+    },
+    priceMonster: function (party: data.IParty, monster: data.Monster): PricedMonster | undefined {
+        return priceMonster(party.level, monster);
+    },
+    isViableForParty: function (party: data.IParty, monster: data.Monster): boolean {
+        return isViable(party, monster);
+    }
+}
+
+export function costSystemForEdition(edition: Edition): ICostSystem {
+    switch(edition) {
+        case Edition.First:
+            return FirstEdition;
+    }
+}

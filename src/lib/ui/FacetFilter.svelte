@@ -7,6 +7,7 @@
     import type { Facet, FacetCounts } from "$lib/data";
     import { clusterItems } from '$lib/clusterItems.js';
     let dispatcher = createEventDispatcher();
+    
     export let facet: Facet;
     export let heading: string;
     export let values: string[];

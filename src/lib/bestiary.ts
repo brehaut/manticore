@@ -1,6 +1,6 @@
 import * as data from "./data";
 
-import { isViable } from './costs';
+import { costSystemForEdition, Edition, type ICostSystem } from './costs';
 import type { Facet, FacetCounts } from "./data";
 
 
@@ -16,7 +16,7 @@ function monsterFromRecord(book: string) {
 
 
 export class Bestiary {
-    constructor(public monsters:data.Monster[]) {
+    constructor(public monsters:data.Monster[], private costSystem: ICostSystem) {
 
     }
     
@@ -113,7 +113,7 @@ export class Bestiary {
     public filteredBestiary(party: data.IParty,
                             filter: data.IPredicate<data.Monster>) {
         return this.monsters
-            .filter(m => isViable(party, m))
+            .filter(m => this.costSystem.isViableForParty(party, m))
             .filter(filter)
         ;
     }
@@ -137,5 +137,5 @@ export function createBestiary(dataset:data.DataSet) {
         catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
     }
 
-    return new Bestiary(catalog);
+    return new Bestiary(catalog, costSystemForEdition(Edition.First));
 }
