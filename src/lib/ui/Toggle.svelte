@@ -25,7 +25,9 @@
         padding: 0;
         margin: 0 0.25rem;
         cursor: pointer;
-        position: absolute;
+        position: relative;
+        top:0.25rem;
+        transition: 80ms linear background-color;
     }
 
     .thumb {
@@ -35,17 +37,21 @@
         width: 0.75rem;
         margin: 0;
         background: white;
-        position: relative;
-        top: -0.05rem;
+        position: absolute;
+        top: 0.25rem;
         left: 0.25rem;
         transition: 80ms linear left;
+    }
+
+    .toggle.enabled {
+        background: var(--brand-color);
     }
 
     .thumb:after {
         content: '';
     }
 
-    .toggle.toggle.enabled .thumb {
+    .toggle.enabled .thumb {
         left: calc(1.5rem);
     }
 </style>
