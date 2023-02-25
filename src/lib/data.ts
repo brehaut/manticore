@@ -8,6 +8,8 @@ export type MonsterRecord = [string, number, MonsterSize, string, string[], numb
 
 export type DataSet = {[index:string]: MonsterRecord[]};
 
+export type Tier = "adventurer" | "champion" | "epic";
+
 export interface Monster {
     readonly name:string; 
     readonly level:number; 

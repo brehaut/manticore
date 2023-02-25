@@ -144,6 +144,6 @@ export function allocationsForParty(party:data.IParty,
     return allocateMonsters(costSystem.priceParty(party),
                             selectedMonsters
                                 .map((m) => costSystem.priceMonster(party, m))
-                                .filter((m) => m !== null) as PricedMonster[]
+                                .flat(1) // priceMonster produces arrays of priced monsters
                             );
 }
