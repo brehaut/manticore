@@ -60,9 +60,21 @@ export function newPricedMonster(name:string,
     // type hint to convince the compiler that we are going to mix in the new values                                  
     var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book, pageNumber);
     mon.price = price;
+    mon.count = count;
     return mon;    
 }
 
+/** creates a new PricedMonster record from an existing Monster record
+ * 
+ * the price is the total price for the number of monsters in count. In 2e, 
+ * price may differ by count. 
+ */
+export function priceMonster(monster: data.Monster, price: number, count: number) {
+    var mon = <PricedMonster>data.newMonster(monster.name, monster.level, monster.size, monster.kind, monster.attributes, monster.book, monster.pageNumber);
+    mon.price = price;
+    mon.count = count;
+    return mon;
+}
 
 export function costSystemForEdition(edition: Edition): ICostSystem {
     switch(edition) {

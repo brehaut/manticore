@@ -28,7 +28,7 @@ function normalizeThreat(size: MonsterSize, kind: string): MonsterThreat {
     return "normal";
 }
 
-function normalizeSize(size: MonsterSize): MonsterSizeBase {
+export function normalizeSize(size: MonsterSize): MonsterSizeBase {
     switch (size) {
         case "double strength": 
         case "large elite": 
