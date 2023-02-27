@@ -15,13 +15,14 @@
     } from "$lib/data";
     import { getParty, saveParty } from "$lib/party";
     import { getEdition, saveEdition } from "$lib/edition";
-    import type { Edition } from "$lib/costs/index";
+    import { costSystemForEdition, type Edition } from "$lib/costs/index";
 
     let party = getParty();
     $: saveParty(party);
 
     let bestiary: Bestiary | undefined;
     let edition = getEdition();
+    $: bestiary = bestiary?.switchCostSystem(costSystemForEdition(edition));
     $: saveEdition(edition);
 
     let filterFacets: FilterFacets = new Map();
@@ -41,7 +42,7 @@
 
     onMount(async () => {
         const req = await fetch("/data/bestiary.json");
-        bestiary = createBestiary(await req.json());
+        bestiary = createBestiary(await req.json(), edition);
     });
 
     function handleSmartFilterChange(

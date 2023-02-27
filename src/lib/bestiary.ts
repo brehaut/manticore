@@ -16,27 +16,29 @@ function monsterFromRecord(book: string) {
 
 
 export class Bestiary {
-    constructor(public monsters:data.Monster[], private costSystem: ICostSystem) {
+    constructor(public monsters:data.Monster[], private costSystem: ICostSystem) { }
 
+    switchCostSystem(costSystem: ICostSystem): Bestiary {
+        return new Bestiary(this.monsters, costSystem);
     }
     
-    public allSources() {
+    allSources() {
         return this.distinctValues((m) => m.book);
     }
 
-    public allNames() {
+    allNames() {
         return this.distinctValues((m) => m.name);
     }
     
-    public allSizes() {
+    allSizes() {
         return this.distinctValues((m) => m.size);
     }
 
-    public allKinds() {
+    allKinds() {
         return this.distinctValues((m) => m.kind);
     }
 
-    public allAttributes() {
+    allAttributes() {
         var attributes:string[] = [];
         
         this.monsters.forEach((m:data.Monster) => {
@@ -48,8 +50,7 @@ export class Bestiary {
         return attributes;
     }
 
-
-    public featureCounts(party: data.IParty, filters: data.FilterFacets): FacetCounts {
+    featureCounts(party: data.IParty, filters: data.FilterFacets): FacetCounts {
         var descriptors:{countKey: any, monsterKey: keyof data.Monster, filterKey: any}[] = [
             {countKey: "source", monsterKey: "book", filterKey: "source"},
             {countKey: "size", monsterKey: "size", filterKey: "size"},
@@ -110,7 +111,7 @@ export class Bestiary {
         return counts;
     }
     
-    public filteredBestiary(party: data.IParty,
+    filteredBestiary(party: data.IParty,
                             filter: data.IPredicate<data.Monster>) {
         return this.monsters
             .filter(m => this.costSystem.isViableForParty(party, m))
@@ -118,7 +119,7 @@ export class Bestiary {
         ;
     }
 
-    private distinctValues<T>(accessor:(m:data.Monster)=>T):T[] {
+    distinctValues<T>(accessor:(m:data.Monster)=>T):T[] {
         var vals:T[] = [];
 
         this.monsters.forEach((m:data.Monster) => {
@@ -131,11 +132,11 @@ export class Bestiary {
 }
 
 
-export function createBestiary(dataset:data.DataSet) {
+export function createBestiary(dataset:data.DataSet, edition:Edition) {
     var catalog:data.Monster[] = [];
     for (var key in dataset) if (dataset.hasOwnProperty(key)) {
         catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
     }
 
-    return new Bestiary(catalog, costSystemForEdition(Edition.First));
+    return new Bestiary(catalog, costSystemForEdition(edition));
 }
