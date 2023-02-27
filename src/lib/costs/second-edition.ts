@@ -1,6 +1,6 @@
 import { assertionFailure } from "$lib/assertion";
 import { normalizeSize, type IParty, type Monster, type MonsterSize } from "$lib/data";
-import { newPricedMonster, priceMonster, type PricedMonster } from ".";
+import { newPricedMonster, priceMonster, type ICostSystem, type PricedMonster } from ".";
 
 /// TODO: Correct page numbers to final PDF when published
 
@@ -30,8 +30,8 @@ export function battleLevel(partyLevel: number, numberOfBattles: EncountersPerDa
     return perDayAdjusted + 2;
 }
 
-function toDelta(partyLevel: number, monsterLevel: number): LevelDelta | undefined {
-    const delta =  monsterLevel - battleLevel(partyLevel, 4); // TODO: encounters per day
+export function toDelta(partyLevel: number, monsterLevel: number, encountersPerDay: EncountersPerDay): LevelDelta | undefined {
+    const delta =  monsterLevel - battleLevel(partyLevel, encountersPerDay);
     if (delta < -2 || delta > 2) return undefined;
     return delta as LevelDelta;
 }
@@ -91,9 +91,11 @@ export function mookEquivalents(levelDelta: LevelDelta, monster:Monster): Priced
     const pricing = equivalents.get(levelDelta)
         || assertionFailure(`Expected an mook equivalents at delta ${levelDelta}`);
 
+    const costMultipler = weaklingCostMultiplier(monster);
+
     return Array.from(mookCountsByEquivalent.entries())
         .flatMap(([size, counts]) => 
-            counts.map(count => priceMonster(monster, pricing.get(size)!, count)))
+            counts.map(count => priceMonster(monster, pricing.get(size)! * costMultipler, count)))
 }
 
 /** Calculate a monster's equivalent cost based on the rules from 13th Age.
@@ -105,7 +107,7 @@ export function mookEquivalents(levelDelta: LevelDelta, monster:Monster): Priced
  *          but for mooks, it will be a variety as they differ in cost by size
  */
 export function priceMonsterAsEquivalents(party: IParty, monster:Monster): PricedMonster[] {
-    const delta = toDelta(party.level, monster.level);
+    const delta = toDelta(party.level, monster.level, 4);  // TODO: encounters per day
     if (delta === undefined) return [];
 
     if (monster.kind === "mook") {
@@ -115,11 +117,16 @@ export function priceMonsterAsEquivalents(party: IParty, monster:Monster): Price
     const cost = equivalents.get(delta)?.get(normalizeSize(monster.size)) 
         || assertionFailure(`Expected an equivalent cost for ${monster.size} at delta ${delta}`);
 
-    // TODO: Weaklings
+    const costMultipler = weaklingCostMultiplier(monster);
 
-    return [priceMonster(monster, cost, 1)]; 
+    return [priceMonster(monster, cost * costMultipler, 1)]; 
 }
 
+/* Weaklings cost half the price of the equivalent standard monster 
+ */
+function weaklingCostMultiplier(monster: Monster) {
+    return monster.size === "weakling" ? 0.5 : 1;
+}
 
 /** Implements the party equivalents rules from page 174
  * 
@@ -129,4 +136,17 @@ export function priceMonsterAsEquivalents(party: IParty, monster:Monster): Price
 export function monsterEquivalentParty(party: IParty): number {
     if (party.size <= 3) return party.size * 10;
     return (3 + (party.size - 3) * 2) * 10;
+}
+
+
+export const SecondEdition:ICostSystem = {
+    partyBudget: function (party: IParty): number {
+        return monsterEquivalentParty(party);
+    },
+    priceMonster: function (party: IParty, monster: Monster): PricedMonster[] {
+        return priceMonsterAsEquivalents(party, monster);
+    },
+    isViableForParty: function (party: IParty, monster: Monster): boolean {
+        return toDelta(party.level, monster.level, 4) !== undefined; // TODO: encounters per day
+    }
 }

@@ -161,7 +161,7 @@ export function priceParty(characters:number): number {
 
 
 export const FirstEdition:ICostSystem = {
-    priceParty: function (party: data.IParty): number {
+    partyBudget: function (party: data.IParty): number {
         return priceParty(party.size);
     },
     priceMonster: function (party: data.IParty, monster: data.Monster): PricedMonster[] {

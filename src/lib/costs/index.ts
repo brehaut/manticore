@@ -1,20 +1,25 @@
 import * as data from "../data";
 import { FirstEdition } from "./first-edition";
+import { SecondEdition } from './second-edition.js';
+
 
 export enum Edition {
     First = "First edition",
+    Second = "Second edition"
 }
 
 /** Cost systems implement a pricing model for monsters. 
  * This caters to the differing systems used by 1e and 2e 
  * of 13th Age.
+ * 
+ * the rel
  */
 
 export interface ICostSystem {
-    /** Calculates the how the size 'spend' a party has for a fair fight.      
+    /** Calculates the how the size budget a party has for a fair fight.      
      * @param party IParty instace
      */
-    priceParty(party: data.IParty): number;
+    partyBudget(party: data.IParty): number;
 
     /** Calculates how much it will cost for a monster to join the encounter 
      * against a given party.
@@ -80,5 +85,7 @@ export function costSystemForEdition(edition: Edition): ICostSystem {
     switch(edition) {
         case Edition.First:
             return FirstEdition;
+        case Edition.Second:
+            return SecondEdition;
     }
 }

@@ -141,7 +141,7 @@ export function allocationsForParty(party:data.IParty,
                                     selectedMonsters:data.Monster[],
                                     costSystem: ICostSystem) {
 
-    return allocateMonsters(costSystem.priceParty(party),
+    return allocateMonsters(costSystem.partyBudget(party),
                             selectedMonsters
                                 .map((m) => costSystem.priceMonster(party, m))
                                 .flat(1) // priceMonster produces arrays of priced monsters

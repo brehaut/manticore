@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, assert } from 'vitest';
 
-import { battleLevel, monsterEquivalentParty } from "./second-edition";
+import { battleLevel, monsterEquivalentParty, toDelta } from "./second-edition";
 
 
 describe("battleLevel spot tests", () => {
@@ -32,3 +32,16 @@ describe("monsterEquivalentParty", () => {
     });
 });
 
+
+describe("toDelta computes the relative level difference between a party's battle level and a monsters level", () => {
+    it("delta is between -2 and 2, or undefined (not a viable monster)", () => {
+        for (let party = 1; party <= 10; party++) {
+            for (let monster = 1; monster  <= 10; monster++) {
+                const delta = toDelta(party, monster, 4);
+                if (delta === undefined) continue;
+                expect(delta).toBeGreaterThanOrEqual(-2);
+                expect(delta).toBeLessThanOrEqual(2);
+            }
+        }
+    });
+});
