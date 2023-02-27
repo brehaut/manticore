@@ -96,7 +96,7 @@ class ForkingBufferCursor<T> {
 
 
 function allocateMonsters(points:number, monstersArray:PricedMonster[]): data.GroupedEncounters {        
-    const allowedUnspent = Math.min.apply(null, monstersArray.map((m) => m.price));    
+    const allowedUnspent = Math.min.apply(null, monstersArray.map((m) => m.price)) * 0.9;    
 
     function* allocate(remainingPoints:number, 
                         monsters: ForkingBufferCursor<PricedMonster>,

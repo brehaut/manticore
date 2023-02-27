@@ -15,6 +15,7 @@ export function getParty(): IParty {
             if (party.encountersPerDay === undefined) {
                 party.encountersPerDay = 4;
             }
+            return party;
         }
     }
     return defaultParty;
