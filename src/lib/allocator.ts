@@ -10,7 +10,12 @@ class MonsterAllocation implements data.Allocation {
     public monster: data.Monster;
 
     constructor (monster:PricedMonster, public num:number) { 
-        this.cost = monster.price * num;
+        if (monster.count > 1) {
+            this.cost = monster.price;
+        }
+        else {
+            this.cost = monster.price * num;
+        }
         this.monster = monster;
     }
 
@@ -28,7 +33,9 @@ function monsterIsTerritorial(monster:data.Monster): boolean {
 // TODO: this should respect caps on monster numbers 
 function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<MonsterAllocation> {
     if (monster.count > 1) { // Handle 2e mooks
-        yield new MonsterAllocation(monster, monster.count);
+        if (monster.price <= points) {
+            yield new MonsterAllocation(monster, monster.count);
+        }
         return;
     }
 
