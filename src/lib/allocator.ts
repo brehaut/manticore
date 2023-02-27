@@ -27,6 +27,11 @@ function monsterIsTerritorial(monster:data.Monster): boolean {
 // allocateMonster is the core algorithm of this application.
 // TODO: this should respect caps on monster numbers 
 function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<MonsterAllocation> {
+    if (monster.count > 1) { // Handle 2e mooks
+        yield new MonsterAllocation(monster, monster.count);
+        return;
+    }
+
     var max = Math.floor(points / monster.price);
     if (monsterIsTerritorial(monster)) {
         max = Math.min(max, 1);
