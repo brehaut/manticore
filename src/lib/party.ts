@@ -4,13 +4,18 @@ import type { IParty } from "./data";
 
 const PARTY_STATE_KEY = "state.party";
 
-const defaultParty:IParty = { level: 1, size: 4 };
+const defaultParty:IParty = { level: 1, size: 4, encountersPerDay: 4 };
 
 
 export function getParty(): IParty {
     if (browser) {
         const partyJson = localStorage.getItem(PARTY_STATE_KEY);
-        if (partyJson) return JSON.parse(partyJson);
+        if (partyJson) {
+            const party = JSON.parse(partyJson);
+            if (party.encountersPerDay === undefined) {
+                party.encountersPerDay = 4;
+            }
+        }
     }
     return defaultParty;
 }

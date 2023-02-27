@@ -21,13 +21,13 @@ describe("battleLevel spot tests", () => {
 describe("monsterEquivalentParty", () => {
     it("party of 3 or less faces 3 or less monster equivalents.", () => {
         for (const size of [1,2,3]) {
-            expect(monsterEquivalentParty({size, level: 1})).toEqual(size * 10);
+            expect(monsterEquivalentParty({size, level: 1, encountersPerDay: 4})).toEqual(size * 10);
         }
     });
 
     it("party of 4 or greater matches examples on page 174", () => {
         for (const [size, equivalents] of [[4,5], [5,7], [6, 9], [7, 11]]) {
-            expect(monsterEquivalentParty({size, level: 1})).toEqual(equivalents * 10);
+            expect(monsterEquivalentParty({size, level: 1, encountersPerDay: 4})).toEqual(equivalents * 10);
         }
     });
 });

@@ -8,6 +8,8 @@ export type MonsterRecord = [string, number, MonsterSize, string, string[], numb
 
 export type DataSet = {[index:string]: MonsterRecord[]};
 
+export type EncountersPerDay = 3 | 4;
+
 export interface Monster {
     readonly name:string; 
     readonly level:number; 
@@ -69,6 +71,7 @@ export function newMonster(name:string,
 export interface IParty {
     readonly size: number;
     readonly level: number;
+    readonly encountersPerDay: EncountersPerDay;
 }
 
 

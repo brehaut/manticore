@@ -1,12 +1,11 @@
 import { assertionFailure } from "$lib/assertion";
-import { normalizeSize, type IParty, type Monster, type MonsterSize } from "$lib/data";
+import { normalizeSize, type IParty, type Monster, type MonsterSize, type EncountersPerDay } from "$lib/data";
 import { newPricedMonster, priceMonster, type ICostSystem, type PricedMonster } from ".";
 
 /// TODO: Correct page numbers to final PDF when published
 
 type Equivalence = number;
 
-type EncountersPerDay = 3 | 4;
 type LevelDelta = -2 | -1 | 0 | 1 | 2;
 
 /** Implements the table on pg 175 of the 2e AlphaDraft v2 pdf
@@ -107,7 +106,7 @@ export function mookEquivalents(levelDelta: LevelDelta, monster:Monster): Priced
  *          but for mooks, it will be a variety as they differ in cost by size
  */
 export function priceMonsterAsEquivalents(party: IParty, monster:Monster): PricedMonster[] {
-    const delta = toDelta(party.level, monster.level, 4);  // TODO: encounters per day
+    const delta = toDelta(party.level, monster.level, party.encountersPerDay);
     if (delta === undefined) return [];
 
     if (monster.kind === "mook") {
@@ -147,6 +146,6 @@ export const SecondEdition:ICostSystem = {
         return priceMonsterAsEquivalents(party, monster);
     },
     isViableForParty: function (party: IParty, monster: Monster): boolean {
-        return toDelta(party.level, monster.level, 4) !== undefined; // TODO: encounters per day
+        return toDelta(party.level, monster.level, party.encountersPerDay) !== undefined; // TODO: encounters per day
     }
 }
