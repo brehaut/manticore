@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Monster, IParty, GroupedEncounters } from "$lib/data";
+    import type { Edition } from "$lib/costs";
     import { _ } from "./strings";
     import GenerateWorker from "$lib/generate.worker.ts?worker";
     import EncounterGroup from "./EncounterGroup.svelte";
@@ -9,6 +10,7 @@
 
     export let choices: Monster[];
     export let party: IParty;
+    export let edition: Edition;
 
     let generationWorker:Worker | undefined;
 
@@ -30,7 +32,7 @@
             results = ev.data;
         }
 
-        generationWorker?.postMessage([party, choices]);      
+        generationWorker?.postMessage([party, choices, edition]);      
     }
 
     $:{ 

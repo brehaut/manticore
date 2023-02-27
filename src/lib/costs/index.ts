@@ -1,3 +1,4 @@
+import { assertionFailure } from '$lib/assertion.js';
 import * as data from "../data";
 import { FirstEdition } from "./first-edition";
 import { SecondEdition } from './second-edition.js';
@@ -87,5 +88,7 @@ export function costSystemForEdition(edition: Edition): ICostSystem {
             return FirstEdition;
         case Edition.Second:
             return SecondEdition;
+        default:
+            assertionFailure(`Expected edition to a value in Edition enum, got "${edition}"`)
     }
 }
