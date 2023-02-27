@@ -3,7 +3,8 @@ import type * as data from "../data";
 // the following two functions are used by sizeFactor to determine the 
 
 import { newPricedMonster, type ICostSystem, type PricedMonster } from ".";
-import type { Tier } from "../data";
+
+export type Tier = "adventurer" | "champion" | "epic";
 
 // base scale cost of a given monster 
 function applySize(size: data.MonsterSizeBase, base: number): number {

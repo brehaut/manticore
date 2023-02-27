@@ -2,12 +2,36 @@ import { assertionFailure } from "$lib/assertion";
 import { normalizeSize, type IParty, type Monster, type MonsterSize } from "$lib/data";
 import { newPricedMonster, priceMonster, type PricedMonster } from ".";
 
+/// TODO: Correct page numbers to final PDF when published
+
 type Equivalence = number;
 
+type EncountersPerDay = 3 | 4;
 type LevelDelta = -2 | -1 | 0 | 1 | 2;
 
+/** Implements the table on pg 175 of the 2e AlphaDraft v2 pdf
+ * 
+ * This calcuates the level for the battle (ie, median monster level)
+ * based on the level of the party (and its corresponding tier) and the
+ * number of encounters per "day"
+ * 
+ * @param partyLevel 
+ * @returns level for a fair battle.
+ */
+export function battleLevel(partyLevel: number, numberOfBattles: EncountersPerDay): number {
+    const perDayAdjusted = partyLevel + (numberOfBattles === 3 ? 1 : 0);
+
+    if (partyLevel <= 4) { // Adventurer Tier
+        return perDayAdjusted;
+    }
+    if (partyLevel <= 7) { // Champion Tier
+        return perDayAdjusted + 1;
+    }
+    return perDayAdjusted + 2;
+}
+
 function toDelta(partyLevel: number, monsterLevel: number): LevelDelta | undefined {
-    const delta =  monsterLevel - partyLevel;
+    const delta =  monsterLevel - battleLevel(partyLevel, 4); // TODO: encounters per day
     if (delta < -2 || delta > 2) return undefined;
     return delta as LevelDelta;
 }
@@ -72,7 +96,7 @@ export function mookEquivalents(levelDelta: LevelDelta, monster:Monster): Priced
             counts.map(count => priceMonster(monster, pricing.get(size)!, count)))
 }
 
-/** Compute monster equivalents based on the rules from 13th Age.
+/** Calculate a monster's equivalent cost based on the rules from 13th Age.
  *  This is the core of the cost calculation in 2e.
  * 
  * @param party 
@@ -80,7 +104,7 @@ export function mookEquivalents(levelDelta: LevelDelta, monster:Monster): Priced
  * @returns a collection of monsters. For most monsters this will be a single item
  *          but for mooks, it will be a variety as they differ in cost by size
  */
-export function monsterEquivalents(party: IParty, monster:Monster): PricedMonster[] {
+export function priceMonsterAsEquivalents(party: IParty, monster:Monster): PricedMonster[] {
     const delta = toDelta(party.level, monster.level);
     if (delta === undefined) return [];
 
@@ -94,4 +118,15 @@ export function monsterEquivalents(party: IParty, monster:Monster): PricedMonste
     // TODO: Weaklings
 
     return [priceMonster(monster, cost, 1)]; 
+}
+
+
+/** Implements the party equivalents rules from page 174
+ * 
+ * @returns a budget for monsters expressed in the same scale as 
+ *          monster costs, ie * 10.
+ */
+export function monsterEquivalentParty(party: IParty): number {
+    if (party.size <= 3) return party.size * 10;
+    return (3 + (party.size - 3) * 2) * 10;
 }

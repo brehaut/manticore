@@ -5,6 +5,7 @@ import * as jsc from "jsverify";
 
 import { newMonster, type Allocation, type IParty, type Monster, type MonsterSize } from "./data";
 import * as costs from "./costs";
+import * as firstEdition from "./costs/first-edition";
 import { allocationsForParty } from "./allocator";
 
 const partyLevel = jsc.integer(1, 10);
@@ -38,7 +39,7 @@ const monsters = jsc.array(monster);
 
 
 function genEncounters(party:IParty, monsters:Monster[]) {
-  return allocationsForParty(party, monsters).flat();
+  return allocationsForParty(party, monsters, costs.costSystemForEdition(costs.Edition.First)).flat();
 }
 
 
@@ -68,7 +69,7 @@ function minPrice(ms: costs.PricedMonster[]): costs.PricedMonster | undefined {
 describe("bestiary", () => {
   property("encounters are under party price", party, monsters, (party, monsters) => {
     const encounterGroups = genEncounters(party, monsters);
-    return encounterGroups.every(encounter =>  encounter.map(alloc => alloc.cost).reduce((a,b)=>a + b, 0) <= costs.priceParty(party.size));
+    return encounterGroups.every(encounter =>  encounter.map(alloc => alloc.cost).reduce((a,b)=>a + b, 0) <= firstEdition.priceParty(party.size));
   }); 
 
   property("allocations don't repeat", party, monsters, (party, monsters) => {
@@ -77,12 +78,12 @@ describe("bestiary", () => {
   });
 
   property("unspent budget is not greater than the cheapest monster", party, monsters, (party, monsters) => {
-    const pricedMonsters = monsters.map(m => costs.priceMonster(party.level, m)).filter(a => a) as costs.PricedMonster[]; 
+    const pricedMonsters = monsters.flatMap(m => firstEdition.priceMonster(party.level, m)).filter(a => a) as costs.PricedMonster[]; 
     const cheapestMonster = minPrice(pricedMonsters);
 
     if (!cheapestMonster) return true;
 
-    const partyBudget = costs.priceParty(party.size);
+    const partyBudget = firstEdition.priceParty(party.size);
     const encounterGroups = genEncounters(party, monsters);
 
     function calculateUnspentBudget(encounter:any[]) {
