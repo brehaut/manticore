@@ -52,7 +52,7 @@
       <section class="code">
         <p>
           <a href="https://github.com/brehaut/manticore">Source code</a>
-          copyright © 2014&ndash;2017 <a href="https://brehaut.net/">Andrew
+          copyright © 2014&ndash;2023 <a href="https://brehaut.net/">Andrew
             Brehaut</a>
         </p>
       </section>
