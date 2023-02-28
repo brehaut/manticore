@@ -3,7 +3,7 @@ import { property, assert } from "jsverify";
 import * as jsc from "jsverify";
 (<any>global).it = it; // Needed to get jsverify to run
 
-import { newMonster, type Allocation, type EncountersPerDay, type IParty, type Monster, type MonsterSize } from "./data";
+import { newMonster, type Allocation, type Encounter, type EncountersPerDay, type IParty, type Monster, type MonsterSize } from "./data";
 import * as costs from "./costs";
 import * as firstEdition from "./costs/first-edition";
 import { allocationsForParty } from "./allocator";
@@ -45,13 +45,13 @@ function genEncounters(party:IParty, monsters:Monster[]) {
 
 
 
-function uniqueAllocations(xs:Iterable<Allocation[]>): boolean {
+function uniqueAllocations(xs:Iterable<Encounter>): boolean {
     function mangle(as: Allocation[]) {
         return as.map(m => `[${m.num}x${m.monster.name}]`).sort((a,b)=>a.localeCompare(b)).join("-");
     }
     const seen = new Set<string>();
     for (const x of xs) {
-        const jankyHash = mangle(x);
+        const jankyHash = mangle(x.allocations);
         if (seen.has(jankyHash)) return false;
         seen.add(jankyHash);
     }
@@ -70,7 +70,7 @@ function minPrice(ms: costs.PricedMonster[]): costs.PricedMonster | undefined {
 describe("bestiary", () => {
   property("encounters are under party price", party, monsters, (party, monsters) => {
     const encounterGroups = genEncounters(party, monsters);
-    return encounterGroups.every(encounter =>  encounter.map(alloc => alloc.cost).reduce((a,b)=>a + b, 0) <= firstEdition.priceParty(party.size));
+    return encounterGroups.every(encounter =>  encounter.allocations.map(alloc => alloc.cost).reduce((a,b)=>a + b, 0) <= firstEdition.priceParty(party.size));
   }); 
 
   property("allocations don't repeat", party, monsters, (party, monsters) => {
@@ -87,8 +87,8 @@ describe("bestiary", () => {
     const partyBudget = firstEdition.priceParty(party.size);
     const encounterGroups = genEncounters(party, monsters);
 
-    function calculateUnspentBudget(encounter:any[]) {
-      return partyBudget - encounter.map(alloc => alloc.cost).reduce((a,b)=>a+b, 0);
+    function calculateUnspentBudget(encounter: Encounter) {
+      return partyBudget - encounter.allocations.map(alloc => alloc.cost).reduce((a,b)=>a+b, 0);
     }
 
     return encounterGroups.every(encounter => calculateUnspentBudget(encounter) < (cheapestMonster.price));

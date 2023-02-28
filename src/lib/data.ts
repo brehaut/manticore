@@ -83,7 +83,11 @@ export interface Allocation {
     readonly cost:number;
 }
 
-export type Encounters = Allocation[][];
+export interface Encounter {
+    allocations: Allocation[],
+    unspentPercentage: number;
+}
+export type Encounters = Encounter[];
 export type GroupedEncounters = Encounters[];
 
 export interface Allocator {

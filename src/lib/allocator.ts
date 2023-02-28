@@ -43,11 +43,16 @@ function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<
 }
 
 
+function sortByUnspent(a:data.Encounter, b:data.Encounter): number {
+    if (a.unspentPercentage > b.unspentPercentage) return 1;
+    if (a.unspentPercentage === b.unspentPercentage) return 0;
+    return 1;
+}
 
 
-function groupMonsters(allocations:Iterable<data.Allocation[]>): data.GroupedEncounters {        
-    const groups = iter.groupBy(allocations, (encounter) => encounter.map(a => a.monster.name).join(";"));
-    return Array.from(groups.values());
+function groupMonsters(allocations:Iterable<data.Encounter>): data.GroupedEncounters {        
+    const groups = iter.groupBy(allocations, (encounter) => encounter.allocations.map(a => a.monster.name).join(";"));
+    return Array.from(groups.values()).map(group => group.sort(sortByUnspent));
 }
 
 
@@ -92,14 +97,14 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedU
     function* allocate(remainingPoints:number, 
                         monsters: ForkingBufferCursor<PricedMonster>,
                         acc:MonsterAllocation[],
-                        typeCount = 0): IterableIterator<MonsterAllocation[]> {
+                        typeCount = 0): IterableIterator<data.Encounter> {
         // if we are out of monsters, or have run out 
         // of points to spend, then stop recursing.
         // we check points first, so that we can add the allocation to 
         // the list even if we have run out of monsters
-        if (remainingPoints < allowedUnspent) {
+        if (remainingPoints <= allowedUnspent) {
             if (acc.length > 0) {
-                yield acc;
+                yield {unspentPercentage: (remainingPoints / points) * 100, allocations: acc};
             }
             return;
         }

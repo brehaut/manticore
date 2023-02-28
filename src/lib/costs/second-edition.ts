@@ -149,6 +149,7 @@ export const SecondEdition:ICostSystem = {
         return toDelta(party.level, monster.level, party.encountersPerDay) !== undefined; // TODO: encounters per day
     },
     maximumUnspentBudget(monsters: PricedMonster[]): number {
-        return equivalents.get(-2)?.get("normal")! * 0.9;
+        return 0;
+        //return equivalents.get(-2)?.get("normal")! * 0.5;
     }
 }

@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { PricedMonster } from '$lib/costs/index.js';
     import { battleLevel } from '$lib/costs/second-edition.js';
-    import type { Allocation, IParty, Monster } from "$lib/data";
+    import type { Allocation, Encounter, IParty, Monster } from "$lib/data";
     import { _ } from "./strings";
 
-    export let encounter:Allocation[]
+    export let encounter:Encounter
     export let abbreviated = false;
     export let party: IParty;
 
@@ -49,7 +49,7 @@
 </script>
 
 <div class={`encounter ${abbreviated ? "abbreviated" : ""}`}>
-    {#each encounter as allocation }
+    {#each encounter.allocations as allocation }
     <div class="monster { isCareRequired(allocation.monster) ? "-care" : ""} { isProbableMistake(allocation.monster) ? "-mistake" : ""}">
         <span class="name">{ allocation.monster.name }</span>
         <span class="count">{ allocation.num }</span>
@@ -59,6 +59,14 @@
         {/if}
     </div>
     {/each}
+    
+    {#if encounter.unspentPercentage > 0}
+    <div class="monster unspent">
+        <span class="unspent">
+            { encounter.unspentPercentage }% of budget unspent
+        </span>
+    </div>
+    {/if}
 </div>
 
 <style>
@@ -180,5 +188,16 @@
     }
     .count:before { 
         content: "×";
+    }
+
+    .monster.unspent {
+        color: var(--faded-body-copy-color);
+        grid-template: 'unspent';
+        align-content: center;
+    }
+
+    span.unspent {
+        grid-area: unspent;
+        text-align: center;
     }
 </style>

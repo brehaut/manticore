@@ -171,6 +171,7 @@ export const FirstEdition:ICostSystem = {
         return isViable(party, monster);
     },
     maximumUnspentBudget(monsters: PricedMonster[]): number {
-        return Math.min.apply(null, monsters.map((m) => m.price)) * 0.9;
+        return 0;
+        //return Math.min.apply(null, monsters.map((m) => m.price)) * 0.9;
     } 
 }
