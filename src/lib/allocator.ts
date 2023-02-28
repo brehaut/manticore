@@ -25,10 +25,6 @@ class MonsterAllocation implements data.Allocation {
 }
 
 
-function monsterIsTerritorial(monster:data.Monster): boolean {
-    return monster.attributes.indexOf("dragon") >= 0 || monster.name == "Vampire";
-}
-
 // allocateMonster is the core algorithm of this application.
 // TODO: this should respect caps on monster numbers 
 function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<MonsterAllocation> {
@@ -40,9 +36,6 @@ function* repeatMonster(points: number, monster:PricedMonster):IterableIterator<
     }
 
     var max = Math.floor(points / monster.price);
-    if (monsterIsTerritorial(monster)) {
-        max = Math.min(max, 1);
-    }  
 
     for (var i = 1; i <= max; i++) {
         yield new MonsterAllocation(monster, i);
@@ -99,8 +92,7 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedU
     function* allocate(remainingPoints:number, 
                         monsters: ForkingBufferCursor<PricedMonster>,
                         acc:MonsterAllocation[],
-                        typeCount = 0,
-                        territorialSeen=false): IterableIterator<MonsterAllocation[]> {
+                        typeCount = 0): IterableIterator<MonsterAllocation[]> {
         // if we are out of monsters, or have run out 
         // of points to spend, then stop recursing.
         // we check points first, so that we can add the allocation to 
@@ -118,19 +110,12 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedU
         
         if (monsters.done()) return;
 
-
-        // skip any solitary monsters if we have already encountered a solitary monster
-        // TODO: clean up this logic to work for any kind on tracked constraint
-        monsters.skipWhile(m => territorialSeen && monsterIsTerritorial(m));
-        
-        territorialSeen = territorialSeen || monsterIsTerritorial(monsters.value());
-
         // recursive behaviour follows
         const repeats = repeatMonster(remainingPoints, monsters.value());
         let cur = acc;
 
         // skip this monster
-        yield* allocate(remainingPoints, monsters.forkAndNext(), cur, typeCount, territorialSeen); 
+        yield* allocate(remainingPoints, monsters.forkAndNext(), cur, typeCount); 
 
         // produce allocations for all the available numbers of this monster
         for (const alloc of repeats) {
@@ -138,7 +123,7 @@ function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedU
             cur[cur.length] = alloc;
 
             yield* allocate(remainingPoints - alloc.cost, monsters.forkAndNext(), cur, 
-                            typeCount + 1, territorialSeen);
+                            typeCount + 1);
         }
     }
 
