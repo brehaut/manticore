@@ -7,7 +7,7 @@ const MAXIMUM_TYPES = 6;
 
 class MonsterAllocation implements data.Allocation {
     public cost: number;
-    public monster: data.Monster;
+    public monster: PricedMonster;
 
     constructor (monster:PricedMonster, public num:number) { 
         if (monster.count > 1) {
@@ -95,9 +95,7 @@ class ForkingBufferCursor<T> {
 }
 
 
-function allocateMonsters(points:number, monstersArray:PricedMonster[]): data.GroupedEncounters {        
-    const allowedUnspent = Math.min.apply(null, monstersArray.map((m) => m.price)) * 0.9;    
-
+function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedUnspent: number): data.GroupedEncounters {           
     function* allocate(remainingPoints:number, 
                         monsters: ForkingBufferCursor<PricedMonster>,
                         acc:MonsterAllocation[],
@@ -153,9 +151,12 @@ export function allocationsForParty(party:data.IParty,
                                     selectedMonsters:data.Monster[],
                                     costSystem: ICostSystem) {
 
+    const pricedMonsters = selectedMonsters
+        .map((m) => costSystem.priceMonster(party, m))
+        .flat(1); // priceMonster produces arrays of priced monsters
+
     return allocateMonsters(costSystem.partyBudget(party),
-                            selectedMonsters
-                                .map((m) => costSystem.priceMonster(party, m))
-                                .flat(1) // priceMonster produces arrays of priced monsters
-                            );
+                            pricedMonsters,
+                            costSystem.maximumUnspentBudget(pricedMonsters)
+    );
 }

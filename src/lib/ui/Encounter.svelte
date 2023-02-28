@@ -1,14 +1,56 @@
 <script lang="ts">
-    import type { Allocation } from "$lib/data";
+    import type { PricedMonster } from '$lib/costs/index.js';
+    import { battleLevel } from '$lib/costs/second-edition.js';
+    import type { Allocation, IParty, Monster } from "$lib/data";
     import { _ } from "./strings";
 
     export let encounter:Allocation[]
     export let abbreviated = false;
+    export let party: IParty;
+
+    $: battle = battleLevel(party.level, party.encountersPerDay);
+
+    function isCareRequired(monster: PricedMonster) {
+        const delta = monster.level - battle;
+        if (delta === 1) {
+            if (monster.size !== "normal" && monster.size !== "weakling") {
+                return true;
+            }
+            else if (monster.kind === "mook" && monster.count > 5) {
+                return true;
+            }
+        } 
+        else if (delta === 2) {
+            if (monster.size === "normal") {
+                return true;
+            }
+            else if (monster.kind === "mook" && monster.count === 5) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    function isProbableMistake(monster: PricedMonster) {
+        const delta = monster.level - battle;
+        if (delta === 2) {
+            if (monster.size === "normal") {
+                return true;
+            }
+            else if (monster.kind === "mook" && monster.count === 5) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 </script>
 
 <div class={`encounter ${abbreviated ? "abbreviated" : ""}`}>
     {#each encounter as allocation }
-    <div class="monster">
+    <div class="monster { isCareRequired(allocation.monster) ? "-care" : ""} { isProbableMistake(allocation.monster) ? "-mistake" : ""}">
         <span class="name">{ allocation.monster.name }</span>
         <span class="count">{ allocation.num }</span>
         {#if !abbreviated}
@@ -40,6 +82,17 @@
         --corner: 0.3rem;
         border-left: var(--border);
         border-top: var(--border);
+    }
+
+    .monster.-care {
+        background: #fffade;
+        --border: 1px solid rgba(109, 101, 49, 0.2);
+
+    }
+
+    .monster.-mistake {
+        background: #ffddc6;
+        --border: 1px solid rgba(109, 49, 8, 0.2);
     }
 
     .monster:nth-child(4),

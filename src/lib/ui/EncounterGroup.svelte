@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type { Encounters } from "../data";
+    import type { Encounters, IParty } from "../data";
     import Arrow from './Arrow.svelte';
     import { ArrowFacing } from './arrowFacing.js';
     import Encounter from "./Encounter.svelte";
     import { _ } from "./strings";
     export let encounters: Encounters;
+    export let party: IParty;
 
     $: primary = encounters[0];
     $: variations = encounters.slice(1); 
@@ -18,7 +19,7 @@
 
 <div class="encounter">
     <div class="stereotype">
-        <Encounter encounter={primary} />
+        <Encounter encounter={primary} {party}/>
     </div>
 
     {#if variations.length > 0}
@@ -30,7 +31,7 @@
             <ul class="variations">
                 {#each variations as variation}
                 <li>
-                    <Encounter encounter={variation} abbreviated />
+                    <Encounter encounter={variation} {party} abbreviated />
                 </li>
                 {/each}
             </ul>

@@ -44,6 +44,8 @@ export interface ICostSystem {
      * @param monster 
      */
     isViableForParty(party: data.IParty, monster: data.Monster): boolean;
+
+    maximumUnspentBudget(pricedMonsters: PricedMonster[]): number;
 }
 
 

@@ -161,13 +161,16 @@ export function priceParty(characters:number): number {
 
 
 export const FirstEdition:ICostSystem = {
-    partyBudget: function (party: data.IParty): number {
+    partyBudget(party: data.IParty): number {
         return priceParty(party.size);
     },
-    priceMonster: function (party: data.IParty, monster: data.Monster): PricedMonster[] {
+    priceMonster(party: data.IParty, monster: data.Monster): PricedMonster[] {
         return priceMonster(party.level, monster);
     },
-    isViableForParty: function (party: data.IParty, monster: data.Monster): boolean {
+    isViableForParty(party: data.IParty, monster: data.Monster): boolean {
         return isViable(party, monster);
-    }
+    },
+    maximumUnspentBudget(monsters: PricedMonster[]): number {
+        return Math.min.apply(null, monsters.map((m) => m.price)) * 0.9;
+    } 
 }

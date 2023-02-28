@@ -147,5 +147,8 @@ export const SecondEdition:ICostSystem = {
     },
     isViableForParty: function (party: IParty, monster: Monster): boolean {
         return toDelta(party.level, monster.level, party.encountersPerDay) !== undefined; // TODO: encounters per day
+    },
+    maximumUnspentBudget(monsters: PricedMonster[]): number {
+        return equivalents.get(-2)?.get("normal")! * 0.9;
     }
 }

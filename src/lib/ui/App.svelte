@@ -75,7 +75,7 @@
             monsters={filteredBestiary}
             on:change={handleMonsterFilerChange}
         />
-        <Results {party} choices={generationChoices} {edition} />
+        <Results {party} choices={generationChoices} {edition}/>
     {/if}
 </div>
 

@@ -47,7 +47,7 @@
         </div>
 
         <PaginatedData items={results} let:item={encounters}>
-            <EncounterGroup {encounters} />
+            <EncounterGroup {encounters} {party}/>
         </PaginatedData>
     {:else}
         <Loading/>

@@ -1,3 +1,5 @@
+import type { PricedMonster } from './costs/index.js';
+
 export type MonsterSizeBase = "normal" | "large" | "huge";
 export type MonsterSize = MonsterSizeBase  | "weakling" | "elite" | "double strength" | "triple strength" | "large elite";
 export type MonsterThreat = "normal" | "mook"  | "weakling" | "elite";
@@ -76,7 +78,7 @@ export interface IParty {
 
 
 export interface Allocation {
-    readonly monster: Monster;
+    readonly monster: PricedMonster;
     readonly num:number;
     readonly cost:number;
 }

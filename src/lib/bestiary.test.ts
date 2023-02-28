@@ -3,16 +3,17 @@ import { property, assert } from "jsverify";
 import * as jsc from "jsverify";
 (<any>global).it = it; // Needed to get jsverify to run
 
-import { newMonster, type Allocation, type IParty, type Monster, type MonsterSize } from "./data";
+import { newMonster, type Allocation, type EncountersPerDay, type IParty, type Monster, type MonsterSize } from "./data";
 import * as costs from "./costs";
 import * as firstEdition from "./costs/first-edition";
 import { allocationsForParty } from "./allocator";
 
 const partyLevel = jsc.integer(1, 10);
 const partySize = jsc.integer(1, 10);
-const party = jsc.record({
+const party = jsc.record<IParty>({
   size: partySize,
-  level: partyLevel
+  level: partyLevel,
+  encountersPerDay: jsc.integer(4, 4) as jsc.Arbitrary<EncountersPerDay>
 });
 
 const size = jsc.elements<MonsterSize>(["normal", "large", "huge", "weakling", "elite", "double strength", "triple strength"]);
