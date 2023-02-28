@@ -1,6 +1,6 @@
 {
 	"name": "manticore-2",
-	"version": "2.0.0-Alpha-4",
+	"version": "2.0.0-Alpha-5",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
