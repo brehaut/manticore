@@ -20,8 +20,14 @@
         if (window.matchMedia("(min-width:800px)").matches) {
             numberPages = 20;
         }
-        else {
+        else if (window.matchMedia("(min-width:450px)").matches) {
             numberPages = 10;
+        }
+        else if (window.matchMedia("(min-width:400px)").matches) {
+            numberPages = 5
+        }
+        else {
+            numberPages = 4;
         }
     });
 
@@ -71,7 +77,6 @@
         margin: 0;
         padding: 0;
         list-style: none;
-        width: 100%;
         padding-left: 0;
     }
 
