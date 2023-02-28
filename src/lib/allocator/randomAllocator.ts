@@ -1,6 +1,6 @@
 import type { ICostSystem, PricedMonster } from '$lib/costs/index';
 import type { Allocation, Encounter, IParty, Monster } from "$lib/data";
-import { take } from '$lib/iter';
+import { groupBy, take } from '$lib/iter';
 import { MonsterAllocation, priceMonsters } from "$lib/allocator";
 
 function getWeightComparator<T>(getWeight: (v: T) => number): (a:T, b:T)=>number {
@@ -59,6 +59,20 @@ class ShrinkableRandomAccessCollection<T> {
 }
 
 
+function consolidate(allocations: Allocation[]): Allocation[] {
+    const grouped = Array.from(groupBy(allocations, (alloc) => alloc.monster.name + alloc.monster.count).values())
+    const consolidated: Allocation[] = [];
+    for (const group of grouped) {
+        const exemplar = group[0];
+        consolidated.push(new MonsterAllocation(
+            exemplar.monster, 
+            group.reduce((total, a) => a.num + total, 0)
+        ));
+    }
+    return consolidated.sort((a,b)=>a.monster.name.localeCompare(b.monster.name));
+}
+
+
 /** Generates an infinte stream of random allocations
  *  
  * @param budget the budget to spend on monsters per allocation
@@ -73,12 +87,12 @@ function* allocate(budget: number, allMonsters:ShrinkableRandomAccessCollection<
         while (currentBudget > 0 && !monsters.done()) {
             monsters.setMaxWeight(budget);
             const random = monsters.getRandom();
-            allocations.push(new MonsterAllocation(random, 1)); // TODO: more than one
+            allocations.push(new MonsterAllocation(random, random.count)); // TODO: more than one
             currentBudget = currentBudget - random.price;
         }
         if (currentBudget === 0) {
             yield [{
-                allocations,
+                allocations: consolidate(allocations),
                 unspentPercentage: 0
             }]
             sinceLastSuccess = 0;
