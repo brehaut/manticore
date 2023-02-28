@@ -46,15 +46,22 @@
             {_("Generated % encounters").replace("%", results.length.toString())}
         </div>
 
-        <h2>{_("Key:")}</h2>
-        <ol class="key">
-            <li class="care-needed">{_("Be careful. A monster like this might pack an uncomfortable amount of damage into a single swing.")}</li>
-            <li class="probable-mistake">{_("Probably a mistake to build a battle around monsters that dish out damage like these do.")}</li>
-        </ol>
+        {#if results.length > 0}
+            <h2>{_("Key:")}</h2>
+            <ol class="key">
+                <li class="care-needed">{_("Be careful. A monster like this might pack an uncomfortable amount of damage into a single swing.")}</li>
+                <li class="probable-mistake">{_("Probably a mistake to build a battle around monsters that dish out damage like these do.")}</li>
+            </ol>
 
-        <PaginatedData items={results} let:item={encounters}>
-            <EncounterGroup {encounters} {party}/>
-        </PaginatedData>
+            <PaginatedData items={results} let:item={encounters}>
+                <EncounterGroup {encounters} {party}/>
+            </PaginatedData>
+        {:else}
+            <div class="no-results">
+                <p>{_("The selected monsters could not be organised into an encounter for the specified party. This can occur because the selected monsters are too large/threatening for the size of the party.")}</p>
+                <p>{_("Try adjusting your filters and selection to allow more monsters to be selected.")}</p>
+            </div>
+        {/if}
     {:else}
         <Loading/>
     {/if}
@@ -103,4 +110,14 @@
         border-color: var(--probable-mistake-border-color);
     }
 
+    .no-results {
+        border: 1px solid rgb(203 197 190);
+        background: #e1dcd5;
+        padding: 0 1rem;
+        margin: 0.5rem -1rem;
+    }
+
+    .no-results > p {
+        max-width: 50rem;
+    }
 </style>
