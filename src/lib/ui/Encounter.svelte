@@ -85,14 +85,13 @@
     }
 
     .monster.-care {
-        background: #fffade;
-        --border: 1px solid rgba(109, 101, 49, 0.2);
-
+        background: var(--care-needed-background-color);
+        --border: 1px solid var(--care-needed-border-color);
     }
 
     .monster.-mistake {
-        background: #ffddc6;
-        --border: 1px solid rgba(109, 49, 8, 0.2);
+        background: var(--probable-mistake-background-color);
+        --border: 1px solid var(--probable-mistake-border-color);
     }
 
     .monster:nth-child(4),
