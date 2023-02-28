@@ -39,6 +39,7 @@
             : filteredBestiary;
 
     $: counts = bestiary?.featureCounts(party, filterFacets) ?? new Map();
+    $: hasUserFilteredAnything = Array.from(filterFacets.values()).some(s => s.size > 0) || specificMonsters.size !== 0;
 
     onMount(async () => {
         const req = await fetch("/data/bestiary.json");
@@ -75,7 +76,7 @@
             monsters={filteredBestiary}
             on:change={handleMonsterFilerChange}
         />
-        <Results {party} choices={generationChoices} {edition}/>
+        <Results {party} choices={generationChoices} {edition} {hasUserFilteredAnything}/>
     {/if}
 </div>
 

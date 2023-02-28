@@ -7,22 +7,28 @@
     import Loading from "./Loading.svelte";
     import PaginatedData from "./PaginatedData.svelte";
     import Section from "./Section.svelte";
+    import { GenerationProcess } from '$lib/allocator/index.js';
 
     export let choices: Monster[];
     export let party: IParty;
     export let edition: Edition;
+    export let hasUserFilteredAnything: boolean;
+
+    let deterministicGeneration = true;
 
     let generationWorker:Worker | undefined;
 
     let results:GroupedEncounters | undefined = []; 
 
     function generate(party: IParty, choices: Monster[]) {
+        if (!hasUserFilteredAnything) return;
+
         if (generationWorker) {
             generationWorker.terminate();
         }
 
         // A heuristic to not blank out the results if we think the new results will arrive quickly
-        if (choices.length > 20) {
+        if (deterministicGeneration && choices.length > 40) {
             results = undefined;
         }
 
@@ -32,16 +38,30 @@
             results = ev.data;
         }
 
-        generationWorker?.postMessage([party, choices, edition]);      
+        generationWorker?.postMessage({ party, monsters: choices, edition, generationProcess: deterministicGeneration ? GenerationProcess.Deterministic : GenerationProcess.Random });      
     }
 
-    $:{ 
-        generate(party, choices); 
+    $:{
+        deterministicGeneration, generate(party, choices);  
     }
 </script>
 
 <Section heading="Encounters" summary="[results summary]">
-    {#if results}     
+    <div class="method">
+        <h2>How should results be generated?</h2>
+        <input type="radio" bind:group={deterministicGeneration} value={true} id="deterministicGeneration" name="generationProcess" /><label for="deterministicGeneration">{_("Exhaustively")}</label>
+        <input type="radio" bind:group={deterministicGeneration} id="randomGeneration" name="generationProcess" /><label for="randomGeneration">{_("Randomly")}</label>
+
+        {#if !deterministicGeneration}
+        <br/><button on:click={() => generate(party, choices)}>{_("Roll the dice")}</button>
+        {/if}
+    </div>
+
+    {#if !hasUserFilteredAnything}
+        <div class="no-selection">
+            <p>{_("You need to make some kind of selection with the filters and/or monster selection above.")}</p>
+        </div>
+    {:else if results}         
         <div>
             {_("Generated % encounters").replace("%", results.length.toString())}
         </div>
@@ -100,6 +120,26 @@
         margin-right: 0.5rem;
     }
 
+    .method {
+        margin-bottom: 1rem;
+    }
+
+    .method button {
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.3rem;
+        font-family: "Alegreya";
+        font-size: 1.1rem;
+        background: var(--brand-color);
+        color: var(--background-color);
+        border: 1px solid var(--brand-color);
+        cursor: pointer;
+    }
+
+    .method button:hover {
+        background-color: var(--background-color);
+        color: var(--brand-color);
+    }
     .care-needed:before {
         background: var(--care-needed-background-color);
         border-color: var(--care-needed-border-color);
@@ -110,14 +150,14 @@
         border-color: var(--probable-mistake-border-color);
     }
 
-    .no-results {
+    .no-results, .no-selection {
         border: 1px solid rgb(203 197 190);
         background: #e1dcd5;
         padding: 0 1rem;
         margin: 0.5rem -1rem;
     }
 
-    .no-results > p {
+    .no-results > p, .no-selection > p {
         max-width: 50rem;
     }
 </style>

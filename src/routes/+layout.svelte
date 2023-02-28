@@ -76,6 +76,7 @@
         </p>
       </section>
 
+      <!-- svelte-ignore missing-declaration -->
       <div>Version: { __APP_VERSION__ }</div>
 
     </div>

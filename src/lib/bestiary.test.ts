@@ -6,7 +6,7 @@ import * as jsc from "jsverify";
 import { newMonster, type Allocation, type Encounter, type EncountersPerDay, type IParty, type Monster, type MonsterSize } from "./data";
 import * as costs from "./costs";
 import * as firstEdition from "./costs/first-edition";
-import { allocationsForParty } from "./allocator";
+import { allocationsForParty } from "./allocator/deterministicAllocator";
 
 const partyLevel = jsc.integer(1, 10);
 const partySize = jsc.integer(1, 10);

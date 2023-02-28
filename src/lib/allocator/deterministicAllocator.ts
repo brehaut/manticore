@@ -1,28 +1,9 @@
-import type { PricedMonster, ICostSystem } from "./costs";
-import type * as data from "./data";
-import * as iter from './iter';
+import type { PricedMonster, ICostSystem } from "../costs";
+import type * as data from "../data";
+import * as iter from '../iter';
+import { MonsterAllocation, priceMonsters } from './index';
 
 const MAXIMUM_TYPES = 6;
-
-
-class MonsterAllocation implements data.Allocation {
-    public cost: number;
-    public monster: PricedMonster;
-
-    constructor (monster:PricedMonster, public num:number) { 
-        if (monster.count > 1) {
-            this.cost = monster.price;
-        }
-        else {
-            this.cost = monster.price * num;
-        }
-        this.monster = monster;
-    }
-
-    public toString() {
-        return this.monster.toString() + " x" + this.num;
-    }
-}
 
 
 // allocateMonster is the core algorithm of this application.
@@ -62,7 +43,7 @@ function groupMonsters(allocations:Iterable<data.Encounter>): data.GroupedEncoun
 class ForkingBufferCursor<T> {
     private index: number = 0;
 
-    constructor (private readonly buffer: T[]) {
+    constructor (private readonly buffer: ReadonlyArray<T>) {
 
     }
 
@@ -93,7 +74,7 @@ class ForkingBufferCursor<T> {
 }
 
 
-function allocateMonsters(points:number, monstersArray:PricedMonster[], allowedUnspent: number): data.GroupedEncounters {           
+function allocateMonsters(points:number, monstersArray:ReadonlyArray<PricedMonster>, allowedUnspent: number): data.GroupedEncounters {           
     function* allocate(remainingPoints:number, 
                         monsters: ForkingBufferCursor<PricedMonster>,
                         acc:MonsterAllocation[],
@@ -141,12 +122,12 @@ export function allocationsForParty(party:data.IParty,
                                     selectedMonsters:data.Monster[],
                                     costSystem: ICostSystem) {
 
-    const pricedMonsters = selectedMonsters
-        .map((m) => costSystem.priceMonster(party, m))
-        .flat(1); // priceMonster produces arrays of priced monsters
+    const pricedMonsters = priceMonsters(selectedMonsters, costSystem, party); // priceMonster produces arrays of priced monsters
 
     return allocateMonsters(costSystem.partyBudget(party),
                             pricedMonsters,
-                            costSystem.maximumUnspentBudget(pricedMonsters)
+                            costSystem.maximumUnspentBudget(pricedMonsters as PricedMonster[])
     );
 }
+
+

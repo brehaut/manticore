@@ -1,16 +1,22 @@
 
 import type * as data from "$lib/data";
-import {allocationsForParty} from './allocator';
+import { allocationsForParty as deterministicAllocator }  from './allocator/deterministicAllocator';
+import { allocationsForParty as randomAllocator }  from './allocator/randomAllocator';
+import { GenerationProcess } from './allocator/index.js';
 import { costSystemForEdition, Edition } from './costs';
 
 interface ProcessingMessageEvent extends MessageEvent {
-    data: [data.IParty, data.Monster[], Edition];
+    data: {party: data.IParty, monsters:data.Monster[], edition: Edition, generationProcess: GenerationProcess };
 }
 
 onmessage = (message:ProcessingMessageEvent) => {
-    const [party, monsters, edition] = message.data;
+    const { party, monsters, edition, generationProcess } = message.data;
     
-    postMessage(allocationsForParty(party, monsters, costSystemForEdition(edition)));
+    const generator = generationProcess === GenerationProcess.Deterministic 
+        ? deterministicAllocator 
+        : randomAllocator;
+
+    postMessage(generator(party, monsters, costSystemForEdition(edition)));
     close();
 };
 
