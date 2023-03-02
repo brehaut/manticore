@@ -46,24 +46,24 @@ export class Bestiary {
         return new Bestiary(this.monsters, costSystem);
     }
     
-    allSources() {
+    allSources(): string[] {
         return this.distinctValues((m) => m.book).sort(compareBook);
     }
 
-    allNames() {
+    allNames(): string[] {
         return this.distinctValues((m) => m.name).sort(compareStrings);
     }
     
-    allSizes() {
+    allSizes(): data.MonsterSize[] {
         console.log("all sizes")
         return this.distinctValues((m) => m.size).sort(compareSize);
     }
 
-    allKinds() {
+    allKinds(): string[] {
         return this.distinctValues((m) => m.kind).sort(compareStrings);
     }
 
-    allAttributes() {
+    allAttributes(): string[] {
         var attributes:string[] = [];
         
         this.monsters.forEach((m:data.Monster) => {
@@ -73,6 +73,10 @@ export class Bestiary {
         });
 
         return attributes.sort(compareStrings);
+    }
+
+    allLevels(): number[] {
+        return this.distinctValues(m => m.level).sort();
     }
 
     featureCounts(party: data.IParty, filters: data.FilterFacets): FacetCounts {

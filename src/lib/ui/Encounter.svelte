@@ -1,56 +1,19 @@
 <script lang="ts">
-    import type { PricedMonster } from '$lib/costs/index.js';
     import { battleLevel } from '$lib/costs/second-edition.js';
-    import type { Allocation, Encounter, IParty, Monster } from "$lib/data";
+    import type { Encounter, IParty } from "$lib/data";
+    import { isCareRequired, isProbableMistake } from '$lib/levels.js';
     import { _ } from "./strings";
 
     export let encounter:Encounter
     export let abbreviated = false;
     export let party: IParty;
 
-    $: battle = battleLevel(party.level, party.encountersPerDay);
-
-    function isCareRequired(monster: PricedMonster) {
-        const delta = monster.level - battle;
-        if (delta === 1) {
-            if (monster.size !== "normal" && monster.size !== "weakling") {
-                return true;
-            }
-            else if (monster.kind === "mook" && monster.count > 5) {
-                return true;
-            }
-        } 
-        else if (delta === 2) {
-            if (monster.size === "normal") {
-                return true;
-            }
-            else if (monster.kind === "mook" && monster.count === 5) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    function isProbableMistake(monster: PricedMonster) {
-        const delta = monster.level - battle;
-        if (delta === 2) {
-            if (monster.size === "normal") {
-                return true;
-            }
-            else if (monster.kind === "mook" && monster.count === 5) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    $: battle = battleLevel(party.level, party.encountersPerDay);    
 </script>
 
 <div class={`encounter ${abbreviated ? "abbreviated" : ""}`}>
     {#each encounter.allocations as allocation }
-    <div class="monster { isCareRequired(allocation.monster) ? "-care" : ""} { isProbableMistake(allocation.monster) ? "-mistake" : ""}">
+    <div class="monster { isCareRequired(allocation.monster, battle) ? "-care" : ""} { isProbableMistake(allocation.monster, battle) ? "-mistake" : ""}">
         <span class="name">{ allocation.monster.name }</span>
         <span class="count">{ allocation.num }</span>
         {#if !abbreviated}
@@ -59,7 +22,7 @@
         {/if}
     </div>
     {/each}
-    
+
     {#if encounter.unspentPercentage > 0}
     <div class="monster unspent">
         <span class="unspent">
