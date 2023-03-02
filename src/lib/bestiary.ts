@@ -2,6 +2,7 @@ import * as data from "./data";
 
 import { costSystemForEdition, Edition, type ICostSystem } from './costs';
 import type { Facet, FacetCounts } from "./data";
+import { append } from 'svelte/internal';
 
 
 function monsterFromRecord(book: string) {
@@ -14,6 +15,29 @@ function monsterFromRecord(book: string) {
                                                             record[5]);
 }
 
+const compareStrings = (a: string, b: string) => a.localeCompare(b)
+
+function orderedComparisonFrom(terms: string[]): (a: string, b: string) => number {
+    const priority = new Map(terms.map((t, idx) => [t, idx]));
+    return (a: string, b: string) => {
+        
+        const aPriority = priority.get(a.toLocaleLowerCase());
+        const bPriority = priority.get(b.toLocaleLowerCase());
+        console.log(a,b,aPriority, bPriority)
+        if (aPriority === undefined && bPriority === undefined) return compareStrings(a,b);
+
+        if (aPriority === undefined) return 1;
+        if (bPriority === undefined) return -1;
+
+        if (aPriority < bPriority) return -1;
+        if (aPriority > bPriority) return 1;
+
+        return 0;
+    }
+}
+
+const compareBook = orderedComparisonFrom(["13th age", "13 true ways", "bestiary", "bestiary 2"]);
+const compareSize = orderedComparisonFrom(["weakling", "normal", "elite", "double strength", "large", "large elite", "triple strength", "huge"]);
 
 export class Bestiary {
     constructor(public monsters:data.Monster[], private costSystem: ICostSystem) { }
@@ -23,19 +47,20 @@ export class Bestiary {
     }
     
     allSources() {
-        return this.distinctValues((m) => m.book);
+        return this.distinctValues((m) => m.book).sort(compareBook);
     }
 
     allNames() {
-        return this.distinctValues((m) => m.name);
+        return this.distinctValues((m) => m.name).sort(compareStrings);
     }
     
     allSizes() {
-        return this.distinctValues((m) => m.size);
+        console.log("all sizes")
+        return this.distinctValues((m) => m.size).sort(compareSize);
     }
 
     allKinds() {
-        return this.distinctValues((m) => m.kind);
+        return this.distinctValues((m) => m.kind).sort(compareStrings);
     }
 
     allAttributes() {
@@ -47,7 +72,7 @@ export class Bestiary {
             });
         });
 
-        return attributes;
+        return attributes.sort(compareStrings);
     }
 
     featureCounts(party: data.IParty, filters: data.FilterFacets): FacetCounts {

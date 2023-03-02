@@ -14,13 +14,14 @@
     export let cluster = false;
     export let width: 1 | 2 | 4 | 6;
     export let counts: FacetCounts | undefined = undefined;
+
     $: count = counts?.get(facet) ?? new Map();
     $: showCount = counts !== undefined;
     
     let selected = new Set<string>();
     let enabled = false;
 
-    $: sorted = Array.from(clusterItems(values.sort((a,b) => a.localeCompare(b)), a => a));
+    $: sorted = Array.from(clusterItems(values, a => a));
 
     function tagToggled(ev: CustomEvent<{value:string, checked:boolean}>) {
         if (ev.detail.checked) {
