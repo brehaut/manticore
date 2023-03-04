@@ -1,3 +1,4 @@
+import { attr } from 'svelte/internal';
 import type { PricedMonster } from './costs/index.js';
 
 export type MonsterSizeBase = "normal" | "large" | "huge";
@@ -94,7 +95,7 @@ export interface Allocator {
     (party: IParty, monsters: Monster[]): Promise<GroupedEncounters>;
 }
 
-export type Facet = "name" | "size" | "source" | "kind" | "attributes";
+export type Facet = "name" | "size" | "source" | "kind" | "attributes" | "level";
 
 export type FilterFacets = Map<Facet, Set<string>>;
 
@@ -140,6 +141,10 @@ function namePredicate(name:string) {
     return (m:Monster) => m.name === name;
 }
 
+function levelPredicate(level: string) {
+    return (m:Monster) => m.level.toString() === level;
+}
+
 function hasOneAttributePredicate(attributes:string[]) {
     return (m:Monster) => {
         var mattrs = m.attributes;
@@ -181,6 +186,11 @@ export function predicateForFilters(filters:FilterFacets) {
         else if (key === "attributes") {
             predicates.push(hasOneAttributePredicate(Array.from(attributes)));
         }            
+        else if (key === "level") {
+            predicates.push(anyPredicate<Monster>(
+                Array.from(attributes).map(levelPredicate)
+            ));
+        }
         else {
             throw new Error("unknown filter type: " + key);
         }            

@@ -16,6 +16,7 @@
     import { getParty, saveParty } from "$lib/party";
     import { getEdition, saveEdition } from "$lib/edition";
     import { costSystemForEdition, type Edition } from "$lib/costs/index";
+    import { battleLevel } from '$lib/costs/second-edition.js';
 
     let party = getParty();
     $: saveParty(party);
@@ -71,6 +72,7 @@
             on:change={handleSmartFilterChange}
             {counts}
             totalMonsters={filteredBestiary.length}
+            battleLevel={battleLevel(party.level, party.encountersPerDay)}
         />
         <MonsterFilter
             monsters={filteredBestiary}

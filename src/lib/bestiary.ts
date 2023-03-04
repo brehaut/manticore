@@ -86,6 +86,7 @@ export class Bestiary {
             {countKey: "kind", monsterKey: "kind", filterKey: "kind"},
             {countKey: "name", monsterKey: "name", filterKey: "name"},
             {countKey: "attributes", monsterKey: "attributes", filterKey: "attributes"},
+            {countKey: "level", monsterKey: "level", filterKey: "level"},
         ];
         
         function filtersExcluding(key: string):data.FilterFacets {
@@ -106,7 +107,8 @@ export class Bestiary {
             const viable = this.filteredBestiary(party, descriptor.predicate);
             const countMap:Map<string, number> = new Map();
             
-            function inc (key:string) {
+            function inc (key:string | number) {
+                key = (typeof key === "number") ? key.toString() : key;
                 const v:number = countMap.has(key) ? countMap.get(key)! : 0;
                 countMap.set(key, v + 1);
             }
@@ -131,6 +133,7 @@ export class Bestiary {
             ["kind", new Map()],
             ["attributes", new Map()],
             ["name", new Map()],
+            ["level", new Map()],
         ]);
 
         descriptors.map(applicableFilters).forEach(d => {

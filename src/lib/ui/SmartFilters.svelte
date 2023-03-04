@@ -4,10 +4,14 @@
     import FacetFilter from "./FacetFilter.svelte";
     import type { FacetCounts } from "$lib/data";
     import { _ } from "./strings";
+    import LevelFilter from './LevelFilter.svelte';
 
+    export let battleLevel: number;
     export let bestiary: Bestiary;
     export let counts: FacetCounts;
     export let totalMonsters: number;
+
+    $: console.log(counts);
 </script>
 
 <Section heading="Filters" summary="[filter summary]">
@@ -21,6 +25,9 @@
         <div class="kind">
             <FacetFilter facet="kind" heading="Kind" values={bestiary.allKinds()} width={1} {counts} on:change />
         </div>
+        <div class="levels">
+            <LevelFilter {battleLevel} {bestiary} counts={counts.get("level")} on:change />
+        </div>
         <div class="attributes">
             <FacetFilter facet="attributes" heading="Attributes" values={bestiary.allAttributes()} width={4} {counts} cluster on:change />
         </div>
@@ -32,14 +39,14 @@
 
     .facets {
         display: grid;
-        grid-template: "book book" "size kind" "attributes attributes";
+        grid-template: "book book" "size kind" "level level" "attributes attributes";
         grid-column-gap: 0;
         grid-template-columns: 1fr 1fr;
     }
 
     @media screen and (min-width:725px) {
         .facets {
-            grid-template: "book book book" "size kind attributes";
+            grid-template: "book book book" "size kind attributes" "level . attributes" ". . attributes";
             grid-template-columns: 1fr 1fr 2fr;
         }
     }
@@ -54,5 +61,6 @@
     .book { grid-area: book; }
     .size { grid-area: size; }
     .kind { grid-area: kind; }
+    .level { grid-area: level; }
     .attributes { grid-area: attributes; }
 </style>
