@@ -2,17 +2,22 @@ import * as data from "./data";
 
 import { costSystemForEdition, Edition, type ICostSystem } from './costs';
 import type { Facet, FacetCounts } from "./data";
-import { append } from 'svelte/internal';
 
 
-function monsterFromRecord(book: string) {
-    return (record:data.MonsterRecord) => data.newMonster(record[0], 
-                                                            record[1],
-                                                            record[2],
-                                                            record[3],
-                                                            record[4],
-                                                            book,
-                                                            record[5]);
+function monsterFromRecordForBook(book: string, srdReferences: data.SrdReferences) {
+    return (record:data.MonsterRecord):data.Monster => {
+        const name = record[0];
+        return data.newMonster(
+            name, 
+            record[1],
+            record[2],
+            record[3],
+            record[4],
+            book,
+            record[5],
+            srdReferences[name.toLowerCase()]
+        );
+    }
 }
 
 const compareStrings = (a: string, b: string) => a.localeCompare(b)
@@ -164,10 +169,22 @@ export class Bestiary {
 }
 
 
+function normaliseSrdNames(srdReferences: data.SrdReferences): data.SrdReferences {
+    const normalised: data.SrdReferences = {};
+    for (const [name, url] of Object.entries(srdReferences)) {
+        normalised[name.toLowerCase()] = url;
+    }
+    return normalised;
+}
+
+
 export function createBestiary(dataset:data.DataSet, edition:Edition) {
+    const books = dataset.books;
+    const srdReferences = normaliseSrdNames(dataset.srdReferences);
+
     var catalog:data.Monster[] = [];
-    for (var key in dataset) if (dataset.hasOwnProperty(key)) {
-        catalog = catalog.concat(dataset[key].map(monsterFromRecord(key)));
+    for (const [bookName, book] of Object.entries(books)) {
+        catalog = catalog.concat(book.map(monsterFromRecordForBook(bookName, srdReferences)));
     }
 
     return new Bestiary(catalog, costSystemForEdition(edition));

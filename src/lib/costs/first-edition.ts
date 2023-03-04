@@ -151,6 +151,7 @@ export function priceMonster(partyLevel:number, m:data.Monster): PricedMonster[]
                             m.attributes,
                             m.book,
                             m.pageNumber,
+                            m.srdUrl,
                             cost * multiplier)];
 }
 

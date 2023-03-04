@@ -14,7 +14,9 @@
 <div class={`encounter ${abbreviated ? "abbreviated" : ""}`}>
     {#each encounter.allocations as allocation }
     <div class="monster { isCareRequired(allocation.monster, battle) ? "-care" : ""} { isProbableMistake(allocation.monster, battle) ? "-mistake" : ""}">
-        <span class="name">{ allocation.monster.name }</span>
+        <span class="name">{ allocation.monster.name } 
+            {#if allocation.monster.srdUrl }<a class="srd" target="srd" title="View on SRD" href="{allocation.monster.srdUrl}">↗</a>{/if}
+        </span>
         <span class="count">{ allocation.num }</span>
         {#if !abbreviated}
             <span class="kind">{allocation.monster.kind} {_("lvl")} {allocation.monster.level}</span>
@@ -162,5 +164,16 @@
     span.unspent {
         grid-area: unspent;
         text-align: center;
+    }
+
+    .srd {
+        text-decoration: none;
+        border-bottom: none;
+        font-size: 1.2rem;
+    }
+
+    .srd:hover {
+        background: var(--link-color);
+        color: var(--background-color);
     }
 </style>

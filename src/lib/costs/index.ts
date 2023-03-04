@@ -62,11 +62,12 @@ export function newPricedMonster(name:string,
                             attributes: string[],
                             book: string,
                             pageNumber: number,
+                            srdReference: string,
                             price:number,
                             count:number = 1) 
                             : PricedMonster { 
     // type hint to convince the compiler that we are going to mix in the new values                                  
-    var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book, pageNumber);
+    var mon = <PricedMonster>data.newMonster(name, level, size, kind, attributes, book, pageNumber, srdReference);
     mon.price = price;
     mon.count = count;
     return mon;    
@@ -78,7 +79,7 @@ export function newPricedMonster(name:string,
  * price may differ by count. 
  */
 export function priceMonster(monster: data.Monster, price: number, count: number) {
-    var mon = <PricedMonster>data.newMonster(monster.name, monster.level, monster.size, monster.kind, monster.attributes, monster.book, monster.pageNumber);
+    var mon = <PricedMonster>data.newMonster(monster.name, monster.level, monster.size, monster.kind, monster.attributes, monster.book, monster.pageNumber, monster.srdUrl);
     mon.price = price;
     mon.count = count;
     return mon;

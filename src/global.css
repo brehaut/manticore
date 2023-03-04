@@ -3,6 +3,7 @@ body {
   --body-copy-color: #461B0E;
   --faded-body-copy-color: #9a8d89;
   --background-color: #F2F2EB;
+  --link-color: rgb(14, 0, 194);
 
   --page-margin: 0.25rem;
 }
@@ -72,7 +73,7 @@ h1 {
 a {
     text-decoration: none;
     border-bottom: 1px solid rgba(14, 0, 194, 0.5);
-    color: rgb(14, 0, 194);
+    color: var(--link-color);
 }
 
 

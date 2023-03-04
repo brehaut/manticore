@@ -9,7 +9,12 @@ export type MonsterScale = [MonsterSizeBase, MonsterThreat];
                             // name,   level,  size,        type,   tags,     page number
 export type MonsterRecord = [string, number, MonsterSize, string, string[], number];
 
-export type DataSet = {[index:string]: MonsterRecord[]};
+export type BookData = {[index:string]: MonsterRecord[]};
+export type SrdReferences = {[index: string]: string};
+export type DataSet = {
+    books: BookData,
+    srdReferences: SrdReferences
+};
 
 export type EncountersPerDay = 3 | 4;
 
@@ -22,6 +27,7 @@ export interface Monster {
     readonly attributes: string[];
     readonly book:string;
     readonly pageNumber: number;
+    readonly srdUrl: string | undefined;
 }
 
 function normalizeThreat(size: MonsterSize, kind: string): MonsterThreat {
@@ -56,7 +62,8 @@ export function newMonster(name:string,
                             kind: string,
                             attributes: string[],
                             book:string,
-                            pageNumber: number) 
+                            pageNumber: number,
+                            srdUrl: string | undefined) 
                             : Monster {      
     return {
         name: name,
@@ -66,7 +73,8 @@ export function newMonster(name:string,
         scale: normalizedScale(size, kind),
         attributes: attributes,
         book: book,
-        pageNumber: pageNumber
+        pageNumber: pageNumber,
+        srdUrl
     }                                    
 }
 

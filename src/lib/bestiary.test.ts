@@ -34,7 +34,8 @@ const monster = jsc.record({
   rec.kind,
   rec.attributes,
   rec.book,
-  rec.pageNumber
+  rec.pageNumber,
+  undefined
 ), v => v);
 const monsters = jsc.array(monster);
 
