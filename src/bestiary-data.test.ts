@@ -80,23 +80,55 @@ const isEntry = isTuple( // ["Redscale flamewing", 12, "normal", "wrecker", ["kr
 )
 
 function allEntries(data:any) {
-    return (Object.values(data).flat());
+    return (Object.values(data.books).flat());
 }
 
-describe("format", () => {
+describe("toplevel format", () => {
     const data = loadfile("static/data/bestiary.json");
 
-    it("toplevel datastructure is {[index:string]: Array}", 
-        () => ok(typeof data === "object" && Object.values(data).every(v => v instanceof Array))
+    it("has a toplevel datastructure containing 'books' and 'srdReferences' keys", 
+        () => ok(typeof data === "object" 
+            && typeof data.books === "object"
+            && typeof data.srdReferences === "object"
+            && Object.keys(data).length === 2
+            && Object.values(data).every(v => v instanceof Object))
+    );
+});
+
+
+describe("book format", () => {
+    const data = loadfile("static/data/bestiary.json");
+
+    it("has books datastructure is {[index:string]: Array}", 
+        () => ok(typeof data.books === "object" && Object.values(data.books).every(v => v instanceof Array))
     );
     
-    it("book arrays contain only arrays",
+    it("has book arrays contain only arrays",
         () => ok(allEntries(data).every(record => record instanceof Array
                                                     && (record.length == 5 || record.length == 6)))
     );
 
-    it("entries are in appropriate format", 
-        () => ok(Object.values(data)
+    it("has monster entries are in appropriate format", 
+        () => ok(Object.values(data.books)
                   .every((book:any) => book.every(isEntry)))
     );
+});
+
+
+describe("srd format", () => {
+    const data = loadfile("static/data/bestiary.json");
+    const srdRefs = data.srdReferences;
+
+    it("has an object mapping monster names to https urls", () => {
+        ok(Object.values(srdRefs).every((val => typeof val === "string" && val.startsWith("https://"))));
+    });
+
+    it("has a monster with the same name as each entry in the srdReference", () => {
+        const monsterNames = new Set(Object.values(data.books).flat(1).map((m:any) => m[0].toLowerCase()));
+        for (const refName of Object.keys(srdRefs)) {
+            if (!monsterNames.has(refName.toLowerCase())) {
+                throw new Error(`'${refName}' is missing from set of monsters`);
+            }
+        }
+    })
 });
