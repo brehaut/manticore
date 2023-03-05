@@ -2,6 +2,7 @@
     import type { Bestiary } from '$lib/bestiary.js';
     import { range } from '$lib/iter.js';
     import { createEventDispatcher } from 'svelte';
+    import Page from '../../routes/+page.svelte';
     import FacetCheckbox from "./FacetCheckbox.svelte";
     import FilterList from "./FilterList.svelte";
     import { _ } from "./strings";
@@ -19,6 +20,16 @@
     let enabled = false;
 
     let selected = new Set<string>();
+
+    $: { battleLevelChanged(levels); }
+
+    function battleLevelChanged(levels: number[]) {
+        const oldSelected = selected;
+        selected = new Set(levels.filter(l => oldSelected.has(l.toString())).map(l => l.toString()));
+
+        dispatcher("change", {facet, selected});        
+    }
+    
     function levelToggled(ev: CustomEvent<{value:string, checked:boolean}>) {
         if (ev.detail.checked) {
             selected.add(ev.detail.value);
