@@ -62,7 +62,7 @@ export function newPricedMonster(name:string,
                             attributes: string[],
                             book: string,
                             pageNumber: number,
-                            srdReference: string,
+                            srdReference: string | undefined,
                             price:number,
                             count:number = 1) 
                             : PricedMonster { 
