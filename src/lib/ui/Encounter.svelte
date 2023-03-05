@@ -3,6 +3,7 @@
     import type { Encounter, IParty } from "$lib/data";
     import { isCareRequired, isProbableMistake } from '$lib/levels.js';
     import { _ } from "./strings";
+    import ViewInSrd from './ViewInSrd.svelte';
 
     export let encounter:Encounter
     export let abbreviated = false;
@@ -14,8 +15,9 @@
 <div class={`encounter ${abbreviated ? "abbreviated" : ""}`}>
     {#each encounter.allocations as allocation }
     <div class="monster { isCareRequired(allocation.monster, battle) ? "-care" : ""} { isProbableMistake(allocation.monster, battle) ? "-mistake" : ""}">
-        <span class="name">{ allocation.monster.name } 
-            {#if allocation.monster.srdUrl }<a class="srd" target="srd" title="View on SRD" href="{allocation.monster.srdUrl}">↗</a>{/if}
+        <span class="name">
+            { allocation.monster.name } 
+            <ViewInSrd url={allocation.monster.srdUrl} />
         </span>
         <span class="count">{ allocation.num }</span>
         {#if !abbreviated}
@@ -49,7 +51,7 @@
         width: 100%;
         background: #fafafa;
         font-size: 1rem;
-        grid-template: "kind page" "name count";
+        grid-template: "kind page page" "name name count";
         padding:0.5rem;
         --border: 1px solid rgba(70, 27, 14, 0.2);
         --corner: 0.3rem;
@@ -164,16 +166,5 @@
     span.unspent {
         grid-area: unspent;
         text-align: center;
-    }
-
-    .srd {
-        text-decoration: none;
-        border-bottom: none;
-        font-size: 1.2rem;
-    }
-
-    .srd:hover {
-        background: var(--link-color);
-        color: var(--background-color);
     }
 </style>
