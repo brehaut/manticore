@@ -2,6 +2,11 @@
 
 A Typescript program to generate encounters for [*13th Age*](http://13thage.com/). 
 
+# Maintainance Status — May 2024
+
+With the release of 13th Age 2e I’ve decided to cease maintaining of Manticore. See [this handover document](https://brehaut.net/media/files/the_manticore.pdf) for more details if you wish to use this code in some way.. 
+
+
 ## Usage
 
 The easy way is to visit the online instance at [https://manticore.brehaut.net](https://manticore.brehaut.net).
